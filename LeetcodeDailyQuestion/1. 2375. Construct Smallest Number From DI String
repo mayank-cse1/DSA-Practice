@@ -1,0 +1,111 @@
+### Finding the Smallest Number Matching the Pattern
+
+**Problem Statement:**
+You are given a 0-indexed string pattern of length `n` consisting of the characters 'I' meaning increasing and 'D' meaning decreasing. A 0-indexed string `num` of length `n + 1` is created using the following conditions:
+1. `num` consists of the digits '1' to '9', where each digit is used at most once.
+2. If `pattern[i] == 'I'`, then `num[i] < num[i + 1]`.
+3. If `pattern[i] == 'D'`, then `num[i] > num[i + 1]`.
+
+The goal is to return the lexicographically smallest possible string `num` that meets the conditions.
+
+**Example 1:**
+```
+Input: pattern = "IIIDIDDD"
+Output: "123549876"
+```
+
+**Example 2:**
+```
+Input: pattern = "DDD"
+Output: "4321"
+```
+
+**Constraints:**
+- 1 <= pattern.length <= 8
+- pattern consists of only the letters 'I' and 'D'.
+
+---
+
+### Thought Process and Solution
+
+**Thought Process:**
+1. **Recursion with Condition Loop**: We start by choosing the first number using a loop and then recursively selecting the remaining elements based on the pattern.
+2. **Pattern Matching**: Ensure that for 'I' (increasing) patterns, each chosen number is greater than the previous, and for 'D' (decreasing) patterns, each chosen number is smaller than the previous.
+3. **Learning**:
+   - Use the keyword `nonlocal` to modify the `ans` variable within the helper function.
+   - Use `map(str, ans)` to convert a list of integers into a string.
+
+**Optimized Solution:**
+- **Intuition**:
+  - When encountering 'D D I', we reverse the list and start with a greater value.
+  - For reversing individual bits, a stack is used due to its first-in-last-out feature.
+
+---
+
+### Recursive Solution
+
+```python
+class Solution:
+    def smallestNumber(self, pattern: str) -> str:
+        ans = []
+        def helper(num, ind):
+            nonlocal ans
+            if ind == len(pattern):
+                ans = num.copy()
+                return True
+            if pattern[ind] == 'I':
+                for i in range(num[ind] + 1, 10):
+                    if i in num:
+                        continue
+                    if helper(num + [i], ind + 1):
+                        return True
+                return False
+            if pattern[ind] == 'D':
+                for i in range(1, num[ind]):
+                    if i in num:
+                        continue
+                    if helper(num + [i], ind + 1):
+                        return True
+                return False
+        for i in range(1, 10):
+            if helper([i], 0):
+                return ''.join(map(str, ans))
+        return -1
+
+# Example usage:
+solution = Solution()
+print(solution.smallestNumber("IDID"))
+```
+
+### Optimized Solution Using Stack
+
+```python
+class Solution:
+    def smallestNumber(self, pattern: str) -> str:
+        stack = []
+        ans = ""
+        pattern = pattern + "I"
+        for i in range(1, len(pattern) + 1):
+            stack.append(i)
+            if pattern[i - 1] == "I":
+                while stack:
+                    ans = ans + str(stack.pop())
+        return ans
+```
+
+**Time Complexity:**
+- Optimized Analysis: \(O(n)\)
+
+**Space Complexity:** 
+- Optimized Analysis: \(O(n)\) with the use of a stack for individual reversals.
+
+---
+
+### Summary
+
+This problem requires finding the smallest lexicographical number that matches a given increasing and decreasing pattern. Using a recursive approach and optimizing with a stack, we can effectively generate the desired number while adhering to the problem constraints.
+
+Feel free to try the provided solution and share your thoughts or questions!
+
+
+Link - https://youtu.be/fPDPUmI-LNQ?si=lKZt56P5XgyvJ58c
