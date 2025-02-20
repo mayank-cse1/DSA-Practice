@@ -1,0 +1,105 @@
+### Finding a Different Binary String
+
+**Problem Statement:**
+You are given a list of binary strings `nums`. The goal is to find a binary string that is different from all the strings in `nums`. The length of each binary string in `nums` is `n`.
+
+**Example:**
+For `nums = ["11110", "10101", "01000", "11100", "00011"]`:
+- The possible binary strings are all combinations of length 5 (since `2^5 = 32` combinations).
+- The function should return a binary string that is not in the given list `nums`.
+
+---
+
+### Solution Approaches
+
+#### 1. Recursive Approach
+
+**Thought Process:**
+- Use a recursive helper function to generate all possible binary strings of length `n`.
+- Return the first string that is not in the given list `nums`.
+
+```python
+class Solution:
+    def findDifferentBinaryString(self, nums: List[str]) -> str:
+        def helper(output, ind):
+            if ind == len(nums):
+                if output not in nums:
+                    return output
+                else:
+                    return None
+            temp = helper(output + '1', ind + 1)
+            if temp:
+                return temp
+            temp = helper(output + '0', ind + 1)
+            if temp:
+                return temp
+        
+        temp = helper('', 0)
+        if temp:
+            return temp
+```
+
+---
+
+#### 2. Convert to Base 10
+
+**Thought Process:**
+- Convert all binary strings in `nums` to base 10 integers.
+- Find the first integer that is not in the list and convert it back to a binary string.
+
+```python
+class Solution:
+    def findDifferentBinaryString(self, nums: List[str]) -> str:
+        integer = [int(base_2, 2) for base_2 in nums]
+        n = len(nums)
+        for num in range(n + 1):
+            if num not in integer:
+                return ("0" * 16 + bin(num)[2:])[-n:]
+        return ""
+```
+
+---
+
+#### 3. Optimized Approach
+
+**Thought Process:**
+- Use a clever technique to find a different binary string without generating all combinations.
+- Change just one bit of each binary string to make it different from the existing ones.
+
+```python
+class Solution:
+    def findDifferentBinaryString(self, nums: List[str]) -> str:
+        output = ''
+        for i in range(len(nums)):
+            output += ('1' if nums[i][i] == '0' else '0')
+        return output
+```
+---
+
+### Complexity Analysis
+
+1. **Recursive Approach:**
+   - **Time Complexity:** \(O(n^2)\) -> because maximum "N+1" strings will be formed
+   - **Space Complexity:** \(O(n)\)
+
+2. **Convert to Base 10:**
+   - **Time Complexity:** \(O(n^2)\)
+   - **Space Complexity:** \(O(n)\)
+
+3. **Optimized Approach:**
+   - **Time Complexity:** \(O(n)\)
+   - **Space Complexity:** \(O(n)\)
+
+---
+**Explanation:**
+1. **Recursive Approach**: The helper function generates all binary strings of length `n` and returns the first one that is not in `nums`.
+2. **Convert to Base 10**: This approach converts binary strings to integers and finds the first missing integer, then converts it back to a binary string.
+3. **Optimized Approach**: By flipping one bit of each binary string at index `i`, we ensure the resulting string is different from all given binary strings.
+
+**Learning Points:**
+- Using `int(value, base)` helps convert a string to an integer based on the given base. For example, base 2 is used for binary.
+- Consider constraints to determine if recursion is a viable solution. If constraints are not high, recursion can be an effective approach.
+
+---
+
+This post provides three different solution approaches to find a different binary string from a given list. Choose the approach that best fits your needs based on the problem constraints and your preferences. If you have any questions or need further assistance, feel free to ask!
