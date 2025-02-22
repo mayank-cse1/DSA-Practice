@@ -1,0 +1,78 @@
+## Intuition
+
+The problem involves constructing a binary tree from a given preorder traversal string. In preorder traversal, the root node is processed first, followed by the left subtree and then the right subtree. The challenge here is to correctly interpret the depth of each node and place it in the correct position within the binary tree.
+
+## Approach
+
+1. **Parse the Input String:**
+   - The input string is split by dashes (`-`) to separate node values.
+   - Nodes are created based on these values, and their depth is determined by counting the preceding dashes.
+
+2. **Construct the Binary Tree:**
+   - Use a dictionary `count_node` to keep track of nodes at different depths.
+   - Iterate through the parsed values:
+     - If the value is not empty, create a new node and assign it to the appropriate parent node based on its depth.
+     - Update the dictionary `count_node` with the new node.
+     - Reset the depth counter (`count_none`) when encountering a non-empty value.
+     - If the value is empty, increment the depth counter (`count_none`).
+
+3. **Use of Data Structures:**
+   - Recognize the patterns of FIFO (First-In-First-Out) and LIFO (Last-In-First-Out):
+     - **Queue (FIFO):** Can be considered for maintaining the order of processing nodes at each depth.
+     - **Stack (LIFO):** Can be used to keep track of the current path from the root to the current node, as we may need to backtrack when constructing subtrees.
+
+4. **Return the Root Node:**
+   - At the end of the iteration, the root node is found at depth 0 in the dictionary `count_node`.
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the number of characters in the input string. The input string is traversed once, and operations on each character are constant time.
+- **Space complexity:** $$O(d)$$, where $$d$$ is the maximum depth of the binary tree. The space is used for the dictionary `count_node` to store nodes at different depths.
+
+## Code
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def recoverFromPreorder(self, traversal: str) -> Optional[TreeNode]:
+        count_node = {}  # Dictionary to keep track of nodes at different depths
+        node_values = traversal.split('-')  # Split the input string by dashes
+        count_none = 0  # Counter for depth levels
+        count_node[0] = TreeNode(int(node_values[0]))  # Initialize the root node
+
+        for ele in node_values[1:]:
+            if ele:
+                node = TreeNode()
+                node.val = int(ele)
+                root_node = count_node[count_none]
+                
+                if root_node.left is None:
+                    root_node.left = node
+                else:
+                    root_node.right = node
+                
+                count_node[count_none + 1] = node
+                count_none = 0
+            else:
+                count_none += 1
+        
+        return count_node[0]
+
+```
+
+### Learning Points
+
+- **Patterns in Data Structures:**
+  - **FIFO (Queue):** Could be used to process nodes level by level, ensuring each level's nodes are handled before moving to the next.
+  - **LIFO (Stack):** Effective for managing the current path in the binary tree, allowing backtracking when necessary to attach subtrees.
+
+- **Efficiency:**
+  - Using the `count_node` dictionary helps maintain constant time access to nodes at different depths, optimizing the construction process.
+  - Counting dashes accurately determines the depth of each node, ensuring they are placed correctly in the binary tree.
+
