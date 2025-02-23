@@ -1,0 +1,62 @@
+## Problem: Check if a String Reduces to Two Identical Digits
+
+Given a string of digits, the task is to determine if the string can be reduced to two identical digits by repeatedly summing adjacent digits modulo 10.
+
+### Input:
+- `s`: A string of digits (e.g., "123456")
+
+### Output:
+- A boolean value indicating whether the string reduces to two identical digits.
+
+## Approach
+
+1. **Helper Function:**
+   - Define a helper function `helper(s)` that takes a string of digits and returns a new string by summing adjacent digits modulo 10.
+   - Iterate through the string, summing each pair of adjacent digits, taking the result modulo 10, and constructing the new string.
+
+2. **Iterative Reduction:**
+   - Use a while loop to repeatedly call the helper function until the length of the string is reduced to 2.
+   - If the resulting string of length 2 has identical digits, return `True`.
+   - If not, return `False`.
+
+## Solution
+
+```python
+class Solution:
+    def hasSameDigits(self, s: str) -> bool:
+        def helper(s):
+            output = ''
+            prevEle = int(s[0])
+            for ele in s[1:]:
+                output += str((prevEle + int(ele)) % 10)
+                prevEle = int(ele)
+            return output
+        
+        output_string = s
+        while len(output_string) > 2:
+            output_string = helper(output_string)
+        
+        if len(output_string) == 2:
+            if output_string[0] == output_string[1]:
+                return True
+        return False
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n \log n)$$, where $$n$$ is the length of the input string. The helper function reduces the string length by a factor of approximately 2 in each iteration, resulting in a logarithmic number of iterations.
+- **Space complexity:** $$O(n)$$, where $$n$$ is the length of the input string. This space is used for the intermediate strings created during each iteration.
+
+## Learning Points
+
+- **Modular Arithmetic:**
+  - The use of modulo 10 arithmetic ensures that the resulting digits remain within the range of single-digit numbers (0-9).
+  - Modular arithmetic is a common technique used in various algorithms involving cyclic patterns or fixed ranges.
+
+- **Iterative Reduction:**
+  - Iteratively reducing the string by applying the same transformation can simplify complex problems into manageable subproblems.
+  - Understanding how to repeatedly apply a function to reduce a problem's complexity is a valuable skill in algorithm design.
+
+By following this approach, you can determine if a string of digits can be reduced to two identical digits. This problem highlights the importance of modular arithmetic and iterative reduction techniques in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
