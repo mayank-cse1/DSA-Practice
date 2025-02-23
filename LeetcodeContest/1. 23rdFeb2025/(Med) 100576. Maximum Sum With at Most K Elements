@@ -1,0 +1,68 @@
+## Problem: Maximum Sum of Selected Elements
+
+Given a grid of integers, limits on the number of elements that can be selected from each row, and a total limit on the number of selected elements, the task is to find the maximum possible sum of the selected elements.
+
+### Input:
+- `grid`: A list of lists representing the grid of integers.
+- `limits`: A list of integers representing the limits for each row.
+- `k`: An integer representing the total limit on the number of selected elements.
+
+### Output:
+- An integer representing the maximum possible sum of the selected elements.
+
+## Approach
+
+1. **Initialize Global Min-Heap:**
+   - Create a global min-heap to keep track of the top `k` elements across all rows.
+
+2. **Process Each Row:**
+   - For each row, create a local min-heap to keep track of the top `limits[i]` elements.
+   - Iterate through the elements of the row and push them into the local min-heap.
+   - If the size of the local min-heap exceeds the row limit, pop the smallest element.
+
+3. **Merge Local Min-Heap with Global Min-Heap:**
+   - After processing each row, merge the elements of the local min-heap into the global min-heap.
+   - If the size of the global min-heap exceeds `k`, pop the smallest element to maintain the top `k` elements.
+
+4. **Return the Sum of Selected Elements:**
+   - The sum of the elements in the global min-heap represents the maximum possible sum.
+
+## Solution
+
+```python
+from heapq import heappush, heappop
+
+class Solution:
+    def maxSum(self, grid: List[List[int]], limits: List[int], k: int) -> int:
+        global_min_heap = []
+        for i in range(len(grid)):
+            min_heap = []
+            for j in range(len(grid[0])):
+                heappush(min_heap, grid[i][j])
+                if len(min_heap) > limits[i]:
+                    heappop(min_heap)
+            while min_heap:
+                heappush(global_min_heap, heappop(min_heap))
+                if len(global_min_heap) > k:
+                    heappop(global_min_heap)
+        return sum(global_min_heap)
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n \log m)$$, where $$n$$ is the number of elements in the grid and $$m$$ is the row limit or total limit `k`. The heap operations (push and pop) are logarithmic in nature.
+- **Space complexity:** $$O(k)$$, where $$k$$ is the total limit on the number of selected elements. The space is used for the global min-heap to store the top `k` elements.
+
+## Learning Points
+
+- **Min-Heap for Efficient Selection:**
+  - The min-heap data structure is used to efficiently keep track of the top `k` elements while maintaining a constant time complexity for insertion and deletion operations.
+  - This approach ensures that we always have the highest possible sum of selected elements by prioritizing larger elements in the heap.
+
+- **Row-Wise and Global Constraints:**
+  - The problem demonstrates the application of local and global constraints in a grid-based structure.
+  - Understanding how to merge local results with global constraints is crucial for solving similar problems involving multiple levels of selection criteria.
+
+By following this approach, you can effectively solve the problem and gain insights into using heaps for optimized selection processes. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
