@@ -1,0 +1,108 @@
+## Problem: Maximum Net Income of Alice in a Tree Graph
+
+Given a tree (acyclic graph) with nodes representing amounts, the task is to find the maximum net income that Alice can obtain by traversing the tree, while considering Bob's path and the constraints of shared rewards and penalties when both reach the same node.
+
+### Input:
+- `edges`: A list of pairs representing the edges in the tree.
+- `bob`: An integer representing Bob's starting node.
+- `amount`: A list of integers representing the amount at each node.
+
+### Output:
+- An integer representing the maximum net income that Alice can obtain.
+
+## Approach
+
+1. **Construct the Graph:**
+   - Initialize the graph as an adjacency list from the given edges.
+   
+2. **Find Bob's Path:**
+   - Use a recursive function to find the path that Bob takes to reach the root node (node 0).
+   - Track Bob's position at each step in an array `bobPath`.
+
+3. **Calculate Maximum Income for Alice:**
+   - Use a recursive function to traverse the tree starting from the root node.
+   - At each node, consider Alice's step and Bob's position to decide the reward or penalty.
+   - If Bob and Alice reach a node simultaneously, they share the amount (half the amount is added to Alice's score).
+   - Track and update the maximum score Alice can achieve during the traversal.
+
+## Solution
+
+```python
+class Solution:
+    def mostProfitablePath(self, edges: List[List[int]], bob: int, amount: List[int]) -> int:
+        # Construct the graph as an adjacency list
+        graph = {i: [] for i in range(len(amount))}
+        for a, b in edges:
+            graph[a].append(b)
+            graph[b].append(a)
+
+        # Find Bob's path to the root (node 0)
+        bobPath = [-1] * len(amount)
+        bob_path = []
+
+        def find_bob_path(node, parent):
+            if node == 0:
+                return True
+            for neighbour in graph[node]:
+                if neighbour != parent:
+                    bob_path.append(node)
+                    if find_bob_path(neighbour, node):
+                        return True
+                    bob_path.pop()
+        find_bob_path(bob, -1)
+
+        for i, node in enumerate(bob_path):
+            bobPath[node] = i  # Maintain position of Bob's path
+
+        maxScore = float('-inf')
+
+        def get_alice_max_score(node, parent, step, score):
+            nonlocal maxScore
+            if graph[node] == [parent]:
+                if bobPath[node] == step:
+                    score += amount[node] // 2
+                elif bobPath[node] == -1:
+                    score += amount[node]
+                elif bobPath[node] < step:
+                    score += 0
+                else:
+                    score += amount[node]
+                maxScore = max(maxScore, score)
+                return
+
+            for neighbour in graph[node]:
+                if neighbour != parent:
+                    if bobPath[node] == -1 or bobPath[node] > step:
+                        get_alice_max_score(neighbour, node, step + 1, score + amount[node])
+                    elif bobPath[node] == step:
+                        get_alice_max_score(neighbour, node, step + 1, score + amount[node] // 2)
+                    else:
+                        get_alice_max_score(neighbour, node, step + 1, score)
+        
+        get_alice_max_score(0, -1, 0, 0)
+        return maxScore
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the number of nodes in the tree. We perform a DFS traversal to find Bob's path and to calculate Alice's maximum income.
+- **Space complexity:** $$O(n)$$ for the graph representation and the arrays to store Bob's path and traversal state.
+
+## Learning Points
+### Learning Points
+
+- **Tree Structure Characteristics:**
+  - In a tree, there are multiple paths from the root to the leaf nodes, as each leaf node represents a potential endpoint of a path starting from the root. 
+  - However, there's only one unique path from any given node to the root. This characteristic is essential in understanding tree traversal and graph algorithms, as it simplifies backtracking and pathfinding.
+
+- **Graph Traversal with DFS:**
+  - DFS is utilized to find Bob's path and to calculate Alice's maximum income through recursive traversal.
+  - Understanding DFS and its applications in tree and graph problems is fundamental.
+
+- **Handling Simultaneous Events:**
+  - The problem demonstrates how to handle simultaneous events (Alice and Bob reaching a node at the same time) and apply shared rewards or penalties.
+  - This approach highlights the importance of carefully considering event order and interactions in algorithm design.
+
+By following this approach, you can determine the maximum net income Alice can obtain while considering Bob's path and constraints. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
