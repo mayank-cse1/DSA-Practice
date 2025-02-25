@@ -1,0 +1,59 @@
+### Count Subarrays with Odd Sum using Prefix Sum 📊✨  
+
+#### **Problem Statement**  
+Given an array `arr`, count the number of subarrays whose sum is **odd**. Since the answer may be large, return it modulo \(10^9 + 7\).  
+
+#### **Intuition & Approach 🚀**  
+1. **Brute Force (Wrong Thought 💡)**  
+   - Generate all subarrays, compute their sum, and count the odd ones.  
+   - This is inefficient \(O(N^2)\) or \(O(N^3)\).  
+
+2. **Efficient Approach: Prefix Sum & Parity Count 🎯**  
+   - Track how many prefix sums are **even** and how many are **odd**.  
+   - For each new element:
+     - If the **current prefix sum is even**, then the number of subarrays with an **odd sum** is equal to the number of previous **odd** prefix sums.
+     - If the **current prefix sum is odd**, then the number of subarrays with an **odd sum** is equal to the number of previous **even** prefix sums.  
+   - We maintain two counters:
+     - `even` → Number of even prefix sums (initialized to 1, for empty prefix)
+     - `odd` → Number of odd prefix sums (initialized to 0)  
+
+#### **Dry Run Example 📝**  
+For `arr = [1,3,5]`:  
+- Compute prefix sum → `[0,1,4,9]`  
+- `odd = 2, even = 2`  
+- Answer: `1 + 1 + 2 = 4`  
+
+#### **Optimized Code Implementation (Python) 🐍**  
+```python
+from typing import List
+
+class Solution:
+    def numOfSubarrays(self, arr: List[int]) -> int:
+        MOD = 10**9 + 7
+        even = 1  # Count of even prefix sums (initially 1 for empty prefix)
+        odd = 0   # Count of odd prefix sums
+        prefixSum = 0
+        ans = 0
+
+        for ele in arr:
+            prefixSum += ele  # Update prefix sum
+
+            if prefixSum % 2 == 0:  # Even prefix sum
+                ans += odd   # Add subarrays that end here with odd sum
+                even += 1    # Increment count of even prefix sums
+            else:  # Odd prefix sum
+                ans += even   # Add subarrays that end here with odd sum
+                odd += 1      # Increment count of odd prefix sums
+
+        return ans % MOD
+```
+#### **Complexity Analysis ⏳**  
+- **Time Complexity:** \(O(N)\) (single pass through array)  
+- **Space Complexity:** \(O(1)\) (only a few integer variables)  
+
+#### **Key Takeaways 🎯**  
+- **Prefix Sum** + **Parity Counting** helps efficiently solve the problem.  
+- The logic relies on counting **previous occurrences of even and odd prefix sums**.  
+- **MOD \(10^9 + 7\)** is used to handle large outputs.  
+
+Let me know if you have any doubts! 🚀
