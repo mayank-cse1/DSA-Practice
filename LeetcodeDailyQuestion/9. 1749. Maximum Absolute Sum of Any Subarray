@@ -1,0 +1,66 @@
+## Problem: Maximum Absolute Sum of Any Subarray
+
+Given an array of integers, the task is to find the maximum absolute sum of any subarray. A subarray is a contiguous non-empty sequence of elements within an array.
+
+### Input:
+- `nums`: A list of integers (e.g., [1, -3, 2, 3, -4])
+
+### Output:
+- An integer representing the maximum absolute sum of any subarray.
+
+## Approach
+
+1. **Initialize Variables:**
+   - `max_positive`: Tracks the maximum positive sum encountered so far.
+   - `max_negative`: Tracks the maximum negative sum (minimum value) encountered so far.
+   - `curr_sum`: Current running sum of the subarray.
+   - `ans`: Stores the maximum absolute sum found during the iteration.
+
+2. **Iterate Through the Array:**
+   - For each element in the array, update the `curr_sum`.
+   - If `curr_sum` is negative, update `max_negative` and check if the absolute difference between `curr_sum` and `max_positive` gives a larger absolute sum.
+   - If `curr_sum` is positive, update `max_positive` and check if the absolute difference between `curr_sum` and `max_negative` gives a larger absolute sum.
+   - Update the `ans` with the maximum absolute sum found so far.
+
+## Solution
+
+```python
+class Solution:
+    def maxAbsoluteSum(self, nums: List[int]) -> int:
+        max_positive = 0
+        max_negative = 0
+        curr_sum = 0
+        ans = float('-inf')
+        
+        for i in range(len(nums)):
+            curr_sum += nums[i]
+            if curr_sum < 0:
+                # Check the biggest positive till now
+                ans = max(ans, abs(curr_sum - max_positive))
+                max_negative = min(max_negative, curr_sum)
+            else:
+                # Check the biggest negative till now
+                ans = max(ans, abs(curr_sum - max_negative))
+                max_positive = max(max_positive, curr_sum)
+        
+        return ans
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the length of the input array. We iterate through the array once, updating the necessary variables.
+- **Space complexity:** $$O(1)$$, as we are using a constant amount of extra space for the variables.
+
+## Learning Points
+
+- **Tracking Running Sums:**
+  - By maintaining a running sum (`curr_sum`), we can efficiently track the positive and negative contributions of each subarray.
+  - This approach eliminates the need to generate all possible subarrays, reducing the time complexity significantly.
+
+- **Dynamic Programming Insight:**
+  - This solution shares a similarity with dynamic programming techniques, where the state (running sum) is updated iteratively to build the final solution.
+  - Understanding how to update states based on conditions is a valuable skill in algorithm design.
+
+By following this approach, you can determine the maximum absolute sum of any subarray in linear time. This problem highlights the importance of efficient state tracking and conditional updates in solving array-based problems. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
