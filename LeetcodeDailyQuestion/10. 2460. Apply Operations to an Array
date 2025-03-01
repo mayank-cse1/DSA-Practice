@@ -1,0 +1,65 @@
+## Problem: Apply Operations to Array
+
+Given an array of integers, the task is to apply a series of operations to the array based on specific rules:
+1. If two consecutive elements are the same, double the first element and set the second element to zero.
+2. After applying the operations, move all zeros to the end of the array while maintaining the relative order of the non-zero elements.
+
+### Input:
+- `nums`: A list of integers (e.g., [2, 2, 0, 4, 4, 8])
+
+### Output:
+- A list of integers representing the array after applying the operations and moving zeros to the end.
+
+## Approach
+
+1. **First Pass - Apply Operations:**
+   - Iterate through the array and check each pair of consecutive elements.
+   - If two consecutive elements are the same, double the first element and set the second element to zero.
+
+2. **Second Pass - Rearrange Elements:**
+   - Create an empty list `ans` to store the non-zero elements.
+   - Count the number of zeros encountered.
+   - Append the non-zero elements to the list `ans`.
+   - After the first pass, append the counted number of zeros to the end of `ans`.
+
+## Solution
+
+```python
+class Solution:
+    def applyOperations(self, nums: List[int]) -> List[int]:
+        for i in range(len(nums) - 1):
+            if nums[i] == nums[i + 1]:
+                nums[i] *= 2
+                nums[i + 1] = 0
+        
+        ans = []
+        count = 0
+        
+        for i in range(len(nums)):
+            if nums[i] != 0:
+                ans.append(nums[i])
+            else:
+                count += 1
+        
+        ans += [0] * count
+        return ans
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the length of the input array. We iterate through the array twice: once to apply the operations and once to rearrange the elements.
+- **Space complexity:** $$O(n)$$ for the output list `ans` which stores the non-zero elements followed by the zeros.
+
+## Learning Points
+
+- **In-Place Modification:**
+  - The solution demonstrates how to modify an array in place while maintaining the integrity of subsequent operations.
+  - In-place modifications are crucial for optimizing space complexity in many algorithmic problems.
+
+- **Two-Pass Algorithm:**
+  - This approach uses two passes: one to apply the operations and another to rearrange the elements.
+  - Understanding how to efficiently split tasks into multiple passes can simplify complex problems and enhance readability.
+
+By following this approach, you can efficiently apply the specified operations to the array and rearrange its elements accordingly. This problem highlights the importance of in-place modifications and efficient traversal techniques in array manipulation. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
