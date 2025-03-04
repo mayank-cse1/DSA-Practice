@@ -1,0 +1,75 @@
+## Problem: Check if a Number Can Be Expressed as a Sum of Powers of Three
+
+Given an integer `n`, the task is to determine if it can be represented as a sum of distinct powers of three.
+
+### Input:
+- `n`: An integer (e.g., 12)
+
+### Output:
+- A boolean value indicating whether the number can be expressed as a sum of distinct powers of three.
+
+## Approach
+
+1. **Helper Function:**
+   - Define a recursive helper function `helper(n)` that takes an integer `n` and returns a boolean value indicating whether `n` can be expressed as a sum of distinct powers of three.
+   - Use a dictionary `visited` to track the powers of three that have already been used to avoid repetition.
+
+2. **Recursive Solution:**
+   - If `n` is 0, return `True` as an empty sum is valid.
+   - Iterate through possible powers of three up to `n // 2 + 1`.
+   - For each power of three, check if it equals `n`. If so, return `True`.
+   - If a power of three exceeds `n`, adjust to the previous power of three and continue.
+   - Use the `visited` dictionary to avoid reusing the same power of three.
+
+3. **Base Cases and Recursive Calls:**
+   - If the sum of powers of three equals `n`, return `True`.
+   - If no valid combination is found, return `False`.
+
+## Solution
+
+```python
+class Solution:
+    def checkPowersOfThree(self, n: int) -> bool:
+        visited = {}
+        
+        def helper(n):
+            if n == 0:
+                return True 
+            for i in range(n // 2 + 1):
+                temp = 3**i
+                if temp == n:
+                    if i in visited:
+                        return False
+                    return True
+                if temp > n:
+                    temp = 3**(i - 1)
+                    if i - 1 in visited:
+                        return False
+                    visited[i - 1] = True
+                    if helper(n - temp):
+                        return True
+                    else:
+                        return False
+            return False
+        
+        return helper(n)
+```
+
+## Complexity
+
+- **Time complexity:** $$O(\log n)$$, where $$n$$ is the input integer. The logarithmic time complexity arises from iterating through possible powers of three.
+- **Space complexity:** $$O(\log n)$$ for the recursion stack and the `visited` dictionary.
+
+## Learning Points
+
+- **Recursive Problem Solving:**
+  - The problem demonstrates the use of recursion for breaking down a complex problem into simpler subproblems.
+  - Recursion is a powerful tool for solving problems that can be divided into similar subproblems, as seen in this example.
+
+- **Memoization with Dictionaries:**
+  - The `visited` dictionary is used to avoid reusing the same power of three, which is crucial for ensuring the solution's correctness.
+  - Memoization is an essential technique for optimizing recursive algorithms by storing previously computed results.
+
+By following this approach, you can determine if a given integer can be expressed as a sum of distinct powers of three. This problem highlights the importance of recursive problem-solving and memoization in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
