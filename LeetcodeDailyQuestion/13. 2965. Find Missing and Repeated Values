@@ -1,0 +1,65 @@
+## Problem: Find Missing and Repeated Values in a 2D Grid
+
+Given a 2D grid of integers, where each integer should ideally be unique and in a specific range, the task is to find the missing and repeated values. Assume that the grid should contain integers from 1 to `n*n`, where `n` is the dimension of the grid.
+
+### Input:
+- `grid`: A 2D list of integers (e.g., [[1, 2, 2], [3, 4, 5], [6, 7, 8]])
+
+### Output:
+- A list containing the repeated value and the missing value (e.g., [2, 9])
+
+## Approach
+
+1. **Using Mathematical Formulas:**
+   - Calculate the expected sum of integers from 1 to `n*n` using the formula `sumN = n*(n+1)//2`.
+   - Calculate the expected sum of squares of integers from 1 to `n*n` using the formula `sumSqrN = (n*(n+1)*(2*n+1))//6`.
+   
+2. **Calculate Current Sums:**
+   - Calculate the current sum of the integers in the grid (`currSum`).
+   - Calculate the current sum of the squares of the integers in the grid (`currSqrSum`).
+
+3. **Derive Equations:**
+   - Let `x` be the repeated value and `y` be the missing value.
+   - From the current sum and expected sum: `x - y = currSum - sumN`
+   - From the current sum of squares and expected sum of squares: `x^2 - y^2 = currSqrSum - sumSqrN`
+   - Solve for `x` and `y` using these equations.
+
+## Solution
+
+```python
+class Solution:
+    def findMissingAndRepeatedValues(self, grid: List[List[int]]) -> List[int]:
+        currSum = sum(num for row in grid for num in row)
+        currSqrSum = sum(num * num for row in grid for num in row)
+        n = len(grid) * len(grid)
+        sumN = (n * (n + 1)) // 2
+        sumSqrN = (n * (n + 1) * (2 * n + 1)) // 6
+        diff = currSum - sumN  # repeated - missing
+        add = (currSqrSum - sumSqrN) // diff  # repeated + missing
+
+        repeated = (diff + add) // 2
+        missing = (add - diff) // 2
+        return [repeated, missing]
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n^2)$$, where $$n$$ is the dimension of the grid. We iterate through all elements in the grid once to compute the sums.
+- **Space complexity:** $$O(1)$$, as we are using a constant amount of extra space for the calculations.
+
+## Learning Points
+
+- **Mathematical Formulas for Sums:**
+  - Using mathematical formulas for the sum of first `n` integers and the sum of squares of first `n` integers allows us to derive relationships between the missing and repeated values efficiently.
+  - This approach avoids the need for additional data structures and provides a constant space solution.
+        - sumN = (n * (n + 1)) // 2
+        - sumSqrN = (n * (n + 1) * (2 * n + 1)) // 6
+- **Bitwise Operations:**
+  - Although not directly used here, bitwise operations like XOR can also be used for similar problems involving finding missing and repeated values.
+
+- **Grid and Array Manipulations:**
+  - The problem demonstrates the importance of understanding how to manipulate 2D grids and convert them into 1D structures for easier mathematical operations.
+
+By following this approach, you can efficiently find the missing and repeated values in a 2D grid using mathematical formulas. This problem highlights the importance of mathematical derivations and efficient computations in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
