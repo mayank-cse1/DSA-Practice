@@ -1,0 +1,79 @@
+## Problem: Minimum Recolors to Get K Consecutive Black Blocks
+
+Given a string `blocks` consisting of characters 'B' (black) and 'W' (white) and an integer `k`, the task is to determine the minimum number of recolors needed to obtain `k` consecutive black blocks.
+
+### Input:
+- `blocks`: A string of characters 'B' and 'W' (e.g., "WBWWB")
+- `k`: An integer representing the desired number of consecutive black blocks (e.g., 3)
+
+### Output:
+- An integer representing the minimum number of recolors needed (e.g., 1)
+
+## Approach
+
+1. **Sliding Window Technique:**
+   - Use a sliding window of size `k` to traverse through the string `blocks`.
+   - Keep track of the number of white blocks ('W') within the current window.
+
+2. **Initialize Variables:**
+   - `i`: Left pointer of the sliding window.
+   - `whites`: Counter for white blocks within the window.
+   - `ans`: Variable to store the minimum number of recolors needed, initialized to infinity.
+
+3. **Create Initial Window:**
+   - Iterate through the first `k` elements of `blocks` to initialize the window and count the number of white blocks.
+
+4. **Slide the Window:**
+   - Move the window one position to the right at a time.
+   - Adjust the `whites` counter based on the characters entering and leaving the window.
+   - Update the `ans` with the minimum number of white blocks encountered.
+
+## Solution
+
+```python
+class Solution:
+    def minimumRecolors(self, blocks: str, k: int) -> int:
+        # Sliding Window Approach
+        i = 0
+        whites = 0
+        ans = float('inf')
+        
+        # Create the initial window of size k
+        for j in range(k):
+            if blocks[j] == "W":
+                whites += 1
+        
+        j = k
+        ans = min(ans, whites)
+        
+        # Slide the window across the rest of the string
+        while j < len(blocks):
+            if blocks[i] == "W":
+                whites -= 1
+            if blocks[j] == "W":
+                whites += 1
+            ans = min(ans, whites)
+            i += 1
+            j += 1
+        
+        return ans
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the length of the input string `blocks`. We traverse the string once with the sliding window.
+- **Space complexity:** $$O(1)$$, as we are using a constant amount of extra space for variables.
+
+## Learning Points
+
+- **Sliding Window Technique:**
+  - The sliding window technique is effective for problems involving contiguous subarrays or substrings.
+  - This approach allows us to maintain a fixed-size window while efficiently updating the state based on elements entering and leaving the window.
+
+- **Optimized Counting:**
+  - By maintaining a count of white blocks within the window, we can efficiently determine the minimum number of recolors needed.
+  - This avoids the need for nested loops and reduces the time complexity to linear.
+
+By following this approach, you can efficiently determine the minimum number of recolors needed to obtain `k` consecutive black blocks. This problem highlights the importance of the sliding window technique and optimized counting in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
