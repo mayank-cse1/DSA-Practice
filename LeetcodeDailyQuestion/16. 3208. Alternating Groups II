@@ -1,0 +1,60 @@
+## Problem: Number of Alternating Groups of Length K
+
+Given a list of colors represented by integers and an integer `k`, the task is to count the number of alternating groups of length `k` in the list. An alternating group is defined as a subarray where no two consecutive elements are the same.
+
+### Input:
+- `colors`: A list of integers representing colors (e.g., [1, 2, 1, 2, 1, 2])
+- `k`: An integer representing the desired length of the alternating groups (e.g., 3)
+
+### Output:
+- An integer representing the number of alternating groups of length `k` (e.g., 4)
+
+## Approach
+
+### Sliding Window Technique
+
+1. **Initialize Variables:**
+   - `start`: Pointer to track the start of the current group.
+   - `count`: Counter for the number of alternating groups.
+
+2. **Iterate Through the List:**
+   - Use a loop to iterate through the list, checking each element and its previous element.
+   - If two consecutive elements are the same, update the `start` pointer to the current position.
+   - If the length of the current group (`i - start + 1`) is greater than or equal to `k`, increment the `count`.
+
+## Solution
+
+```python
+class Solution:
+    def numberOfAlternatingGroups(self, colors: List[int], k: int) -> int:
+        start = 0
+        count = 0
+        for i in range(1, len(colors) + k - 1):
+            if colors[i % len(colors)] == colors[(i - 1 + len(colors)) % len(colors)]:
+                start = (i)
+                if start >= len(colors):
+                    break
+            else:
+                if i - start + 1 >= k:
+                    count += 1
+        return count
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n+k)$$, where $$n$$ is the length of the input list `colors`. We iterate through the list once.
+- **Space complexity:** $$O(1)$$, as we are using a constant amount of extra space for variables.
+
+## Learning Points
+
+- **Sliding Window Technique:**
+  - The sliding window technique is effective for problems involving contiguous subarrays or substrings.
+  - This approach allows us to maintain a fixed-size window while efficiently updating the state based on elements entering and leaving the window.
+
+- **Handling Circular Arrays:**
+  - The modulo operation is used to handle circular arrays, allowing the iteration to wrap around the end of the list.
+  - This technique is useful in problems where the array needs to be treated as circular or cyclic.
+
+By following this approach, you can efficiently count the number of alternating groups of length `k` in the list. This problem highlights the importance of the sliding window technique and handling circular arrays in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
