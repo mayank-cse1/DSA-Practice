@@ -1,0 +1,68 @@
+## Problem: Count Substrings Containing All Three Characters
+
+Given a string `s` consisting of characters 'a', 'b', and 'c', the task is to count the number of substrings that contain all three characters at least once.
+
+### Input:
+- `s`: A string consisting of characters 'a', 'b', and 'c' (e.g., "abcabc")
+
+### Output:
+- An integer representing the number of substrings that contain all three characters (e.g., 10)
+
+## Approach
+
+### Optimized Sliding Window Technique
+
+1. **Initialize Variables:**
+   - `left`: Pointer to track the start of the current window.
+   - `right`: Pointer to track the end of the current window.
+   - `frequency`: Dictionary to keep track of the frequency of characters 'a', 'b', and 'c' within the current window.
+   - `ans`: Counter for the number of valid substrings.
+
+2. **Iterate Through the String:**
+   - Use a loop to iterate through the string, expanding the window by moving the `right` pointer.
+   - Update the `frequency` dictionary with the character at the `right` pointer.
+
+3. **Validate and Update the Window:**
+   - Use a nested loop to shrink the window from the left by moving the `left` pointer while the window contains all three characters.
+   - For each valid window, increment the `ans` counter by the number of valid substrings that can be formed by extending the window to the right.
+
+## Solution
+
+```python
+class Solution:
+    def numberOfSubstrings(self, s: str) -> int:
+        left = 0
+        right = 0
+        frequency = { key: 0 for key in ['a', 'b', 'c'] }
+        ans = 0
+        
+        while right < len(s):
+            frequency[s[right]] += 1
+
+            while frequency['a'] > 0 and frequency['b'] > 0 and frequency['c'] > 0:
+                ans += (len(s) - right)
+                frequency[s[left]] -= 1
+                left += 1
+            right += 1
+        
+        return ans
+```
+
+## Complexity
+
+- **Time complexity:** $$O(n)$$, where $$n$$ is the length of the input string `s`. We iterate through the string once with the sliding window.
+- **Space complexity:** $$O(1)$$, as we are using a constant amount of extra space for the frequency dictionary and other variables.
+
+## Learning Points
+
+- **Sliding Window Technique:**
+  - The sliding window technique is effective for problems involving contiguous subarrays or substrings.
+  - This approach allows us to maintain a dynamic window while efficiently updating the state based on elements entering and leaving the window.
+
+- **Optimized Counting with Frequency Dictionary:**
+  - By using a frequency dictionary to track the counts of characters within the window, we can efficiently check if the window contains all three characters.
+  - This avoids the need for nested loops and reduces the time complexity to linear.
+
+By following this approach, you can efficiently count the number of substrings that contain all three characters in a given string. This problem highlights the importance of the sliding window technique and optimized counting methods in algorithm design. Happy coding! 🚀
+
+If you have any further questions or need more clarifications, feel free to ask! 😊
