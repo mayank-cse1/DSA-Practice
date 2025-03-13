@@ -1,0 +1,57 @@
+### Problem
+Given an array of integers `nums` and a list of range update operations `queries`, determine the minimum number of range updates required to transform the array such that each element in `nums` is zero or more after all the updates.
+
+### Intuition
+To solve this problem, we need to efficiently manage multiple range update operations and then determine the minimum number of such updates needed. The concept of a **difference array** becomes crucial here, as it allows for efficient range update operations.
+
+### Approach
+1. **Difference Array**: Utilize a difference array to handle range updates efficiently. This enables the calculation of the cumulative effect of all updates in constant time for each operation.
+2. **Prefix Sum**: Convert the difference array to a prefix sum array to determine the final values of the array after all updates.
+3. **Binary Search**: Use binary search to find the minimum number of range updates required to make the array elements zero or more.
+
+### Solution
+
+```python
+from typing import List
+
+class Solution:
+    def minZeroArray(self, nums: List[int], queries: List[List[int]]) -> int:
+        def canTransform(nums, queries, k):
+            # Difference array
+            diffArray = [0] * (len(nums) + 1)
+            for index in range(k):
+                start = queries[index][0]
+                end = queries[index][1]
+                val = queries[index][2]
+                diffArray[start] += val
+                diffArray[end + 1] -= val
+            
+            prefixSum = 0
+            # Prefix sum
+            for i in range(len(nums)):
+                prefixSum += diffArray[i]
+                if prefixSum < nums[i]:
+                    return False
+            return True
+
+        start = 0
+        end = len(queries)
+        if not canTransform(nums, queries, end):
+            return -1
+        while start <= end:
+            mid = start + (end - start) // 2
+            if canTransform(nums, queries, mid):
+                end = mid - 1
+            else:
+                start = mid + 1
+        return start
+```
+
+### Time and Space Complexity
+- **Time Complexity**: The solution involves a binary search on the number of queries `O(log M)`, and for each binary search step, we perform range updates and prefix sum calculations which take `O(N)`. Thus, the overall time complexity is `O(N+M+log M)`, where `N` is the length of the array and `M` is the number of queries.
+- **Space Complexity**: The space complexity is `O(N)` for storing the difference array.
+
+### Learnings about diffArray Concept
+The difference array is a powerful tool for performing range update operations efficiently. By using a difference array, we can apply updates in constant time `O(1)` per update. Later, the prefix sums of the difference array can be computed to get the final updated array. This technique is especially useful in scenarios where multiple range updates are required, as it significantly reduces the time complexity compared to directly updating the array for each operation.
+
+---
