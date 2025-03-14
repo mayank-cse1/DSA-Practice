@@ -1,0 +1,58 @@
+## Solving the Maximum Candies Distribution Problem
+
+When it comes to distributing candies among children, we often find ourselves facing challenging yet interesting problems. Today, I'll walk you through a Python solution to find the maximum number of candies each child can receive such that all candies are distributed as fairly as possible.
+
+### Problem Statement
+
+Given an array `candies` where each element represents the number of candies in a pile, and an integer `k` which represents the number of children, our task is to determine the maximum number of candies each child can receive.
+
+### Approach
+
+To solve this problem, we'll use a binary search algorithm. Here's a step-by-step breakdown of the solution:
+
+1. **Define the Search Space:** The minimum number of candies each child can receive is `1`, and the maximum is the sum of all candies divided by `k`.
+
+2. **Binary Search:** We'll perform a binary search within this range to find the maximum possible number of candies each child can receive.
+   - Calculate the midpoint of the range.
+   - Check if it is possible to distribute candies such that each child receives at least the midpoint number of candies.
+
+3. **Helper Function:** Define a helper function `is_possible(mid)` that checks whether it's possible to distribute the candies such that each child gets at least `mid` candies.
+
+4. **Update the Search Range:** Based on the result of the helper function, adjust the search range. If it's possible, update the answer and move the search to the right half. Otherwise, move to the left half.
+
+Here's the complete implementation:
+
+```python
+class Solution:
+    def maximumCandies(self, candies: List[int], k: int) -> int:
+        def is_possible(mid):
+            num_children = 0
+            for pile in candies:
+                num_children += pile // mid
+            return num_children >= k
+        
+        right = sum(candies) // k
+        if right == 0: return right
+        left = 1
+        ans = 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if is_possible(mid):
+                ans = max(ans, mid)
+                left = mid + 1
+            else:
+                right = mid - 1
+        return ans
+```
+
+### Explanation
+
+1. **is_possible(mid):** This helper function iterates over each pile of candies, dividing the pile by the `mid` value to calculate the number of children that can receive `mid` candies from that pile. If the total number of children receiving `mid` candies is greater than or equal to `k`, it returns `True`.
+
+2. **Binary Search:** We initialize `left` to `1` and `right` to the sum of candies divided by `k`. The `while` loop performs the binary search, updating the `ans` variable whenever a valid `mid` is found. The search continues until `left` exceeds `right`.
+
+### Conclusion
+
+By leveraging binary search and a helper function, we efficiently find the maximum number of candies each child can receive. This approach ensures an optimal solution with a time complexity of `O(n log m)`, where `n` is the number of candy piles and `m` is the sum of candies divided by `k`.
+
+I hope this explanation helps you understand the algorithm better. Happy coding!
