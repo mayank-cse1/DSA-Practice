@@ -1,0 +1,125 @@
+### **Minimizing Capability for House Selection**
+
+In this post, we’ll explore a fascinating problem where the goal is to select `k` houses such that:
+1. The capability of any selected house is minimized.
+2. No two adjacent houses are selected.
+
+We'll solve it using a combination of **Binary Search** and a **Greedy Approach**, diving into the intuition, algorithm, and complexity analysis.
+
+---
+
+### **Problem Intuition**
+
+Imagine a row of houses, each with a value representing its "capability." Our goal is to select `k` houses such that:
+- **The maximum capability among the selected houses is minimized.**
+- We cannot choose two adjacent houses.
+
+This is akin to finding the balance between picking "lower-capability houses" and respecting the adjacency restriction.
+
+---
+
+### Approach
+
+To solve this problem, we'll use a binary search algorithm. Here's a step-by-step breakdown of the solution:
+
+1. **Define the Search Space**:
+   - The minimum possible capability is 1, and the maximum is the largest value in the `nums` array (as any selected house must have a value within this range).
+
+2. **Binary Search**:
+   - Perform a binary search within the defined range to find the smallest possible capability that allows us to select `k` houses.
+
+   - **Calculate the midpoint of the range**:
+     Compute `mid = (left + right) // 2`.
+
+   - **Check Feasibility**:
+     Use a helper function to determine if it's possible to select `k` houses such that no two adjacent houses are chosen and all selected houses have values ≤ `mid`.
+
+3. **Helper Function**:
+   - Define a function `is_possible(capability)` that:
+     - Iterates through the array to greedily pick houses with values ≤ `capability`, skipping adjacent houses after picking one.
+     - Counts the number of houses picked and checks if it meets or exceeds `k`.
+
+4. **Update the Search Range**:
+   - If the helper function returns `True` (feasible with the current `mid`), update the result (`ans = mid`) and narrow the search to the left half (`right = mid - 1`).
+   - Otherwise, move the search to the right half (`left = mid + 1`).
+
+5. **Result**:
+   - Continue the binary search until the range is exhausted. The variable `ans` will hold the minimum feasible capability.
+
+---
+
+### **Algorithm Implementation**
+
+Here’s the code to implement this logic:
+
+```python
+from typing import List
+
+class Solution:
+    def minCapability(self, nums: List[int], k: int) -> int:
+        def is_possible(capability):
+            count = 0
+            flag = False
+            for i in range(len(nums)):
+                if flag:  # Skip adjacent house
+                    flag = False
+                    continue
+                if nums[i] <= capability:
+                    count += 1
+                    flag = True  # Mark this house as picked
+            return count >= k
+        
+        left, right = 1, max(nums)
+        ans = float('inf')
+        
+        while left <= right:
+            mid = left + (right - left) // 2
+            if is_possible(mid):
+                ans = min(ans, mid)  # Update answer with the minimum feasible capability
+                right = mid - 1
+            else:
+                left = mid + 1
+        
+        return ans
+```
+
+---
+
+### **Time and Space Complexity**
+
+1. **Time Complexity**:
+   - Binary Search: `O(log(max(nums)))`
+   - Each call to `is_possible` traverses the `nums` array: `O(n)`.
+   - Total: **O(n * log(max(nums)))**
+
+2. **Space Complexity**:
+   - The solution uses a constant amount of extra space.
+   - Total: **O(1)**.
+
+---
+
+### **Learnings**
+
+1. **Binary Search + Greedy**:
+   - Binary search isn’t just for sorted arrays! Here, it helps us efficiently narrow down the capability range.
+   - Greedy methods are perfect for verifying the feasibility of midpoints during the search.
+
+2. **Flexibility with Constraints**:
+   - Problems involving adjacency constraints (e.g., skipping neighbors) can often be tackled with simple flags or counters.
+
+3. **Edge Case Handling**:
+   - Always consider edge cases like very small arrays (`nums` of length 1 or 2) or cases where `k` is close to the size of the array.
+
+---
+
+### **Example Walkthrough**
+
+Let’s run an example with `nums = [2, 3, 5, 9]` and `k = 2`:
+1. Binary Search range: `[1, 9]`.
+2. Mid = 5:
+   - Check: Select houses `[2, 5]`. Feasible, so update `ans = 5` and move left.
+3. Mid = 3:
+   - Check: Only `[2]` is feasible. Move right.
+4. Final result: **5**.
+
+The minimum capability required to select `2` houses is **5**.
