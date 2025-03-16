@@ -1,0 +1,140 @@
+### 🚗 Problem: Repair Cars
+You're given `ranks` of mechanics and `cars` to repair. Each mechanic's speed is determined by their rank. The time for a mechanic with rank `r` to repair `k` cars is:
+
+    time = r * k^2
+
+The goal is to determine the **minimum time** required for all mechanics to collectively repair all `cars`.
+
+---
+
+### 🌟 Intuition
+
+1. **Mechanic Rank and Repair Time:**  
+   - A lower rank means faster work. Mechanics with rank `r` take `r * k^2` time to repair `k` cars.  
+   - To minimize the total time, we want to distribute cars optimally among all mechanics.
+
+2. **Binary Search on Time:**  
+   - To find the minimum time, we assume a range:
+     - Minimum time = 1.  
+     - Maximum time = (smallest rank) * (cars)^2.  
+   - For a given time, we check if all cars can be repaired using the formula:
+
+     - cars_repairable = floor(sqrt(time / rank))
+
+
+3. **Feasibility Check:**  
+   - If the total number of cars that all mechanics can repair within the given time is greater than or equal to the required `cars`, then that time is feasible.  
+   - Otherwise, increase the time.
+
+---
+
+### 🛠 Approach
+
+1. **Define the Search Space:**  
+   - Start with `left = 1` and `right = (smallest rank) * cars^2`.  
+   - Use binary search to determine the minimum time.
+
+2. **Feasibility Function (`is_possible`):**  
+   - Iterate through each mechanic's rank.  
+   - Compute the maximum cars the mechanic can repair within the given time.  
+   - Sum this across all mechanics and check if the total is greater than or equal to the required `cars`.
+
+3. **Binary Search Logic:**  
+   - Calculate the midpoint `mid` of the current search space.  
+   - Check feasibility using `is_possible(mid)`:
+     - If feasible, update `ans` to `mid` and search in the left half by setting `right = mid - 1`.
+     - Otherwise, search in the right half by setting `left = mid + 1`.
+
+---
+
+### 📝 Algorithm
+
+1. **Initialize Variables:**  
+   - `left = 1`, `right = (smallest rank) * cars^2`, `ans = right`.
+
+2. **Define Feasibility Function (`is_possible`):**  
+   - Iterate through mechanics.
+   - For each mechanic, calculate the number of cars repairable within the given time:
+
+     - num_cars = floor(sqrt(time / rank))
+
+   - Sum up the cars repaired by all mechanics.
+   - Return `True` if the total is greater than or equal to the required `cars`.
+
+3. **Binary Search:**  
+   - While `left <= right`:
+     - Calculate `mid = left + (right - left) // 2`.
+     - Check feasibility using `is_possible(mid)`.
+     - If feasible, update `ans` to `mid` and set `right = mid - 1`.
+     - Otherwise, set `left = mid + 1`.
+
+4. **Return Result:**  
+   - Return `ans`, which holds the minimum feasible time.
+
+---
+
+### ⏳ Time Complexity
+
+1. **Binary Search:**  
+   - Operates on the range of possible times. The range is proportional to \( O(log((smallest rank) * cars^2)) \).
+
+2. **Feasibility Check:**  
+   - For each time, iterate through all mechanics to calculate the number of cars repairable, which is \( O(number of mechanics) \).
+
+3. **Total Complexity:**  
+
+   - O(number of mechanics * log((smallest rank) * cars^2))
+
+
+---
+
+### 🔍 Code
+
+```python
+from typing import List
+
+class Solution:
+    def repairCars(self, ranks: List[int], cars: int) -> int:
+        # Feasibility function to check if time is sufficient
+        def is_possible(time):
+            count = 0
+            for rank in ranks:
+                # Calculate the maximum cars a mechanic can repair within the given time
+                num_cars = int((time // rank) ** 0.5)
+                count += num_cars
+            return count >= cars
+
+        # Binary search on time
+        left = 1  # Minimum possible time
+        right = min(ranks) * cars * cars  # Maximum possible time
+        ans = right
+
+        while left <= right:
+            mid = left + (right - left) // 2
+            if is_possible(mid):
+                ans = mid  # Update minimum time
+                right = mid - 1
+            else:
+                left = mid + 1
+
+        return ans
+```
+
+---
+
+### 📊 Example Walkthrough
+
+For `ranks = [4, 2, 3, 1]` and `cars = 10`:
+
+1. **Initial Range:**  
+   - `left = 1`, `right = (smallest rank) * cars^2 = 1 * 10^2 = 100`.
+
+2. **Binary Search Steps:**  
+   - Test midpoints: 50, 25, 12, 6, 9, etc.
+   - Use `is_possible` to verify feasibility at each midpoint:
+     - For `mid = 50`: Compute the number of cars repairable by each mechanic, check total, and adjust the range.
+     - For `mid = 25`: Repeat feasibility check and refine the range.
+     - Continue until the range converges.
+
+3. **Final Result:**  
+   The function outputs the minimum time required to repair 10 cars.
