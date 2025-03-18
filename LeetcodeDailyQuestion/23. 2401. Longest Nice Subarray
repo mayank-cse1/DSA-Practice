@@ -1,0 +1,95 @@
+### Understanding the "Longest Nice Subarray"
+
+---
+
+#### Problem Statement
+
+You are given an array of integers, `nums`. A subarray is called "nice" if the bitwise AND of every pair of elements in the subarray is `0`. Your task is to find the length of the longest "nice" subarray.
+
+---
+
+#### Approach
+
+To solve this problem efficiently, we focus on the concept of maintaining a valid subarray while iterating through the array. The core of the problem lies in understanding the relationship between the sum and XOR of elements.
+
+---
+
+#### Algorithm
+
+1. **Initialize Variables**:
+   - Use two variables: `curr_sum` and `xor_sum` to store the sum and XOR of the current subarray elements, respectively.
+   - Start two pointers, `left` and `right`, to define the window of the subarray.
+   - Track the maximum length of the nice subarray using `ans`.
+
+2. **Expand Window**:
+   - Incrementally add `nums[right]` to both `curr_sum` and `xor_sum`.
+   - Check whether the current subarray satisfies the condition: `curr_sum == xor_sum`.
+
+3. **Shrink Window**:
+   - If the condition is violated (i.e., `curr_sum != xor_sum`), move the `left` pointer forward to shrink the subarray.
+   - Adjust `curr_sum` and `xor_sum` accordingly by subtracting/performing XOR with `nums[left]`.
+
+4. **Update Answer**:
+   - During each iteration, calculate the length of the current window and update `ans` if the length is greater.
+
+5. **Edge Case**:
+   - If the array has only one element, the longest "nice" subarray is `1`.
+
+---
+
+#### Intuition
+
+The key insight here is to leverage the relationship between the properties of XOR and addition:
+- `curr_sum` and `xor_sum` will only remain equal when all the bits of the elements in the current subarray are disjoint (non-overlapping).
+- This ensures that the subarray is "nice," as no two elements in the subarray share a common bit.
+
+By using a sliding window approach, we can dynamically expand and shrink the subarray to efficiently find the longest valid subarray without recalculating the sums and XOR repeatedly.
+
+---
+
+#### Code
+
+Here is the implementation:
+
+```python
+class Solution:
+    def longestNiceSubarray(self, nums: List[int]) -> int:
+        curr_sum = 0
+        xor_sum = 0
+        left = 0
+        right = 0
+        ans = 1
+        while right < len(nums):
+            curr_sum += nums[right]
+            xor_sum ^= nums[right]
+            while curr_sum != xor_sum:
+                ans = max(right - left, ans)
+                curr_sum -= nums[left]
+                xor_sum ^= nums[left]
+                left += 1
+            right += 1
+        ans = max(ans, right - left)
+        return ans
+```
+
+---
+
+#### Time and Space Complexity
+
+- **Time Complexity**:  
+  The algorithm processes each element of the array at most twice (once when expanding and once when shrinking the window). Thus, the time complexity is **O(n)**, where `n` is the size of the input array.
+
+- **Space Complexity**:  
+  We only use a few variables (`curr_sum`, `xor_sum`, etc.) that take constant space, so the space complexity is **O(1)**.
+
+---
+
+#### Learnings
+
+- **Sliding Window Technique**: This problem is a classic example of how sliding window can dynamically adjust the size of the subarray to maintain a condition.
+- **Bit Manipulation Insight**: Recognizing that `curr_sum == xor_sum` implies no overlapping bits was crucial to optimizing the solution.
+- **Efficient Validation**: Avoid recalculating the properties of the subarray from scratch by adjusting values incrementally.
+
+---
+
+This problem is an excellent opportunity to practice combining bitwise operations with optimization techniques like sliding windows. It teaches us how to balance multiple conditions in a single algorithmic pass.
