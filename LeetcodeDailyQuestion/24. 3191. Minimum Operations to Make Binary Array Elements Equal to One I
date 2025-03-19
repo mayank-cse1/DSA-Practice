@@ -1,0 +1,95 @@
+### Post: Solving the Minimum Operations to Flip `0`s Problem
+
+---
+
+#### **Intuition**  
+The problem involves flipping elements in an array of binary values (`0`s and `1`s). A window of size 3 is used to flip `0`s into `1`s such that every `0` in the array eventually gets flipped. For every flip, you toggle the next three numbers starting from the `0` encountered. If at some point flipping is not possible due to a lack of enough elements (i.e., fewer than three elements remain), the solution becomes impossible, and we return `-1`.
+
+The core idea is to traverse the array and handle every `0` as you encounter it while ensuring that no unflippable `0`s are left.
+
+---
+
+#### **Approach**  
+1. Traverse the array using a pointer (`right`).
+2. When a `0` is encountered:
+   - Check if there are at least 3 elements from the current position. If not, return `-1`.
+   - Otherwise, flip the next 3 elements (`0` to `1` or `1` to `0`).
+   - Increment the flip count.
+3. If the loop ends without encountering an impossible case, return the flip count.
+
+---
+
+#### **Examples to Validate the Approach**  
+
+**Example 1:**  
+Input: `nums = [0, 0, 1, 0, 1]`  
+Output: `2`  
+Explanation:
+- First `0`: Flip `[0, 0, 1]` → `[1, 1, 0, 0, 1]`  
+- Next `0`: Flip `[0, 0, 1]` → `[1, 1, 1, 1, 0]`  
+
+**Example 2:**  
+Input: `nums = [0, 1, 0, 1, 0]`  
+Output: `-1`  
+Explanation:  
+- First `0`: Flip `[0, 1, 0]` → `[1, 0, 1, 1, 0]`  
+- Remaining `0` at the end cannot be flipped (fewer than 3 elements left).  
+
+**Example 3:**  
+Input: `nums = [1, 1, 1]`  
+Output: `0`  
+Explanation: No `0`s in the array, so no flips are needed.  
+
+---
+
+#### **Algorithm**  
+1. Initialize two variables:
+   - `right` as a pointer for traversal.
+   - `count` to keep track of the number of flips performed.
+2. Iterate through the array using the `right` pointer.
+3. For every `0` encountered:
+   - Check if the remaining array has fewer than 3 elements. If true, return `-1`.
+   - Perform the flipping operation on the next 3 elements.
+   - Increment the flip count.
+4. Return `count` after the loop completes.
+
+---
+
+#### **Code**  
+```python
+class Solution:
+    def minOperations(self, nums: List[int]) -> int:
+        right = 0
+        count = 0
+        for right in range(len(nums)):
+            if nums[right] == 0:
+                if right > len(nums) - 3:
+                    return -1
+                nums[right] = (0 if nums[right] == 1 else 1)
+                nums[right + 1] = (0 if nums[right + 1] == 1 else 1)
+                nums[right + 2] = (0 if nums[right + 2] == 1 else 1)
+                count += 1
+        return count
+```
+
+---
+
+#### **Time and Space Complexity**  
+
+1. **Time Complexity:**  
+   - Iterating through the array takes \(O(n)\), where \(n\) is the size of the array.  
+   - The flipping operation happens at most \(O(n/3)\) times.  
+   - **Overall Time Complexity:** \(O(n)\).  
+
+2. **Space Complexity:**  
+   - The solution operates in-place, requiring no extra space apart from variables for traversal.  
+   - **Overall Space Complexity:** \(O(1)\).  
+
+---
+
+#### **Learnings**  
+1. Using a sliding window approach simplifies problems involving contiguous subarray operations.  
+2. Edge cases, like insufficient elements for flipping, are critical to handle early to avoid unnecessary computations.  
+3. In-place modifications save memory but require cautious indexing to avoid out-of-bound errors.  
+
+This exercise demonstrates how window-based logic can provide efficient solutions to traversal and transformation challenges.
