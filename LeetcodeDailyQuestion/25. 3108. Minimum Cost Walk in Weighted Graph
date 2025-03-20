@@ -1,0 +1,135 @@
+**Post: Solving Minimum Cost Queries with AND Operations in Graphs**
+
+---
+
+### **Introduction**
+
+In this problem, we need to find the minimum cost between pairs of nodes in a graph with weighted edges. The edge weights are combined using the **bitwise AND operation**, and the goal is to determine whether two nodes in a query belong to the same connected component, and if so, fetch the result of the cumulative AND operation over the edge weights in that component.
+
+---
+
+### **Understanding the Problem**
+
+- **Multiple Edges Between Nodes**:
+  - In this graph, there can be multiple edges between nodes, making it crucial to revisit nodes and edges during traversal.
+  
+- **AND Operation Basics**:
+  - The **bitwise AND** operation behaves as follows:
+    - `1 & 1 = 1`
+    - `0 & 0 = 0`
+    - `1 & 0 = 0`
+    - `0 & 1 = 0`
+  - This implies that the result of the AND operation between any two numbers will always be **equal to or smaller than the smaller of the two numbers**.
+
+This key property of the AND operation helps optimize our solution when traversing the graph.
+
+---
+
+### **Steps to Solve**
+
+#### **Step 1: Generate a Graph**
+- Represent the graph using an adjacency list, where each node points to its connected neighbors along with the respective weights.
+- Ensure isolated nodes (nodes without any edges) are also represented.
+
+#### **Step 2: Identify Components Using DFS**
+- Use Depth First Search (DFS) to traverse the graph and assign nodes to **connected components**.
+- During traversal:
+  - Maintain a cumulative AND value (`weighted_and_sum`) that stores the result of performing the AND operation across all edge weights in a component.
+
+#### **Step 3: Efficient DFS with Precomputation**
+- While performing the DFS, initialize `weighted_and_sum` to `2**21 - 1`. Why?
+  - The maximum weight in the graph is given as `1e5` (constraint), which requires 20 bits for representation.
+  - By initializing all 20 bits as `1` (represented as `2**21 - 1`), we ensure accurate AND calculations throughout the traversal.
+
+#### **Step 4: Resolve Queries**
+- For each query `(u, v)`:
+  - Check if nodes `u` and `v` belong to the same component:
+    - If **yes**, return the precomputed `weighted_and_sum` for that component.
+    - If **no**, return `-1` as the nodes aren't connected.
+
+---
+
+### **Code Implementation**
+
+Here's how this logic translates into Python code:
+
+```python
+from typing import List
+
+class Solution:
+    def minimumCost(self, n: int, edges: List[List[int]], query: List[List[int]]) -> List[int]:
+        # Step 1: Generate the graph
+        graph = {}
+        for u, v, w in edges:
+            graph.setdefault(u, []).append((v, w))
+            graph.setdefault(v, []).append((u, w))
+        
+        # Step 2 and Step 3: DFS to find components and precompute AND weights
+        components = {}
+        component_weights = {}
+        visited = {}
+        
+        def dfs(node, component, weighted_and_sum):
+            if node in visited:
+                return
+            visited[node] = True
+            components[node] = component
+            for child, weight in graph.get(node, []):
+                weighted_and_sum[0] &= weight
+                if child not in visited:
+                    dfs(child, component, weighted_and_sum)
+        
+        component_id = 1
+        for u in range(n):
+            if u not in graph:
+                graph[u] = []  # Include isolated nodes
+            if u not in visited:
+                weighted_and_sum = [2**21 - 1]
+                dfs(u, component_id, weighted_and_sum)
+                component_weights[component_id] = weighted_and_sum[0]
+                component_id += 1
+        
+        # Step 4: Resolve queries
+        result = []
+        for u, v in query:
+            if components.get(u) != components.get(v):
+                result.append(-1)
+            else:
+                result.append(component_weights[components[u]])
+        return result
+```
+
+---
+
+### **Time Complexity**
+
+- **Graph Construction**: `O(m)` where `m` is the number of edges.
+- **DFS Traversal**: `O(n + m)` for `n` nodes and `m` edges.
+- **Query Resolution**: `O(q)` for `q` queries.
+- **Overall**: `O(n + m + q)`.
+
+---
+
+### **Space Complexity**
+
+- **Graph Representation**: `O(n + m)`.
+- **Tracking Components and Visited Nodes**: `O(n)`.
+- **Total**: `O(n + m)`.
+
+---
+
+### **Learnings**
+
+1. **Understanding AND Operations**:
+   - The key insight of the AND operation being equal to or smaller than the smallest value unlocks a straightforward way to track minimum costs.
+
+2. **DFS for Component Identification**:
+   - Depth First Search is a powerful tool for dividing graphs into connected components efficiently.
+
+3. **Precomputation for Optimized Queries**:
+   - By calculating the cumulative AND weight for each component beforehand, query resolution is highly efficient (`O(1)` per query).
+
+4. **Handling Sparse Graphs**:
+   - Incorporating isolated nodes ensures robustness in edge cases.
+
+This problem provides a great blend of graph traversal techniques and bitwise operations, offering valuable lessons for future graph-related challenges. Let me know if you'd like to dive deeper into specific parts!
