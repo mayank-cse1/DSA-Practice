@@ -1,0 +1,104 @@
+### Problem Statement
+Given an undirected graph with `n` nodes numbered from `0` to `n-1` and a list of `edges` representing the graph's connections, find the number of **complete components** in the graph. A complete component is a connected subgraph where every pair of nodes is directly connected.
+
+---
+
+### Intuition
+To identify a **complete component**, we need to verify two properties:
+1. The nodes must form a connected subgraph.
+2. Every node in the subgraph must be directly connected to every other node (i.e., the subgraph must be a clique).
+
+The goal is to traverse all nodes, identify connected subgraphs, and check if they meet the above criteria.
+
+---
+
+### Approach
+1. **Graph Representation**: Use an adjacency list to represent the graph. This allows efficient traversal.
+2. **Connected Subgraph Detection**: Use a DFS (Depth First Search) to traverse connected components.
+3. **Completeness Validation**: For each connected subgraph, check if the number of edges for each node is `size of the subgraph - 1`. If not, it's not a complete component.
+4. **Global Tracking**: Use a global `visited` dictionary to keep track of nodes already processed.
+
+---
+
+### Completeness Validation
+When validating whether a component is complete, the process involves:
+1. **Edge Count Check**: For a component to be a clique, each node must connect to `possible_nodes - 1` (where `possible_nodes` is the total number of nodes in the component). If the number of edges for a node is not equal to `possible_nodes - 1`, the component is not complete.
+2. **Node Membership Check**: If the edge count matches `possible_nodes - 1`, ensure all nodes in the subgraph are part of `possible_nodes`. This ensures no external or missing connections.  
+   - If all nodes satisfy this criterion, return `True`.
+   - Otherwise, return `False`.
+
+
+---
+
+
+
+### Algorithm
+1. Construct an adjacency list for the graph.
+2. Define a recursive function `check_complete` to:
+   - Traverse all nodes in the current subgraph.
+   - Validate if the node connections form a clique.
+3. Iterate through all nodes:
+   - If a node is not yet visited, mark it as the start of a potential component.
+   - Use `check_complete` to validate the component.
+   - If valid, increase the count and mark the nodes in this component as visited.
+4. Return the count of complete components.
+
+---
+
+### Code
+```python
+class Solution:
+    def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:
+        graph = {node: [] for node in range(n)}
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+
+        def check_complete(node, possible_nodes, visited):
+            visited[node] = True
+            children = graph[node]
+            if len(children) != len(possible_nodes) - 1:
+                return False
+            for child in children:
+                if child in visited:
+                    continue
+                if child not in possible_nodes:
+                    return False
+                if not check_complete(child, possible_nodes, visited):
+                    return False
+            return True
+
+        global_visited = {}
+        count = 0
+        for node in range(n):
+            if node not in global_visited:
+                possible_complete_nodes = {child: True for child in graph[node]}
+                possible_complete_nodes[node] = True
+                if check_complete(node, possible_complete_nodes, {}):
+                    count += 1
+                    for node in possible_complete_nodes:
+                        global_visited[node] = True
+        return count
+```
+
+---
+
+### Time and Space Complexity
+- **Time Complexity**:  
+  - Building the graph: \(O(n + m)\), where \(m\) is the number of edges.
+  - Checking completeness: For each node, we traverse its neighbors and validate connected nodes, which takes \(O(n + m)\).  
+  - Total: \(O(n + m)\).
+
+- **Space Complexity**:  
+  - Adjacency list: \(O(n + m)\).  
+  - Recursive DFS stack and additional dictionaries for visited nodes: \(O(n)\).  
+  - Total: \(O(n + m)\).
+
+---
+
+### Learnings
+- **Recursive DFS for Graph Traversal**: DFS is a powerful way to explore graph components.
+- **Clique Validation**: Validating completeness of a component requires verifying both connectivity and structure (node degrees).
+- **Efficient Adjacency List Representation**: Using a dictionary for the adjacency list allows efficient traversal and lookup.
+
+---
