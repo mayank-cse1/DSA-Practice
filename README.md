@@ -1,117 +1,121 @@
 # DSA-Practice
 
-### 1. **Sorting Algorithms**
-| **Algorithm**          | **Purpose**                                        |
-|-------------------------|----------------------------------------------------|
-| Bubble Sort             | Simplistic comparison-based sorting.               |
-| Insertion Sort          | Efficient for small or nearly sorted datasets.     |
-| Selection Sort          | Selects the smallest/largest element iteratively. |
-| Merge Sort              | Divide-and-conquer based stable sorting.           |
-| Quick Sort              | Efficient, but unstable divide-and-conquer sorting.|
-| Heap Sort               | Priority Queue-based sorting technique.            |
-| Counting Sort           | Non-comparison-based sorting for integers.         |
-| Radix Sort              | Efficient non-comparison-based sorting.            |
+Here’s a concise explanation of each algorithm across different DSA topics:
 
 ---
 
-### 2. **Search Algorithms**
-| **Algorithm**          | **Purpose**                                        |
-|-------------------------|----------------------------------------------------|
-| Linear Search           | Sequential search in unsorted data.               |
-| Binary Search           | Efficient search on sorted data.                  |
-| Exponential Search      | For unbounded or infinite datasets.               |
+### **Sorting Algorithms**
+| **Algorithm**          | **Explanation**                                                                                              |
+|-------------------------|------------------------------------------------------------------------------------------------------------|
+| **Bubble Sort**         | Repeatedly compares adjacent elements and swaps them if they are in the wrong order.                       |
+| **Insertion Sort**      | Builds a sorted array one element at a time by placing each element in its correct position.               |
+| **Selection Sort**      | Selects the smallest (or largest) element and swaps it with the first unsorted element.                    |
+| **Merge Sort**          | Divides the array into halves, sorts each half, and then merges them.                                      |
+| **Quick Sort**          | Picks a pivot, partitions the array into smaller/greater values, and recursively sorts the partitions.     |
+| **Heap Sort**           | Uses a heap to repeatedly extract the maximum or minimum element to sort the array.                        |
+| **Counting Sort**       | Counts occurrences of each value and builds the sorted array from these counts (non-comparison based).    |
+| **Radix Sort**          | Sorts numbers by processing digits one at a time, starting from the least significant digit.              |
 
 ---
 
-### 3. **Graph Algorithms**
-| **Algorithm**          | **Purpose**                                        |
-|-------------------------|----------------------------------------------------|
-| Breadth-First Search (BFS) | Traversal or pathfinding in graphs/trees.     |
-| Depth-First Search (DFS)   | Recursive graph/tree traversal.              |
-| Dijkstra's Algorithm        | Shortest path in weighted graphs.           |
-| Bellman-Ford Algorithm      | Shortest path (handles negative weights).   |
-| Floyd-Warshall Algorithm    | All-pairs shortest path.                    |
-| Prim's Algorithm            | Minimum Spanning Tree (MST).               |
-| Kruskal's Algorithm          | MST using edge weights.                   |
-| Topological Sort             | Ordering of vertices in Directed Acyclic Graph (DAG). |
-| Tarjan's Algorithm           | Find Strongly Connected Components (SCCs).|
-| Kosaraju's Algorithm         | SCCs in a graph.                          |
+### **Search Algorithms**
+| **Algorithm**          | **Explanation**                                                                                              |
+|-------------------------|------------------------------------------------------------------------------------------------------------|
+| **Linear Search**       | Sequentially checks each element until the desired one is found.                                           |
+| **Binary Search**       | Efficiently searches in a sorted array by repeatedly dividing the search range by half.                    |
+| **Exponential Search**  | Finds a range where the target may exist and uses binary search within that range.                         |
 
 ---
 
-### 4. **Greedy Algorithms**
-| **Algorithm**               | **Purpose**                                              |
-|------------------------------|----------------------------------------------------------|
-| Activity Selection           | Maximize the number of non-overlapping activities.       |
-| Huffman Coding               | Compression algorithm for prefix codes.                 |
-| Fractional Knapsack          | Maximization problem with fractional items.             |
+### **Graph Algorithms**
+| **Algorithm**          | **Explanation**                                                                                              |
+|-------------------------|------------------------------------------------------------------------------------------------------------|
+| **BFS (Breadth-First)** | Explores all neighbors at the current level before moving deeper (used for shortest paths in unweighted graphs). |
+| **DFS (Depth-First)**   | Explores as far as possible down each branch before backtracking (used for connected components, cycles).   |
+| **Dijkstra's Algorithm**| Finds shortest paths from a single source to all other nodes in weighted graphs.                           |
+| **Bellman-Ford**        | Handles shortest paths but works even with negative-weight edges.                                           |
+| **Floyd-Warshall**      | Computes shortest paths between all pairs of nodes.                                                        |
+| **Prim's Algorithm**    | Finds the Minimum Spanning Tree (MST) by adding edges with the smallest weight.                            |
+| **Kruskal's Algorithm** | Finds the MST by sorting edges and adding them while avoiding cycles.                                      |
+| **Topological Sort**    | Orders vertices of a Directed Acyclic Graph (DAG) such that all edges point forward.                       |
+| **Tarjan's Algorithm**  | Finds Strongly Connected Components (SCCs) in a directed graph using DFS.                                  |
+| **Kosaraju's Algorithm**| Another approach to find SCCs, using two passes of DFS.                                                   |
 
 ---
 
-### 5. **Dynamic Programming (DP)**
-| **Algorithm**              | **Purpose**                                              |
-|-----------------------------|---------------------------------------------------------|
-| Longest Common Subsequence (LCS) | Find the longest subsequence common to two strings.|
-| Longest Increasing Subsequence (LIS) | Maximize the subsequence length with order.  |
-| 0/1 Knapsack                | Maximize value with weight constraints.                 |
-| Matrix Chain Multiplication| Optimize parenthesis placement in matrix multiplication.|
-| Coin Change Problem         | Minimize coins to reach a target.                       |
-| Rod Cutting Problem         | Maximize revenue by cutting rods.                       |
-| Floyd-Warshall              | All-pairs shortest paths (overlaps with graphs).        |
+### **Greedy Algorithms**
+| **Algorithm**               | **Explanation**                                                                                          |
+|------------------------------|--------------------------------------------------------------------------------------------------------|
+| **Activity Selection**       | Selects the maximum number of non-overlapping activities based on end times.                          |
+| **Huffman Coding**           | Builds an optimal prefix code tree for data compression.                                              |
+| **Fractional Knapsack**      | Maximizes total value by taking fractions of items, sorted by value/weight ratio.                     |
 
 ---
 
-### 6. **Divide and Conquer**
-| **Algorithm**            | **Purpose**                                              |
-|---------------------------|---------------------------------------------------------|
-| Merge Sort                | Sorting.                                                |
-| Quick Sort                | Sorting.                                                |
-| Binary Search             | Efficient search in sorted data.                        |
-| Maximum Subarray (Kadane's Algorithm) | Find maximum sum of contiguous subarray.   |
+### **Dynamic Programming (DP)**
+| **Algorithm**              | **Explanation**                                                                                          |
+|-----------------------------|---------------------------------------------------------------------------------------------------------|
+| **LCS**                    | Finds the longest subsequence common to two strings.                                                   |
+| **LIS**                    | Finds the longest subsequence with increasing order.                                                   |
+| **0/1 Knapsack**           | Maximizes value with a weight constraint, where items cannot be divided.                               |
+| **Matrix Chain Multiplication** | Optimizes parenthesization to minimize the cost of multiplying matrices.                          |
+| **Coin Change Problem**    | Finds the minimum number of coins needed for a target sum.                                             |
+| **Rod Cutting Problem**    | Cuts rods into pieces to maximize revenue.                                                             |
 
 ---
 
-### 7. **Backtracking**
-| **Algorithm**              | **Purpose**                                                |
-|-----------------------------|-----------------------------------------------------------|
-| N-Queens Problem            | Place queens on a chessboard such that none attack each other. |
-| Sudoku Solver               | Solve Sudoku puzzles.                                      |
-| Subset Sum Problem          | Check if a subset with a given sum exists.                |
-| Permutations/Combinations   | Generate permutations or combinations of elements.        |
+### **Divide and Conquer**
+| **Algorithm**            | **Explanation**                                                                                          |
+|---------------------------|---------------------------------------------------------------------------------------------------------|
+| **Merge Sort**            | Splits the array, sorts each half, and merges them.                                                    |
+| **Quick Sort**            | Partitions array and recursively sorts around a pivot.                                                 |
+| **Binary Search**         | Repeatedly divides the search range in half on sorted arrays.                                          |
+| **Maximum Subarray (Kadane's Algorithm)** | Finds the contiguous subarray with the maximum sum in linear time.                      |
 
 ---
 
-### 8. **String Algorithms**
-| **Algorithm**               | **Purpose**                                                |
-|------------------------------|-----------------------------------------------------------|
-| KMP Algorithm                | Pattern matching in strings.                              |
-| Rabin-Karp Algorithm         | Rolling hash for string searching.                        |
-| Z-Algorithm                  | Pattern matching using Z-values.                          |
-| Trie Data Structure          | Efficient storage and retrieval of string prefixes.       |
-| Suffix Arrays                | Efficient pattern searching in strings.                   |
-| Longest Palindromic Substring| Find the longest palindrome in a string.                  |
+### **Backtracking**
+| **Algorithm**              | **Explanation**                                                                                          |
+|-----------------------------|---------------------------------------------------------------------------------------------------------|
+| **N-Queens**               | Places queens on a chessboard such that no two queens attack each other.                               |
+| **Sudoku Solver**          | Solves a Sudoku puzzle by filling in cells using backtracking.                                         |
+| **Subset Sum**             | Checks if any subset of numbers sums to a target.                                                     |
+| **Permutations/Combinations** | Generates all possible arrangements or combinations of elements.                                    |
 
 ---
 
-### 9. **Tree Algorithms**
-| **Algorithm**                  | **Purpose**                                            |
-|---------------------------------|-------------------------------------------------------|
-| Depth-First Traversals (Inorder, Preorder, Postorder) | Traversing trees.             |
-| Breadth-First Traversal         | Level-order traversal of trees.                       |
-| Lowest Common Ancestor (LCA)    | Find the common ancestor of two nodes.               |
-| Segment Trees                   | Range queries and updates.                           |
-| Fenwick Tree (Binary Indexed Tree) | Efficient prefix sum calculations.               |
+### **String Algorithms**
+| **Algorithm**               | **Explanation**                                                                                          |
+|------------------------------|---------------------------------------------------------------------------------------------------------|
+| **KMP Algorithm**            | Searches for a pattern in a string using partial match information.                                   |
+| **Rabin-Karp Algorithm**     | Uses a rolling hash to efficiently find substrings.                                                   |
+| **Z-Algorithm**              | Finds occurrences of a pattern by computing Z-values of the string.                                   |
+| **Trie**                     | Stores strings for efficient prefix-based operations.                                                 |
+| **Suffix Arrays**            | Builds an array to find substrings and patterns efficiently.                                          |
+| **Longest Palindromic Substring** | Finds the longest palindromic substring in a string.                                               |
 
 ---
 
-### 10. **Mathematical Algorithms**
-| **Algorithm**             | **Purpose**                                                  |
-|----------------------------|-------------------------------------------------------------|
-| Sieve of Eratosthenes      | Generate primes efficiently.                                 |
-| Euclidean Algorithm        | Find the greatest common divisor (GCD).                     |
-| Fast Exponentiation        | Compute powers efficiently.                                 |
-| Modular Arithmetic         | Work with large numbers under modulo.                       |
+### **Tree Algorithms**
+| **Algorithm**                  | **Explanation**                                                                                      |
+|---------------------------------|-----------------------------------------------------------------------------------------------------|
+| **Tree Traversals**            | Inorder, Preorder, and Postorder traverse nodes of a tree in specific orders.                      |
+| **Breadth-First Traversal**    | Visits nodes level by level.                                                                       |
+| **Lowest Common Ancestor (LCA)** | Finds the lowest common ancestor of two nodes in a tree.                                           |
+| **Segment Trees**              | Supports efficient range queries and updates on an array.                                          |
+| **Fenwick Tree (BIT)**         | Efficiently computes prefix sums and updates in logarithmic time.                                  |
 
 ---
 
+### **Mathematical Algorithms**
+| **Algorithm**             | **Explanation**                                                                                          |
+|----------------------------|---------------------------------------------------------------------------------------------------------|
+| **Sieve of Eratosthenes**  | Efficiently generates prime numbers up to a given number.                                              |
+| **Euclidean Algorithm**    | Computes the Greatest Common Divisor (GCD) of two numbers.                                             |
+| **Fast Exponentiation**    | Computes powers of numbers in logarithmic time.                                                        |
+| **Modular Arithmetic**     | Performs arithmetic under a modulo to handle large numbers.                                           |
+
+---
+
+Let me know which algorithms you'd like to explore further! 🚀
 These algorithms cover the most important topics under DSA. 
