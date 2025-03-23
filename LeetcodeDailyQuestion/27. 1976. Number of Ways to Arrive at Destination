@@ -1,0 +1,103 @@
+### Intuition
+When dealing with problems of finding the number of ways to reach a target node in the shortest possible time, **Dijkstra's algorithm** shines as the optimal solution. It leverages a priority queue to explore nodes in increasing order of cost while ensuring that only the shortest paths are explored. By combining this with path counting, we efficiently calculate the number of ways to reach the destination node in the minimum time.
+
+---
+
+### Approach
+1. **Graph Representation**:
+   - Use an adjacency list to store the graph as it is efficient in terms of space and time for traversals.
+
+2. **Priority Queue for Shortest Time**:
+   - Use a **min-heap** (priority queue) to extract nodes in increasing order of travel time.
+
+3. **Tracking Shortest Paths**:
+   - Maintain two arrays:
+     - `shortest_time[]`: To store the shortest time to reach each node.
+     - `path_count[]`: To store the number of ways to reach each node in the shortest time.
+
+4. **Dijkstra's Core Logic**:
+   - For every node processed from the heap, explore its neighbors:
+     - If a shorter path to a child node is found, update the shortest time and reset its path count.
+     - If the shortest time remains the same, add the current node's path count to the child's path count (modulo \(10^9+7\)).
+
+5. **Return the Result**:
+   - After processing all nodes, the number of ways to reach the destination node (`n-1`) in the shortest time is stored in `path_count[n-1]`.
+
+---
+
+### Algorithm
+1. Initialize a `graph` as an adjacency list.
+2. Set up a **min-heap** (priority queue) initialized with the source node `(0,0)` (time, node).
+3. Create arrays `shortest_time` and `path_count`, initialized with `inf` and `0` respectively for all nodes. Set:
+   - `shortest_time[0] = 0`
+   - `path_count[0] = 1`
+4. While the heap is not empty:
+   - Pop the node with the smallest travel time.
+   - For each neighbor of the current node:
+     - If a shorter path to the neighbor is found, update `shortest_time` and reset the `path_count`.
+     - If the shortest time is equal, increment the `path_count` of the neighbor by the `path_count` of the current node (modulo \(10^9+7\)).
+5. Return `path_count[n-1]`.
+
+---
+
+### Code
+```python
+import heapq
+from typing import List
+
+class Solution:
+    def countPaths(self, n: int, roads: List[List[int]]) -> int:
+        MOD = 1_000_000_007
+        # Define Nodes
+        graph = {ele: [] for ele in range(n)}
+        # Define Edges
+        for u, v, t in roads:
+            graph[u].append((v, t))
+            graph[v].append((u, t))
+
+        min_heap = [(0, 0)]  # --> (time, node)
+        # Assign infinite time and zero path count to each node
+        shortest_time = [float("inf")] * n
+        path_count = [0] * n
+
+        # Initialize source node
+        shortest_time[0] = 0  # Distance to source is 0
+        path_count[0] = 1  # 1 way to reach node 0
+
+        while min_heap:
+            time_taken, node = heapq.heappop(min_heap)
+            children = graph[node]
+            for child, time in children:
+                # Found shorter time
+                if time_taken + time < shortest_time[child]:
+                    shortest_time[child] = time_taken + time
+                    path_count[child] = path_count[node]
+                    heapq.heappush(min_heap, (shortest_time[child], child))
+                # Found an equally short time
+                elif time_taken + time == shortest_time[child]:
+                    path_count[child] = (path_count[child] + path_count[node]) % MOD
+
+        return path_count[n - 1]
+```
+
+---
+
+### Time and Space Complexity
+1. **Time Complexity**:
+   - Constructing the graph: \(O(m)\), where \(m\) is the number of edges.
+   - Dijkstra's algorithm: \(O((n + m) \cdot \log n)\), where \(n\) is the number of nodes. The `log n` factor comes from heap operations.
+   - Overall: **\(O((n + m) \cdot \log n)\)**.
+
+2. **Space Complexity**:
+   - Graph representation: \(O(n + m)\) for the adjacency list.
+   - Auxiliary arrays (`shortest_time`, `path_count`): \(O(n)\).
+   - Min-heap: \(O(n)\).
+   - Overall: **\(O(n + m)\)**.
+
+---
+
+### Learnings
+1. **Dijkstra's Algorithm**: A powerful tool to find shortest paths efficiently in weighted graphs.
+2. **Dynamic Updates**: Combining shortest path tracking with path counting is straightforward when processed in priority order.
+3. **Modulo Arithmetic**: Ensuring the results fit within constraints using modular operations is crucial in competitive programming.
+4. **Graph Representation**: An adjacency list is an efficient way to represent graphs, particularly for problems involving traversal.
