@@ -1,0 +1,73 @@
+### Problem: Counting Unoccupied Days
+Given a total number of days (`days`) and a list of intervals representing meeting times (`meetings`), the objective is to calculate the number of days completely unoccupied by any meetings.
+
+---
+
+### Intuition:
+This approach leverages the fact that by sorting the intervals, we can efficiently track the occupied days and calculate the unoccupied ones. The main idea is to:
+1. Traverse through the sorted intervals while keeping track of the latest end time of meetings.
+2. Add gaps between intervals as unoccupied days.
+3. Finally, count the days after the last meeting as unoccupied days.
+
+---
+
+### Approach:
+1. **Sort the Meetings**: Sort the intervals by their starting time. This ensures that we process the meetings in chronological order, making it easy to track overlaps and gaps.
+2. **Traverse Intervals**: Use a variable (`latest_end`) to track the farthest day covered by meetings as you traverse the list of intervals.
+   - For each interval, check if the gap between the current start and `latest_end` represents unoccupied days.
+   - If so, add this gap to the count of `free_days`.
+   - Update `latest_end` to reflect the latest occupied day.
+3. **Count Remaining Days**: After processing all the intervals, any days after `latest_end` are unoccupied and should be added to `free_days`.
+
+---
+
+### Algorithm:
+1. Initialize `free_days` to 0 and `latest_end` to 0.
+2. Sort the `meetings` array based on start times.
+3. For each meeting `[start, end]`:
+   - If `start` is greater than `latest_end + 1`, calculate the gap between them and add it to `free_days`.
+   - Update `latest_end` with the maximum of its current value and `end`.
+4. After the loop, add any remaining days after `latest_end` to `free_days`.
+5. Return `free_days`.
+
+---
+
+### Code:
+```python
+class Solution:
+    def countDays(self, days: int, meetings: list[list[int]]) -> int:
+        free_days = 0
+        latest_end = 0
+
+        # Sort meetings based on starting times
+        meetings.sort()
+
+        for start, end in meetings:
+            # Add current range of days without a meeting
+            if start > latest_end + 1:
+                free_days += start - latest_end - 1
+
+            # Update latest meeting end
+            latest_end = max(latest_end, end)
+
+        # Add all days after the last day of meetings
+        free_days += days - latest_end
+
+        return free_days
+```
+
+---
+
+### Space and Time Complexity:
+- **Time Complexity:** 
+  - Sorting the `meetings`: $$O(n \log n)$$ where `n` is the number of intervals.
+  - Processing the meetings: $$O(n)$$ since each meeting is traversed once.
+  - **Total:** $$O(n \log n)$$.
+- **Space Complexity:** $$O(1)$$ as no additional data structures are used (besides variables).
+
+---
+
+### Learnings:
+1. **Sorting for Efficiency:** Sorting intervals simplifies the problem of managing overlapping or adjacent intervals.
+2. **One-pass Calculation:** By maintaining a variable (`latest_end`) to track occupied days, we ensure the solution is both time and space efficient.
+3. **Edge-case Coverage:** The solution elegantly handles gaps before the first meeting and after the last meeting using boundary checks.
