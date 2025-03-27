@@ -1,0 +1,76 @@
+### Problem:
+Given an array `nums`, find the **minimum index** such that if the array is split into two non-empty parts at that index, the **majority element** (an element whose frequency is greater than half the size of the array) in both parts remains the same. If no such index exists, return `-1`.
+
+---
+
+### Intuition:
+To solve this problem, we need to:
+1. Identify the frequency of the numbers in both the left and right parts while iterating through the array.
+2. For an index to qualify:
+   - The left part must have a majority element (its count should be greater than half the size of the left part).
+   - The right part must have the same majority element (its count should be greater than half the size of the right part).
+3. By maintaining separate dictionaries for `left` and `right` frequencies, we can track the counts dynamically and check the conditions at each index.
+
+---
+
+### Algorithm:
+1. Use two dictionaries:
+   - `left`: to store the frequency of numbers in the left segment (from the start to the current index).
+   - `right`: to store the frequency of numbers in the right segment (from the current index to the end).
+
+2. First, populate the `right` dictionary with frequencies of all elements in the array.
+
+3. Start iterating through the array. At each index:
+   - Update the `left` and `right` frequency dictionaries:
+     - Increment the count of the current element in `left`.
+     - Decrement the count of the current element in `right`.
+   - Check if the current element satisfies the majority conditions:
+     - Its frequency in `left` must be greater than half the size of the left part (`index + 1`).
+     - Its frequency in `right` must be greater than half the size of the right part (`n - index - 1`).
+
+4. Return the first index where these conditions are satisfied. If no such index exists, return `-1`.
+
+---
+
+### Approach:
+```python
+class Solution:
+    def minimumIndex(self, nums: List[int]) -> int:
+        # Dictionaries for frequencies
+        left = {}
+        right = {}
+        n = len(nums)
+        
+        # Populate the right dictionary with initial frequencies
+        for num in nums:
+            if num not in right:
+                right[num] = 1
+            else:
+                right[num] += 1
+        
+        # Iterate through the array
+        for index in range(n):
+            num = nums[index]
+            # Update the right and left dictionaries
+            right[num] -= 1
+            if num not in left:
+                left[num] = 1
+            else:
+                left[num] += 1
+            
+            # Check the majority conditions
+            if left[num] * 2 > index + 1 and right[num] * 2 > n - index - 1:
+                return index
+        
+        return -1
+```
+
+---
+
+### Learning Points:
+1. **Two-Pointer Thinking**: By maintaining separate frequency maps (`left` and `right`), we efficiently calculate the required conditions at each step without recalculating frequencies from scratch.
+2. **Dynamic Updates**: Real-time updates to the `right` and `left` dictionaries allow us to manage the state of the array as we iterate through it.
+3. **Majority Element Definition**: Understanding how majority conditions depend on the size of the current segment was key to this solution.
+4. **Efficiency through Dictionaries**: Using dictionaries to track counts ensures an efficient solution with time complexity **O(n)**, as every element is processed a constant number of times.
+5. **Edge Cases Consideration**: The algorithm gracefully handles cases where no such index exists by returning `-1`.
+
