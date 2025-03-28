@@ -1,0 +1,89 @@
+**Problem:**
+
+You are given a grid with integer values and a list of queries. Each query represents a threshold, and you need to calculate the number of grid cells with values less than the query threshold that can be visited starting from the top-left corner of the grid.
+
+---
+
+**Intuition:**
+
+The goal is to efficiently process each query and compute the answer. A priority queue (min-heap) can help in exploring the grid cells by their values in ascending order. By combining this with a visited set and directions to move in the grid, the algorithm systematically expands its exploration for each query.
+
+---
+
+**Approach:**
+
+1. Sort the queries and pair them with their indices for result mapping.
+2. Use a min-heap to explore the grid values starting from the top-left corner.
+3. Process each query:
+   - Expand the grid cells from the heap until the smallest value in the heap is greater than or equal to the current query threshold.
+   - Count the visited cells during the process.
+   - Map the result back to the original indices of the queries.
+
+This ensures the grid cells are processed efficiently for all queries.
+
+---
+
+**Algorithm:**
+
+1. Parse the queries and pair each query with its original index.
+2. Sort the queries based on their values to process smaller thresholds first.
+3. Initialize a priority queue with the top-left cell `(0,0)`, a visited set to avoid revisits, and a count variable to track the number of cells visited.
+4. For each query:
+   - Expand the cells in the heap until a cell value exceeds the query threshold.
+   - For each expanded cell, explore its neighbors, pushing valid neighbors into the heap.
+   - Map the count to the result array for the query index.
+5. Return the results in the original query order.
+
+---
+
+**Code:**
+
+```python
+import heapq
+from typing import List
+
+class Solution:
+    def maxPoints(self, grid: List[List[int]], queries: List[int]) -> List[int]:
+        query = []
+        for index, ele in enumerate(queries):
+            query.append((ele, index))
+        query.sort()
+        ans = [0 for _ in range(len(queries))]
+        x, y = 0, 0
+        priority_queue = []
+        heapq.heappush(priority_queue, (grid[x][y], x, y))
+        dirs = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+        visited = {}
+        visited[(x, y)] = True
+        count = 0
+        
+        for ele, index in query:
+            while priority_queue:
+                value, x, y = heapq.heappop(priority_queue)
+                if value >= ele:
+                    heapq.heappush(priority_queue, (value, x, y))
+                    ans[index] = count
+                    break
+                count += 1
+                for dx, dy in dirs:
+                    if (x+dx, y+dy) not in visited and 0 <= x+dx < len(grid) and 0 <= y+dy < len(grid[0]):
+                        visited[(x+dx, y+dy)] = True
+                        heapq.heappush(priority_queue, (grid[x+dx][y+dy], x+dx, y+dy))
+            ans[index] = count
+        
+        return ans
+```
+
+---
+
+**Learning:**
+
+1. **Efficient Query Handling:** Sorting the queries upfront ensures that you process thresholds in order, which simplifies the priority queue logic.
+2. **Priority Queue Usage:** Using a priority queue (min-heap) allows for efficient retrieval of the smallest values, essential for expanding the grid cells.
+3. **Visited Set:** Preventing re-visitation of grid cells is crucial to avoid infinite loops and redundant computations.
+4. **Direction Array:** Defining directions upfront simplifies neighbor traversal logic and keeps the code concise.
+5. **Algorithm Design:** Breaking the problem into smaller sub-problems (sorting, heap processing, result mapping) leads to a structured and efficient solution.
+
+---
+**Recommendation:**
+1. **Watch Explanation** - https://www.youtube.com/watch?v=DW2Sw-eZAVY&ab_channel=AryanMittal
