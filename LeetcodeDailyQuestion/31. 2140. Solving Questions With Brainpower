@@ -1,0 +1,66 @@
+### **Problem**  
+Given an array `questions` where each element is of the form `[points, brainpower]`:  
+- `points` denotes the reward for answering the question.
+- `brainpower` indicates the number of subsequent questions that must be skipped after answering.  
+Find the maximum points you can earn by optimally answering the questions.
+
+---
+
+### **Intuition**  
+The problem boils down to making a decision at each step—whether to "pick" the current question and skip the required number of subsequent questions or to "not pick" it and move to the next question.  
+This decision-making process suggests the use of recursion and memoization (dynamic programming) to efficiently calculate the maximum points.
+
+---
+
+### **Approach**  
+1. Define a helper function that computes the maximum points starting from a given question index.  
+2. Use two choices at every step:
+   - *Pick the current question*: Add the points and skip the required number of subsequent questions.
+   - *Not pick the current question*: Move to the next question without adding points.
+3. Use a dictionary `dp` to store the maximum points for each index to avoid redundant calculations.
+4. Base case: If the index is out of bounds, return 0 (no more questions to answer).
+5. Return the maximum of the two choices for the current index.
+
+---
+
+### **Algorithm**  
+1. Initialize a dictionary `dp` for memoization.
+2. Define a recursive helper function:
+   - If the index exceeds the array length, return 0.
+   - If the result for the current index is already in `dp`, use it.
+   - Calculate the points for both "pick" and "not pick" scenarios.
+   - Store the maximum of the two in `dp` for the current index.
+3. Call the helper function starting from index 0 and return its result.
+
+---
+
+### **Code**  
+
+```python
+class Solution:
+    def mostPoints(self, questions: List[List[int]]) -> int:
+        dp = {}
+
+        def helper(index):
+            if index >= len(questions):
+                return 0
+            if index in dp:
+                return dp[index]
+            profit, block = questions[index]
+            pick = helper(index + block + 1) + profit
+            notpick = helper(index + 1)
+            dp[index] = max(pick, notpick)
+            return dp[index]
+
+        return helper(0)
+```
+
+---
+
+### **Learnings**  
+1. **Dynamic Programming Insight**: Breaking problems into overlapping subproblems and solving each once significantly boosts efficiency.
+2. **Optimal Decision-Making**: Sometimes, it's about calculating the cost-benefit of each decision rather than solving the problem all at once.
+3. **Memoization**: Storing intermediate results is powerful when exploring all possible paths in a problem.
+4. **Divide and Conquer Thinking**: Splitting the problem space into manageable chunks allows for clearer reasoning and efficient coding.
+
+---
