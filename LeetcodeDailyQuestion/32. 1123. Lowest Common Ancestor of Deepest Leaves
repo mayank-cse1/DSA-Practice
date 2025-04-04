@@ -1,0 +1,77 @@
+### Problem
+You are given a binary tree. Your task is to find the **lowest common ancestor (LCA) of its deepest leaves**. The deepest leaves are the leaves at the maximum depth of the tree.
+
+The **lowest common ancestor** is the lowest node in the tree that has both leaves as descendants.
+
+---
+
+### Approach
+To solve this problem, we utilize the concept of **depth-first search (DFS)**, where we explore the depths of the tree and keep track of:
+1. The height of the subtree rooted at a node.
+2. The LCA of the deepest leaves within the subtree.
+
+---
+
+### Naive Approach
+We recursively determine the LCA and depth of the left and right subtrees, comparing them to decide the LCA for the current node.
+
+#### Naive Code:
+```python
+class Solution:
+    def lcaDeepestLeaves(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        def dfs(node: Optional[TreeNode]) -> Tuple[int, Optional[TreeNode]]:
+            if not node:
+                return 0, None  # Base case: Height = 0, No LCA
+            
+            left_height, left_lca = dfs(node.left)
+            right_height, right_lca = dfs(node.right)
+            
+            if left_height == right_height:  
+                return left_height + 1, node  # This node is LCA
+            elif left_height > right_height:
+                return left_height + 1, left_lca  # LCA is deeper on the left
+            else:
+                return right_height + 1, right_lca  # LCA is deeper on the right
+        
+        return dfs(root)[1]
+```
+
+- **Complexity:**
+    - Time: \(O(n)\), where \(n\) is the number of nodes in the tree. Each node is visited once.
+    - Space: \(O(h)\), where \(h\) is the height of the tree, due to recursion stack.
+
+---
+
+### Optimized Approach
+The naive approach is already efficient as it visits each node once and calculates the LCA in \(O(n)\). Hence, no further optimization is needed.
+
+#### Optimized Code:
+```python
+class Solution:
+    def lcaDeepestLeaves(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        def dfs(node: Optional[TreeNode]) -> Tuple[int, Optional[TreeNode]]:
+            if not node:
+                return 0, None  # Base case: Height = 0, No LCA
+            
+            left_height, left_lca = dfs(node.left)
+            right_height, right_lca = dfs(node.right)
+            
+            if left_height == right_height:  
+                return left_height + 1, node  # This node is LCA
+            elif left_height > right_height:
+                return left_height + 1, left_lca  # LCA is deeper on the left
+            else:
+                return right_height + 1, right_lca  # LCA is deeper on the right
+        
+        return dfs(root)[1]
+```
+
+The optimized approach remains the same as the naive approach, as it is already optimal in its current form.
+
+---
+
+### Learning
+- **Depth-First Search (DFS):** By using recursive DFS, we efficiently explore the binary tree, calculating heights and LCA simultaneously.
+- **Comparing Subtree Heights:** The key is identifying when the left and right subtrees have equal depth to determine the LCA.
+- **Divide and Conquer:** We break the problem into smaller subproblems (left and right subtrees) and combine their results.
+- **Space Optimization:** Recursive DFS uses space proportional to the tree's height, making it efficient for balanced trees.
