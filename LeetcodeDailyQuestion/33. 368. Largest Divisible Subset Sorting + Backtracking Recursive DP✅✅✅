@@ -1,0 +1,72 @@
+## Intuition
+The goal is to find the largest subset of numbers from a given array such that for every pair of numbers in the subset, one is divisible by the other. This problem suggests using dynamic programming since we can break it into overlapping subproblems. By leveraging properties of divisibility, sorting the array provides a meaningful order to streamline the checks.
+
+---
+
+## Approach
+1. **Sorting**: Start by sorting the numbers in ascending order. This way, any smaller number will appear before a larger number, simplifying the divisibility checks.
+2. **Dynamic Programming (Memoization)**: Use a helper function to explore all subsets recursively. Cache results for subproblems to avoid redundant calculations.
+3. **Subset Formation**: For each number, either include it in the subset (if divisible by the previous number in the subset) or skip it.
+4. **Compare Sizes**: Keep track of the largest subset formed by comparing the sizes of subsets that include or exclude the current number.
+5. **Return the Result**: Once all subsets are evaluated, return the largest one.
+
+---
+
+## Algorithm
+1. Sort the array in ascending order.
+2. Define a recursive helper function `helper(index, prev_pick)`:
+   - `index` represents the current position in the array.
+   - `prev_pick` holds the index of the last included number.
+3. At each step:
+   - If the current number is divisible by the number at `prev_pick`, include it in the subset and move to the next index.
+   - Alternatively, skip the current number and evaluate the next index.
+4. Use a dictionary `dp` for memoization to cache results of subproblems `(index, prev_pick)`.
+5. After exploring all options, return the largest subset found.
+
+---
+
+## Code
+```python
+class Solution:
+    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        # Sort in Increasing Order
+        nums.sort()
+
+        self.dp = {}
+        
+        def helper(index, prev_pick):
+            if (index, prev_pick) in self.dp:
+                return self.dp[index, prev_pick]
+            if index == len(nums):
+                return []
+            
+            pick = []
+            temp = nums[prev_pick] if prev_pick != -1 else 1
+            if nums[index] % temp == 0:
+                pick = helper(index + 1, index) + [nums[index]]
+            not_pick = helper(index + 1, prev_pick)
+            
+            # Memoize the larger subset
+            self.dp[index, prev_pick] = pick if len(pick) >= len(not_pick) else not_pick
+            return self.dp[index, prev_pick]
+        
+        return helper(0, -1)
+```
+
+---
+
+## Time and Space Complexity
+- **Time Complexity**:  
+  Sorting the array takes **O(n log n)**. The recursive function explores combinations but benefits from memoization, making it approximately **O(n²)** in the worst case, as each state `(index, prev_pick)` is computed once.
+
+- **Space Complexity**:  
+  - **O(n²)** for memoization storage (`dp` dictionary).  
+  - Recursion depth contributes an additional **O(n)** in the call stack.
+
+---
+
+## Learnings
+1. Sorting simplifies the divisibility checks in problems like this by enforcing an order.
+2. Dynamic programming (with memoization) is a powerful technique to solve problems with overlapping subproblems.
+3. Structuring recursive solutions with clear base cases and memoization can optimize algorithms significantly.
+4. Breaking a problem into smaller subproblems often makes it more manageable and leads to elegant solutions.
