@@ -1,0 +1,81 @@
+### **Problem Statement**
+You are given an array `nums` where each element represents a value. The task is to determine the **minimum number of chunks of size 3** needed such that all elements within the resulting array chunks are unique.
+
+---
+
+### **Intuition**
+The problem revolves around managing duplicates efficiently.  
+- **Approach 1:** Sequentially iterate through the array in chunks of 3. At every step, check if the subarray contains duplicates using a set, then adjust the answer accordingly.
+- **Approach 2:** Use a frequency dictionary to track duplicate elements and their positions. This allows for a more direct computation of the chunk where the last duplicate lies, reducing unnecessary computations.
+
+---
+
+### **Approaches and Algorithms**
+#### **Approach 1: Iterative Chunks with Subarray Slicing**
+1. Initialize a pointer `i` at `0`.
+2. Iterate over the array in increments of 3 (`i += 3`).
+3. For each subarray `nums[i:]`, check if its length matches the length of its set (i.e., no duplicates).  
+   - If it does, return the chunk count `i // 3`.
+4. Continue until no more duplicates exist.
+
+**Algorithm:**  
+- Iterate through the array in chunks of 3.
+- Utilize slicing to check duplicates using sets.
+
+```python
+class Solution:
+    def minimumOperations(self, nums: List[int]) -> int:
+        i = 0
+        while i < len(nums):
+            if len(nums[i:]) == len(set(nums[i:])):
+                return i // 3
+            i += 3
+        return i // 3
+```
+
+**Complexity Analysis:**
+- **Time Complexity:** **O(n²)**  
+  The slicing operation `nums[i:]` and set conversion are performed repeatedly over diminishing subarrays.
+- **Space Complexity:** **O(n)**  
+  Space is used for the `set(nums[i:])`.
+
+---
+
+#### **Approach 2: Frequency Dictionary for Optimized Search**
+1. Create a frequency dictionary `freq` to store the latest index for each element in `nums`.
+2. Track duplicates dynamically:  
+   - When a duplicate is encountered, update the maximum duplicate's position.
+3. Use a flag to detect if any duplicates exist.
+4. If duplicates are found, compute the minimum chunks required as `(max_duplicate // 3) + 1`. Otherwise, return `0`.
+
+**Algorithm:**  
+- Use dictionary-based tracking to handle duplicates efficiently.
+
+```python
+class Solution:
+    def minimumOperations(self, nums: List[int]) -> int:
+        freq = {}  # Element -> Position
+        max_duplicate = 0
+        flag = 0
+        for index, ele in enumerate(nums):
+            if ele in freq:
+                flag = 1
+                max_duplicate = max(max_duplicate, freq[ele])
+            freq[ele] = index
+        return max_duplicate // 3 + 1 if flag != 0 else 0
+```
+
+**Complexity Analysis:**
+- **Time Complexity:** **O(n)**  
+  Each element is processed once, and dictionary operations are **O(1)**.
+- **Space Complexity:** **O(n)**  
+  Space is used for the dictionary `freq`.
+
+---
+
+### **Learnings**
+1. **Understanding Complexity:** The naive slicing-based approach has quadratic time complexity due to redundant subarray construction and duplicate checks. Optimized methods leverage hashmaps/dictionaries for efficient operations.
+2. **Data Structure Mastery:** Frequency dictionaries are immensely useful in problems requiring tracking and counting elements, avoiding unnecessary iterations.
+3. **Divide-and-Conquer Thinking:** Breaking the problem into chunks or windows can simplify the logic while improving clarity.
+4. **Efficiency Through Flags:** Incorporating flags avoids redundant computations and enables early exits.
+5. **Algorithm Comparison:** Iterative improvement through multiple approaches builds intuition about time-space trade-offs.
