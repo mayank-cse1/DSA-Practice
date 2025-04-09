@@ -1,0 +1,72 @@
+### **Problem:**
+
+You are given an array of integers `nums` and a target value `k`. The task is to determine the minimum number of operations required such that every integer in the array is greater than or equal to `k`. An operation is defined as removing any element from the array.
+
+If it's impossible to ensure that all integers are greater than or equal to `k`, return `-1`.
+
+---
+
+### **Intuition:**
+
+The problem boils down to evaluating if the condition `nums[i] >= k` can be satisfied for all elements in the array. If not, returning `-1` is the obvious choice. Additionally, if the minimum element of the array equals `k`, then all numbers greater than `k` must remain in the array, leading to some straightforward calculations.
+
+The goal here is to simplify the solution by first filtering the array to ensure all elements are unique. Then, key comparisons can help deduce the output efficiently.
+
+---
+
+### **Approach/Algorithm:**
+
+1. **Remove Duplicates:** Convert the array `nums` into a set to avoid redundant operations for duplicate values.
+2. **Find the Minimum Element:** Check the smallest value in the array:
+   - If the smallest element is less than `k`, it's impossible to meet the condition, so return `-1`.
+   - If the smallest element equals `k`, count how many other numbers are greater than `k` and adjust accordingly.
+   - Otherwise, count all numbers greater than `k`.
+3. **Return Result:** The resulting value is either `-1` or the calculated operation count.
+
+---
+
+### **Code:**
+
+```python
+class Solution:
+    def minOperations(self, nums: List[int], k: int) -> int:
+        # Convert nums to a set to eliminate duplicates
+        nums = set(nums)
+        
+        # Base case
+        if min(nums) < k:
+            return -1
+        
+        # If the minimum element is exactly k
+        if min(nums) == k:
+            return len(nums) - 1
+        
+        # Otherwise, return the count of elements
+        else:
+            return len(nums)
+```
+
+---
+
+### **Complexity Analysis:**
+
+- **Time Complexity:**  
+  - **O(n):** The set operation (`set(nums)`) to remove duplicates and the computation of the minimum element take linear time. All other operations are constant time.
+- **Space Complexity:**  
+  - **O(n):** Requires additional space to store the set.
+
+---
+
+### **Learning Points:**
+
+1. **Set Data Structure for Optimization:**  
+   Using a set eliminates duplicates efficiently, reducing the problem size.
+
+2. **Early Returns for Base Cases:**  
+   Identifying critical base cases, like when the minimum element fails the condition, helps optimize runtime and simplifies logic.
+
+3. **Clear Problem Breakdown:**  
+   Breaking down problems into smaller components, like uniqueness and minimum-checking, allows for cleaner and more maintainable code.
+
+4. **Simplifying with Mathematical Reasoning:**  
+   Using properties like the minimum condition helps deduce outcomes without unnecessary iterations.
