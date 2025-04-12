@@ -1,0 +1,106 @@
+
+
+### **Counting Good Integers: Intuition, Approach, and Implementation**
+
+#### **Intuition**
+This problem is about generating and counting palindromic numbers of `n` digits, where the number is divisible by `k`. The challenge lies in efficiently generating unique palindromes and handling permutations with digit repetitions.
+
+To solve this, we:
+- Leverage the symmetry of palindromes by constructing half of the number and reflecting it.
+- Optimize the counting by tracking permutations and avoiding redundant calculations.
+
+#### **Approach**
+1. **Palindrome Construction**:
+   - Generate all numbers of length `ceil(n/2)` and construct a full palindrome by mirroring the first half.
+   - Handle odd-digit palindromes by excluding the middle digit from the mirroring.
+
+2. **Permutation Handling**:
+   - Use a frequency map to calculate how many distinct permutations can be generated for a given palindrome string, accounting for duplicate digits.
+
+3. **Divisibility Check**:
+   - Only consider palindromes that are divisible by `k`.
+
+4. **Deduplication**:
+   - Avoid counting duplicates by tracking sorted representations of palindromes.
+
+#### **Algorithm**
+- Generate possible half-length numbers.
+- Construct full palindromes from these numbers.
+- Check divisibility and, if divisible, count permutations without duplicates.
+- Return the total count.
+
+---
+
+#### **Code**
+
+```python
+class Solution:
+    def countGoodIntegers(self, n: int, k: int) -> int:
+        count_n = n
+
+        def factorial(num):
+            ans = 1
+            for ele in range(num, 0, -1):
+                ans *= ele
+            return ans
+
+        def count_permutation(num):
+            freq = {}
+            freq['0'] = 0
+            for ele in palindrome:
+                if ele not in freq:
+                    freq[ele] = 0
+                freq[ele] += 1
+            ans = (count_n - freq['0']) * factorial(count_n - 1)
+            duplicate = 1
+            for val in freq.values():
+                duplicate *= factorial(val)
+            
+            ans = ans // duplicate
+            return ans
+
+        odd = False
+        if n % 2 == 0:
+            n = (n + 1) // 2
+        else:
+            n = (n + 1) // 2
+            odd = True
+
+        start = 10 ** (n - 1)
+        end = 10 ** n
+        visited = {}
+        count = 0
+
+        for ele in range(start, end):
+            palindrome = str(ele)
+            second_half = palindrome if not odd else palindrome[:-1]
+            palindrome += second_half[::-1] 
+            if int(palindrome) % k == 0:
+                palindrome = ''.join(sorted(palindrome))
+                if palindrome not in visited:
+                    visited[palindrome] = True
+                    count += count_permutation(palindrome)
+        return count
+```
+
+---
+
+#### **Time Complexity**
+1. **Generating Numbers**:
+   - For `n` digits, the range of half-length numbers is `10^(ceil(n/2))`. So, complexity is approximately **O(10^(n/2))**.
+2. **Palindrome Validation**:
+   - Checking divisibility and tracking permutations is negligible compared to the number generation.
+
+**Total**: **O(10^(n/2))**
+
+#### **Space Complexity**
+- Space used for storing palindromes and frequency maps is proportional to the size of the input and intermediate results.
+- **Overall Space**: **O(n)** for auxiliary data structures.
+
+---
+
+#### **Learnings**
+1. Palindrome generation can be optimized by reflecting half-length numbers.
+2. Deduplication requires efficient representation, such as sorting digits of a number.
+3. The factorial function can be reused for handling permutations with duplicates.
+4. Modular arithmetic and symmetry properties reduce the computational overhead in problems involving numerical constraints.
