@@ -108,12 +108,12 @@ Here’s a concise explanation of each algorithm across different DSA topics:
 ---
 
 ### **Mathematical Algorithms**
-| **Algorithm**             | **Explanation**                                                                                          |
-|----------------------------|---------------------------------------------------------------------------------------------------------|
-| **Sieve of Eratosthenes**  | Efficiently generates prime numbers up to a given number.                                              |
-| **Euclidean Algorithm**    | Computes the Greatest Common Divisor (GCD) of two numbers.                                             |
-| **Fast Exponentiation**    | Computes powers of numbers in logarithmic time.                                                        |
-| **Modular Arithmetic**     | Performs arithmetic under a modulo to handle large numbers.                                           |
+| **Algorithm**             | **Explanation**                                                                                          | **Link**|
+|----------------------------|---------------------------------------------------------------------------------------------------------|-------------------------|
+| **Sieve of Eratosthenes**  | Efficiently generates prime numbers up to a given number.                                              ||
+| **Euclidean Algorithm**    | Computes the Greatest Common Divisor (GCD) of two numbers.                                             ||
+| **Binary/Fast Exponentiation**    | Computes powers of numbers in logarithmic time.                                                 |[Blog](https://leetcode.com/problems/count-good-numbers/solutions/6645666/beats-100-fastbinary-exponential-combina-yfxz/)|
+| **Modular Arithmetic**     | Performs arithmetic under a modulo to handle large numbers.                                           ||
 
 ---
 
