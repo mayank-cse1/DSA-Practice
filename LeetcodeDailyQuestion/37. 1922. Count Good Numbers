@@ -1,0 +1,88 @@
+### Efficiently Counting Good Numbers 🚀
+
+#### **Intuition**
+In this problem, we are tasked with finding the count of all valid "good numbers" for a given length `n`. A "good number" is one that alternates between even digits (0, 2, 4, 6, 8) and prime digits (2, 3, 5, 7). Here's the intuition:
+- Even digits can occur in even-indexed positions.
+- Prime digits can occur in odd-indexed positions.
+- The problem can be reduced to finding the count of numbers that satisfy this pattern.
+
+To solve this efficiently, we leverage **modular arithmetic** and **fast exponentiation**. Instead of generating numbers and checking their validity, we compute the count directly.
+
+---
+
+#### **Approach**
+1. **Divide the Length `n`:**
+   - `even_places` represents the count of positions for even digits.
+   - `odd_places` represents the count of positions for prime digits.
+
+   Depending on whether `n` is odd or even, compute:
+   - `even_places = (n + 1) // 2`
+   - `odd_places = n // 2`
+
+2. **Count Valid Choices:**
+   - For each even place, we have **5** valid choices (`0, 2, 4, 6, 8`).
+   - For each odd place, we have **4** valid choices (`2, 3, 5, 7`).
+
+3. **Compute Using Modular Arithmetic:**
+   - To prevent overflow, use modular arithmetic with `mod = 10^9 + 7`.
+   - Calculate the total count as:
+     \[
+     \text{result} = (5^{even\_places} \times 4^{odd\_places}) \mod \text{mod}
+     \]
+
+4. **Optimize with Modular Exponentiation:**
+   - Use an efficient modular exponentiation algorithm to calculate powers in \( O(\log n) \).
+
+---
+
+#### **Algorithm**
+1. Define a helper function for modular exponentiation to compute \((base^{exponent}) \% mod\).
+2. Determine `even_places` and `odd_places` based on `n`.
+3. Compute the final result using modular exponentiation for both base \(5\) and \(4\).
+
+---
+
+#### **Code**
+Here is the Python implementation:
+
+```python
+class Solution:
+    def countGoodNumbers(self, n: int) -> int:
+        # Modular Exponentiation
+        def power(base, exponent, mod):
+            if exponent == 0:
+                return 1
+            half = power(base, exponent // 2, mod)
+            result = (half * half) % mod
+            if exponent % 2 != 0:
+                result = (result * base) % mod
+            return result
+        
+        even_places = (n + 1) // 2
+        odd_places = n // 2
+        mod = 10**9 + 7
+        
+        return (power(5, even_places, mod) * power(4, odd_places, mod)) % mod
+```
+
+---
+
+#### **Time Complexity**
+- **Modular Exponentiation:** Each call to `power(base, exponent, mod)` runs in \(O(\log(\text{exponent}))\).
+- Since we perform two calls to `power`, the overall time complexity is:
+  \[
+  O(\log(even\_places) + \log(odd\_places)) \approx O(\log n)
+  \]
+
+#### **Space Complexity**
+- The space complexity is \(O(\log n)\), due to the recursive stack in the `power` function.
+
+---
+
+#### **Learning Outcomes**
+1. **Modular Arithmetic:** Using `mod = 10^9 + 7` ensures that computations remain efficient and prevent overflow.
+2. **Divide and Conquer:** Breaking the problem into "even places" and "odd places" simplifies computations.
+3. **Efficient Exponentiation:** Modular exponentiation is a powerful technique for handling large powers efficiently.
+4. **Thinking in Patterns:** Instead of brute-forcing the generation of numbers, identifying patterns and counting possibilities saves significant computational effort.
+
+By leveraging mathematical insights and efficient algorithms, this solution runs seamlessly for very large inputs. Let me know if you'd like to explore further refinements! 🚀
