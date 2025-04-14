@@ -1,0 +1,85 @@
+
+**Intuition**
+
+The problem asks us to count "good triplets" from the array, where specific conditions on the absolute differences between triplet elements must hold true. This means we need to explore all triplets `(i, j, k)` such that:
+1. `i < j < k`.
+2. The absolute differences between elements of the triplet satisfy the conditions:
+   - `|arr[i] - arr[j]| <= a`
+   - `|arr[j] - arr[k]| <= b`
+   - `|arr[i] - arr[k]| <= c`
+
+The naive approach uses three nested loops to evaluate all possible triplets but may be computationally expensive for large arrays. A slight optimization can prune unnecessary computations.
+
+---
+
+**Approach**
+
+1. **Iterate through each potential triplet:** Use three loops to generate all combinations of `i`, `j`, and `k` such that `i < j < k`.
+2. **Pruning unnecessary calculations:** Before exploring the third element (`k`), check the first two (`i`, `j`) for the condition `|arr[i] - arr[j]| <= a`. Only proceed to the third loop if this condition holds.
+3. **Validate triplet conditions:** For each triplet, check all three conditions:
+   - `|arr[i] - arr[j]| <= a`
+   - `|arr[j] - arr[k]| <= b`
+   - `|arr[i] - arr[k]| <= c`.
+4. **Count valid triplets:** If a triplet satisfies all conditions, increment the count.
+
+This pruning ensures we skip unnecessary iterations, saving computation time.
+
+---
+
+**Algorithm**
+
+1. Initialize `count` as 0.
+2. Loop through `i` from 0 to `len(arr) - 3`:
+   - Loop through `j` from `i+1` to `len(arr) - 2`:
+     - If `|arr[i] - arr[j]| <= a`, then:
+       - Loop through `k` from `j+1` to `len(arr) - 1`:
+         - If all conditions are met (`|arr[i] - arr[j]| <= a`, `|arr[j] - arr[k]| <= b`, `|arr[i] - arr[k]| <= c`), increment `count`.
+3. Return `count`.
+
+---
+
+**Code**
+
+```python
+class Solution:
+    def countGoodTriplets(self, arr: list[int], a: int, b: int, c: int) -> int:
+        count = 0
+        for i in range(0, len(arr) - 2):
+            for j in range(i + 1, len(arr) - 1):
+                if abs(arr[j] - arr[i]) <= a:  # Prune here
+                    for k in range(j + 1, len(arr)):
+                        if (
+                            abs(arr[i] - arr[j]) <= a
+                            and abs(arr[j] - arr[k]) <= b
+                            and abs(arr[i] - arr[k]) <= c
+                        ):
+                            count += 1
+        return count
+```
+
+---
+
+**Time Complexity**
+
+- Outer loop (`i`): Runs approximately `O(n)` times.
+- Middle loop (`j`): Runs `O(n-1)` to `O(1)` depending on `i`.
+- Inner loop (`k`): Runs `O(n-2)` to `O(1)` depending on `j`.
+
+**Total Complexity:**  
+Approximately `O(n^3)` (triangular growth due to three nested loops). The pruning does not change the worst-case complexity but helps reduce unnecessary iterations.
+
+**Space Complexity**
+
+- **Auxiliary Space:** `O(1)` since no additional data structures are used.
+- **Overall:** `O(1)`.
+
+---
+
+**Learnings**
+
+1. **Efficiency through pruning:** A simple conditional check (`|arr[i] - arr[j]| <= a`) before entering the innermost loop can significantly reduce redundant work.
+2. **Iterative optimization:** While this solution is still `O(n^3)`, we reduced the constant factor through clever pruning.
+3. **Problem decomposition:** Breaking down the problem into smaller parts (`i, j, k` triplet generation, followed by condition validation) ensures a systematic approach.
+4. **Understanding trade-offs:** Optimization often lies in balancing complexity reduction with clarity of code.
+
+By focusing on clarity and step-by-step problem-solving, we can inspire confidence in our solutions and identify avenues for further improvement in future challenges!
