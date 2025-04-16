@@ -1,0 +1,102 @@
+### **Counting Good Subarrays: Intuition, Approach, and Implementation**
+
+#### **Intuition**
+The problem revolves around finding the number of subarrays where the count of unique element pairs is at least `k`. Instead of checking every possible subarray in a brute-force manner (which would be inefficient), a more optimized sliding window approach helps maintain a dynamic count of pairs efficiently.
+
+#### **Approach**
+1. **Sliding Window Technique**:
+   - Maintain a frequency map (`freq`) to store occurrences of each number.
+   - Expand the window (`end` pointer) and count new pairs added.
+   - Shrink the window (`start` pointer) whenever the number of pairs reaches `k`, ensuring efficiency.
+
+2. **Mathematical Computation**:
+   - Use `nC2` (combinations formula) to count the number of pairs formed from repeated elements.
+   - Adjust pairs dynamically while expanding and contracting the window.
+
+3. **Deduplication**:
+   - Remove elements from frequency count when shrinking to ensure valid subarrays are counted properly.
+
+---
+
+#### **Algorithm**
+1. **Initialize**:
+   - Set up frequency map, start and end pointers, total count tracker, and `pairs`.
+
+2. **Expand Window**:
+   - Add the `nums[end]` element into frequency map.
+   - Adjust `pairs` count using `nC2`.
+
+3. **Shrink Window**:
+   - If pairs exceed `k`, shrink the window while counting valid subarrays.
+
+4. **Continue Until End**:
+   - Iterate through `nums` while maintaining an efficient window.
+
+---
+
+#### **Code Implementation**
+
+```python
+from typing import List
+
+class Solution:
+    def nC2(self, num):
+        return (num * (num-1))//2  # Combination formula to count pairs
+
+    def countGood(self, nums: List[int], k: int) -> int:
+        freq = {}
+        start = 0
+        end = 0
+        count = 0
+        pairs = 0
+
+        while end < len(nums):
+            if nums[end] not in freq:
+                freq[nums[end]] = 0
+            
+            # Adjust pairs before updating frequency
+            pairs -= self.nC2(freq[nums[end]])  
+            freq[nums[end]] += 1  
+            pairs += self.nC2(freq[nums[end]])
+
+            while pairs >= k:  
+                count += len(nums) - end  # Count valid subarrays
+
+                # Adjust pairs before updating frequency
+                pairs -= self.nC2(freq[nums[start]])  
+                freq[nums[start]] -= 1  
+                pairs += self.nC2(freq[nums[start]])
+
+                if freq[nums[start]] <= 0:
+                    del freq[nums[start]]  # Cleanup to maintain efficiency
+                start += 1  
+
+            end += 1  
+
+        return count
+```
+
+---
+
+#### **Time Complexity**
+- **Sliding Window Expansion & Contraction**: `O(n)`
+- **Updating Frequency Map**: `O(1) per operation`
+- **Total Complexity**: **O(n)** (Linear time)
+
+#### **Space Complexity**
+- **Frequency Map Storage**: `O(n) in worst case`
+- **Overall Complexity**: **O(n)**
+
+---
+
+#### **Learnings**
+1. **Sliding Window vs Brute Force**:
+   - A naive approach checking every subarray would take `O(n²)`, while sliding window reduces this to `O(n)`.
+   
+2. **Using Combinations (`nC2`) Efficiently**:
+   - Rather than recalculating from scratch, adjusting the pair count incrementally leads to efficient updates.
+   
+3. **Handling Frequency Updates Carefully**:
+   - Removing elements from frequency count ensures minimal redundant calculations.
+
+---
