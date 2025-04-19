@@ -1,0 +1,94 @@
+### **Counting Fair Pairs Efficiently Using Binary Search**
+
+#### **Intuition**
+The problem requires counting the number of pairs `(i, j)` where `nums[i] + nums[j]` lies within the range `[lower, upper]`. Given the constraints, a brute-force `O(n²)` approach would be inefficient. To optimize, we take advantage of sorting and binary search.
+
+The key observation is that for each element `nums[i]`, we determine the valid range of `nums[j]` (i.e., `lower - nums[i]` to `upper - nums[i]`). Instead of iterating through all possible pairs, we use binary search (`lower_bound`) to quickly find indices satisfying the range.
+
+#### **Approach**
+1. **Sort the Array**: Sorting helps in efficiently searching valid `j` indices using binary search.
+2. **Iterate Over `nums[i]`**:
+   - Compute the valid range: `low = lower - nums[i]` and `high = upper - nums[i] + 1`.
+   - Use a `lower_bound` function (custom binary search) to find indices for `low` and `high`.
+3. **Count Valid Pairs Efficiently**:
+   - Using binary search, we find the number of valid elements between `low` and `high` quickly.
+   - Accumulate the count to get the final answer.
+
+---
+
+### **Algorithm**
+1. **Sort** the input array.
+2. Iterate through each element `nums[i]` (from `0` to `n-1`):
+   - Compute `low = lower - nums[i]` and `high = upper - nums[i] + 1`.
+   - Use `lower_bound(nums, low, i+1, n)` to find the leftmost index where elements ≥ `low`.
+   - Use `lower_bound(nums, high, i+1, n)` to find the leftmost index where elements ≥ `high`.
+   - Accumulate `right - left` in `count`.
+3. Return the final count.
+
+---
+
+### **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def lower_bound(self, nums, element, low, high):
+        while low <= high:
+            mid = low + (high - low) // 2
+            if nums[mid] >= element:
+                high = mid - 1
+            else:
+                low = mid + 1
+        return low
+
+    def countFairPairs(self, nums: List[int], lower: int, upper: int) -> int:
+        nums.sort()
+        count = 0
+        n = len(nums) - 1
+        
+        for i in range(n):
+            low = lower - nums[i]
+            high = upper - nums[i] + 1
+            
+            left = self.lower_bound(nums, low, i + 1, n)
+            right = self.lower_bound(nums, high, i + 1, n)
+            
+            count += right - left
+        
+        return count
+```
+
+---
+
+
+### **Time Complexity**
+- **Sorting the array**: `O(n log n)` (due to the sorting step).
+- **Iterating through elements**: `O(n)`.
+- **Binary search (`lower_bound`) per iteration**: `O(log n)`.
+  
+Since we perform a binary search for every element in the array, the overall complexity is:
+
+**Total Time Complexity**: **O(n log n)**.
+
+---
+
+### **Space Complexity**
+- **Sorting requires O(n) space for sorting algorithms that are not in-place (depends on Python implementation)**.
+- **Binary search operates in constant space**.
+- **No additional data structures are used apart from integer variables**.
+
+Thus, the total **Space Complexity**: **O(1)** (assuming sorting is in-place).
+
+---
+
+### **Learnings**
+1. **Sorting Enables Efficient Searching**  
+   Sorting allows us to quickly find boundaries using binary search instead of scanning the entire array.
+   
+2. **Binary Search Reduces Complexity from `O(n²) → O(n log n)`**  
+   Instead of iterating through all pairs, binary search helps pinpoint index ranges efficiently.
+
+3. **Handling Range-based Pair Counting**  
+   Using `lower_bound()` correctly ensures we capture valid indices without excessive computations.
+
+---
