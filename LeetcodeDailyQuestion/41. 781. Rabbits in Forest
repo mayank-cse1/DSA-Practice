@@ -1,0 +1,73 @@
+# **Counting Rabbits in the Forest: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem revolves around rabbits giving answers about how many others share their same color. If a rabbit says "x," it means there are **at most** `x + 1` rabbits of that color (including itself). 
+
+Rather than tracking every individual rabbit, we group them efficiently by the responses, leveraging **mathematical grouping** to minimize the total count.
+
+## **Approach**
+1. **Frequency Mapping**:  
+   - Create a dictionary to count occurrences of each unique response.
+   
+2. **Calculating Minimum Rabbits**:
+   - Each rabbit that says `"x"` belongs to a group of **size `x + 1`**.
+   - Divide the frequency count by `x + 1` to determine the number of full groups.
+   - If there are leftover rabbits that don't form a full group, another **group of size `x + 1`** must be added.
+
+## **Algorithm**
+1. **Initialize a frequency dictionary** to store the occurrences of each reported number.
+2. **Iterate through the frequency map**:
+   - Compute full groups (`value // (key + 1) * (key + 1)`).
+   - If there are leftover rabbits (`value % (key + 1) ≠ 0`), add an additional group.
+3. **Return the total count** of rabbits.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def numRabbits(self, answers: List[int]) -> int:
+        freq = {}
+        for ele in answers:
+            if ele not in freq:
+                freq[ele] = 0
+            freq[ele] += 1
+
+        ans = 0
+        for key, value in freq.items():
+            ans += (value // (key + 1)) * (key + 1)
+            if value % (key + 1) != 0:
+                ans += key + 1
+        return ans
+```
+
+---
+
+## **Time Complexity**
+- **Building Frequency Dictionary** → `O(n)`, where `n` is the number of rabbits answering.
+- **Iterating through unique responses** → `O(m)`, where `m` is the number of unique responses.
+- **Final Computations** → `O(m)`, as we perform constant-time calculations.
+
+Thus, the overall **time complexity** is **O(n)**.
+
+## **Space Complexity**
+- **Dictionary Storage (`freq`)** → `O(m)`, where `m` is the number of unique responses.
+- **Total Space Complexity** → **O(m)**.
+
+---
+
+## **Learnings**
+✅ **Mathematical Grouping for Optimization**  
+Instead of tracking individual rabbits, grouping by responses provides an efficient way to minimize the count.  
+
+✅ **Handling Edge Cases**  
+For responses with leftovers that don’t form full groups, **always** allocate a new full group.  
+
+✅ **Leveraging Hash Maps**  
+Using frequency mapping ensures we can compute results efficiently without unnecessary iterations.
+
+---
+
+🚀 **Follow me for more such content on efficient problem-solving!**  
