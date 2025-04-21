@@ -1,0 +1,102 @@
+# **Counting Possible Arrays from Differences: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem requires reconstructing an original array given its adjacent differences, with the constraint that all elements must lie within a given range `[lower, upper]`. 
+
+### **Key Observations**
+1. **Tracking Value Ranges**:  
+   - The original sequence starts at an unknown value (`x`) and is updated iteratively using `differences[i]`.  
+   - This forms a cumulative sum sequence (`sum_ele`) that reflects how values evolve.
+   
+2. **Maintaining Boundaries**:  
+   - The smallest (`mini_ele`) and largest (`max_ele`) values encountered in the cumulative sequence determine valid starting points.  
+   - The valid `x` range ensuring all values remain within `[lower, upper]` is calculated dynamically.
+
+---
+
+## **Approach**
+1. **Iterate Through the Differences**:
+   - Maintain a cumulative sum (`sum_ele`) to track evolving values.  
+   - Keep track of the **minimum** (`mini_ele`) and **maximum** (`max_ele`) values reached.  
+
+2. **Compute Valid Starting Points**:
+   - `x` must be chosen such that:
+     - `x + mini_ele >= lower`
+     - `x + max_ele <= upper`
+   - The range of valid `x` values is:
+     ```
+     lower - mini_ele ≤ x ≤ upper - max_ele
+     ```
+
+3. **Count Possible Values**:
+   - If `lower - mini_ele > upper - max_ele`, no valid `x` exists, return `0`.  
+   - Otherwise, the count of valid values is:  
+     ```
+     (upper - max_ele) - (lower - mini_ele) + 1
+     ```
+
+---
+
+## **Algorithm**
+1. **Initialize**:
+   - `mini_ele = 0`, `max_ele = 0`, `sum_ele = 0`.
+   
+2. **Iterate Through `differences`**:
+   - Update `sum_ele` as cumulative sum.
+   - Update `mini_ele` and `max_ele` dynamically.
+
+3. **Compute Valid Starting Points**:
+   - If no valid `x` exists, return `0`.
+   - Otherwise, compute the range count.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def numberOfArrays(self, differences: List[int], lower: int, upper: int) -> int:
+        mini_ele = 0
+        max_ele = 0
+        sum_ele = 0
+        for ele in differences:
+            sum_ele += ele
+            mini_ele = min(mini_ele, sum_ele)
+            max_ele = max(max_ele, sum_ele)
+
+        if lower - mini_ele > upper - max_ele:
+            return 0
+        return (upper - max_ele) - (lower - mini_ele) + 1
+```
+
+---
+
+## **Time Complexity Analysis**
+- **Iterating through `differences`** → **O(n)**  
+- **Computing min/max values dynamically** → **O(1)**  
+- **Final calculation for range** → **O(1)**  
+
+**Total Time Complexity** → **O(n)** (Linear)
+
+## **Space Complexity**
+- **Only a few integer variables used** → **O(1)**  
+- **No extra lists or structures** → **O(1)**  
+
+**Total Space Complexity** → **O(1)** (Constant)
+
+---
+
+## **Learnings**
+✅ **Dynamic Range Tracking**  
+Instead of constructing full arrays, we **track boundaries** dynamically, ensuring efficiency.  
+
+✅ **Optimized Computations**  
+By maintaining cumulative sums and updating min/max values **in one pass**, the solution avoids unnecessary storage.  
+
+✅ **Understanding Constraint Handling**  
+Establishing range constraints **before counting** ensures correctness without unnecessary iterations.  
+
+---
+
+This structured approach ensures **optimal efficiency** while preserving clarity. Hope this helps! 🚀
