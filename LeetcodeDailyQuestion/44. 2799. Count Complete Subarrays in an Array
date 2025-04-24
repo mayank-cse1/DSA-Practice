@@ -1,0 +1,97 @@
+# **Counting Complete Subarrays: Intuition, Approach, and Implementation**
+
+## **Intuition**
+A **complete subarray** is defined as a subarray that contains all unique elements from the original array. To efficiently solve this problem, we need to:
+1. Identify the number of unique elements in the entire array (`whole_array_unique_count`).
+2. Traverse the array while dynamically tracking subarray elements and counting how many valid subarrays exist.
+
+The sliding window technique helps us efficiently count all complete subarrays without generating every possible subarray.
+
+---
+
+## **Approach**
+1. **Find Total Unique Elements**:
+   - Use `set(nums)` to compute `whole_array_unique_count`, the number of unique elements in the input array.
+
+2. **Sliding Window Technique**:
+   - Start with two pointers, `start` and `end`, to maintain a sliding window of subarray elements.
+   - Use a hash map (`unique_map`) to track the frequency of each element within the window.
+
+3. **Validate Complete Subarrays**:
+   - When the hash map size equals `whole_array_unique_count`, it means the subarray contains all unique elements.
+   - Count all valid subarrays that start at the current `start` pointer and end at the current `end` pointer, including future extensions of the subarray.
+
+4. **Move the Sliding Window**:
+   - Shrink the window by moving the `start` pointer when a complete subarray is found.
+   - Expand the window by moving the `end` pointer.
+
+---
+
+## **Algorithm**
+1. Compute `whole_array_unique_count` using `len(set(nums))`.
+2. Initialize `start = 0`, `end = 0`, `unique_map = {}`, and `ans = 0`.
+3. Expand the window by iterating `end` through the array:
+   - Add `nums[end]` to `unique_map` and update its frequency.
+4. While `unique_map` contains all unique elements:
+   - Add the number of valid subarrays starting at `start` (calculated as `len(nums) - end`).
+   - Shrink the window by decrementing the frequency of `nums[start]`.
+   - Remove `nums[start]` from `unique_map` if its frequency becomes zero.
+   - Increment `start`.
+5. Return `ans` after processing all elements.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def countCompleteSubarrays(self, nums: List[int]) -> int:
+        whole_array_unique_count = len(set(nums))
+        start = 0
+        end = 0
+        unique_map = {}
+        ans = 0
+        
+        while end < len(nums):
+            if nums[end] not in unique_map:
+                unique_map[nums[end]] = 0
+            unique_map[nums[end]] += 1
+            
+            while len(unique_map) == whole_array_unique_count:
+                count = len(nums) - end
+                ans += count  # Add all future subarrays
+                unique_map[nums[start]] -= 1
+                if unique_map[nums[start]] == 0:
+                    del unique_map[nums[start]]
+                start += 1
+            end += 1
+        
+        return ans
+```
+
+---
+
+## **Time Complexity**
+- **Iterating Through the Array** → **O(n)**: Each element is processed once during `end` traversal.
+- **Sliding Window Operation** → **O(n)**: Each element is processed once during `start` traversal (when shrinking the window).
+
+**Total Time Complexity**: **O(n)** (Linear)
+
+---
+
+## **Space Complexity**
+- **Unique Map Storage** → **O(m)**: At most, the number of unique elements in the array (`m`).
+- **Total Space Complexity** → **O(m)**.
+
+---
+
+## **Learnings**
+✅ **Sliding Window Optimization**:
+Efficiently counting subarrays without generating all possibilities speeds up computation and reduces overhead.
+
+✅ **Hash Map for Dynamic Tracking**:
+Using a hash map allows easy validation of unique element counts within a sliding window.
+
+✅ **Future Extensions of Subarrays**:
+When a complete subarray is found, all possible extensions starting at `start` and ending at `end` are valid, improving efficiency.
