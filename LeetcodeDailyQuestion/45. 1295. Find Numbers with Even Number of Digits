@@ -1,0 +1,73 @@
+# **Finding Numbers with Even Digits: Intuition, Approach, and Implementation**
+
+## **Intuition**
+This problem involves counting numbers that have an **even number of digits** in a given list. Since numbers are represented as integers, we need a straightforward way to determine their digit count. By converting the number to a string, the number of digits becomes equivalent to the string's length.
+
+---
+
+## **Approach**
+1. **Iterate Over the List**:
+   - Loop through each number in the list.
+
+2. **Convert to String**:
+   - Convert the current number to a string to easily determine its digit count.
+
+3. **Check for Even Length**:
+   - If the length of the string is **even**, increment the count.
+
+4. **Return the Total Count**:
+   - After processing all numbers, return the count of numbers with even digits.
+
+---
+
+## **Algorithm**
+1. Initialize a variable `count = 0` to store the number of valid numbers.
+2. For each number `ele` in `nums`:
+   - Convert the number to a string using `str(ele)`.
+   - Check if `len(str(ele)) % 2 == 0`.
+   - If true, increment `count`.
+3. Return `count` as the final result.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def findNumbers(self, nums: List[int]) -> int:
+        count = 0
+        for ele in nums:
+            if len(str(ele)) % 2 == 0:
+                count += 1
+        return count
+```
+
+---
+
+## **Time Complexity**
+- **Iterating through the list** → **O(n)** where `n` is the size of the input list.
+- **String conversion and length computation** → **O(d)** per number, where `d` is the number of digits in the number.
+
+**Total Time Complexity** → **O(n * d)**, but since the digit count (`d`) is usually small, this is practically linear.
+
+---
+
+## **Space Complexity**
+- **Storage for string conversion** → **O(d)** per iteration, where `d` is the number of digits in a number.
+
+**Total Space Complexity** → **O(1)** (no additional data structures are used beyond the `count` variable).
+
+---
+
+## **Learnings**
+✅ **String Manipulation for Numerical Problems**:
+Converting numbers to strings simplifies digit-based operations like counting.
+
+✅ **Direct Condition Checking**:
+Avoid unnecessary nested structures or additional loops for straightforward problems.
+
+✅ **Optimized Iteration**:
+The approach is efficient for large lists since it processes each number independently in linear time.
+
+This solution is clean, intuitive, and leverages Python's capabilities for concise implementation. Let me know if you'd like further insights or refinements! 😊
