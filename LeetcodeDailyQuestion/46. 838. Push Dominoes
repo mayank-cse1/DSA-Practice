@@ -1,0 +1,152 @@
+# **Simulating Domino Falls: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem involves simulating how dominoes fall when pushed from the left (`L`) or right (`R`). Each domino can either:
+- Fall **left** (`L`).
+- Fall **right** (`R`).
+- Remain **standing** (`.`).
+
+The **goal** is to determine the final arrangement of the dominoes based on their initial states.
+
+### **Key Observations**:
+1. **Each Falling Domino Affects Nearby Dominos**:
+   - `R` pushes dominoes to the right.
+   - `L` pushes dominoes to the left.
+   - If two opposing forces (`R...L`) meet, the dominoes in between may stay standing (`.`) or fall towards the dominant force.
+
+2. **Tracking Forces Separately**:
+   - Compute the influence of `R` on dominoes.
+   - Compute the influence of `L` on dominoes (processed in reverse order).
+   - Merge the results to determine the final state.
+
+---
+
+## **Approach**
+### **Step 1: Compute Right Influence (`R`)**
+- Traverse the array from **left to right**.
+- Maintain a `right_array` that records:
+  - **Direction (`R`)** for dominoes influenced by `R`.
+  - **Distance** from the closest `R` domino.
+
+### **Step 2: Compute Left Influence (`L`)**
+- Reverse the array and traverse **right to left**.
+- Maintain a `left_array` similar to `right_array`.
+
+### **Step 3: Determine Final State**
+- Iterate through both influence arrays (`left_array` and `right_array`).
+- At each index, resolve conflicts:
+  - If a domino is influenced only by `R`, it falls `R`.
+  - If a domino is influenced only by `L`, it falls `L`.
+  - If both influence it **equally**, it remains standing (`.`).
+  - If `L` influence is stronger, it falls `L`; if `R` is stronger, it falls `R`.
+
+---
+
+## **Algorithm**
+1. **Initialize `right_array`** to store influences from `R`.
+2. **Process the dominoes** from **left to right**, tracking distance from `R` pushes.
+3. **Reverse the array** and **process from right to left** to track `L` influences using `left_array`.
+4. **Merge the two arrays**, resolving conflicts based on distances.
+5. **Return the final domino arrangement**.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def pushDominoes(self, dominoes: str) -> str:
+        right_array = [(None, None) for _ in range(len(dominoes))]
+        i = 0
+        direction = "."
+        
+        while i < len(dominoes):
+            count = 0
+            while i < len(dominoes) and dominoes[i] == ".":
+                count += 1
+                right_array[i] = (direction, count)
+                i += 1
+            if i == len(dominoes):
+                continue
+            if dominoes[i] == "L":
+                right_array[i] = ("L", 0)
+                direction = "."
+            if dominoes[i] == "R":
+                right_array[i] = ("R", 0)
+                direction = "R"
+            i += 1
+        
+        left_array = [(None, None) for _ in range(len(dominoes))]
+        i = 0
+        direction = "."
+        dominoes = dominoes[::-1]
+        
+        while i < len(dominoes):
+            count = 0
+            while i < len(dominoes) and dominoes[i] == ".":
+                count += 1
+                left_array[i] = (direction, count)
+                i += 1
+            if i == len(dominoes):
+                continue
+            if dominoes[i] == "L":
+                left_array[i] = ("L", 0)
+                direction = "L"
+            if dominoes[i] == "R":
+                left_array[i] = ("R", 0)
+                direction = "."
+            i += 1
+        
+        left_array = left_array[::-1]
+        ans_array = []
+        
+        for i in range(len(dominoes)):
+            l_dir, l_count = left_array[i][0], left_array[i][1]
+            r_dir, r_count = right_array[i][0], right_array[i][1]
+            if l_dir in ["."]:
+                ans_array.append(r_dir)
+            elif r_dir in ["."]:
+                ans_array.append(l_dir)
+            elif l_dir == r_dir:
+                ans_array.append(l_dir)
+            elif l_count < r_count:
+                ans_array.append(l_dir)
+            elif l_count > r_count:
+                ans_array.append(r_dir)
+            else:
+                ans_array.append(".")
+        
+        return "".join(ans_array)
+```
+
+---
+
+## **Time Complexity**
+- **First pass (`right_array`)** → **O(n)**
+- **Second pass (`left_array`)** → **O(n)**
+- **Final merge operation** → **O(n)**
+
+**Total Time Complexity**: **O(n)** (Linear)
+
+---
+
+## **Space Complexity**
+- **Two auxiliary lists (`right_array`, `left_array`)** → **O(n)**
+- **Final array (`ans_array`)** → **O(n)**
+
+**Total Space Complexity**: **O(n)** (Linear)
+
+---
+
+## **Learnings**
+✅ **Using Two-Pass Processing for Opposing Forces**:  
+Tracking left (`L`) and right (`R`) influences separately ensures a clear resolution of conflicts.
+
+✅ **Efficient Distance-Based Decision Making**:  
+Instead of brute-force simulation, maintaining influence distances minimizes redundant operations.
+
+✅ **Understanding Domino Physics via String Processing**:  
+The problem translates real-world physics (falling dominoes) into simple directional checks and string transformations.
+
+This approach ensures an efficient solution while maintaining clarity in domino interactions! Let me know if you'd like further refinements. 🚀
