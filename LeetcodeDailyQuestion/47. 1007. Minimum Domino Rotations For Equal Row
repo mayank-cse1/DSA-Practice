@@ -1,0 +1,126 @@
+# **Minimum Domino Rotations: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem requires finding the **minimum number of rotations** needed to make all values in one row (`tops` or `bottoms`) the same. Each domino has **two sides**, so we need to determine if there is a number that appears in **every domino**, allowing us to rotate individual pieces to align a uniform row.
+
+### **Key Observations**
+1. If a number appears **at least `n` times** across both `tops` and `bottoms`, it is a **potential candidate** for making all elements in one row identical.
+2. Once a candidate is found, we check the **minimum rotations** required to make all elements in `tops` or `bottoms` equal to that number.
+3. If no valid number meets the criteria, return `-1`.
+
+---
+
+## **Approach**
+1. **Count Frequencies**:
+   - Store occurrences of numbers in `tops` and `bottoms` using a dictionary (`freq`).
+   - If a number appears **at least `n` times**, it is **a potential candidate** for making a uniform row.
+
+2. **Determine Minimum Rotations**:
+   - For each potential candidate:
+     - Check how many rotations are needed to make all elements in `tops` equal to the candidate.
+     - Check how many rotations are needed to make all elements in `bottoms` equal to the candidate.
+     - Choose the **minimum rotations** required.
+
+3. **Return Result**:
+   - If no valid candidate exists, return `-1`.
+   - Otherwise, return the minimum rotations found.
+
+---
+
+## **Algorithm**
+1. **Compute Frequencies**:
+   - Loop through `tops` and `bottoms`, updating `freq` dictionary.
+
+2. **Identify Potential Candidates**:
+   - If a number appears at least `n` times across `tops` and `bottoms`, store it in `potential`.
+
+3. **Check Minimum Rotations**:
+   - For each candidate, determine how many rotations are needed for `tops` and `bottoms`.
+   - If a rotation is impossible (i.e., encountering a different number in both rows), mark it as invalid.
+
+4. **Return Minimum Rotations**:
+   - If no valid rotations exist, return `-1`.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def minDominoRotations(self, tops: List[int], bottoms: List[int]) -> int:
+        freq = {}
+        for i in range(len(tops)):
+            if tops[i] not in freq:
+                freq[tops[i]] = 0
+            freq[tops[i]] += 1
+            if bottoms[i] not in freq:
+                freq[bottoms[i]] = 0
+            freq[bottoms[i]] += 1
+
+        potential = []
+        for key, value in freq.items():
+            if value >= len(tops):
+                potential.append(key)
+
+        ans = -1
+        for key in potential:
+            count = 0
+            flag = 0
+            for i in range(len(tops)):
+                if tops[i] != key and bottoms[i] == key:
+                    count += 1
+                elif tops[i] != key and bottoms[i] != key:
+                    flag = 1  # Failure
+                    break
+            if ans == -1:
+                ans = count if flag == 0 else -1
+            else:
+                ans = min(count, ans)
+
+            count = 0
+            flag = 0
+            for i in range(len(tops)):
+                if tops[i] == key and bottoms[i] != key:
+                    count += 1
+                elif tops[i] != key and bottoms[i] != key:
+                    flag = 1  # Failure
+                    break
+            if ans == -1:
+                ans = count if flag == 0 else -1
+            else:
+                ans = min(count, ans)
+
+        return ans
+```
+
+---
+
+## **Time Complexity**
+- **Counting Frequency** → `O(n)`  
+- **Checking Potential Candidates** → `O(n)`  
+- **Computing Minimum Rotations** → `O(n) per candidate`, worst case `O(n)`  
+
+**Total Time Complexity** → `O(n)`
+
+---
+
+## **Space Complexity**
+- **Dictionary storage (`freq`)** → `O(1)` (at most 6 keys for domino values from `1-6`)
+- **Additional variables** → `O(1)`
+
+**Total Space Complexity** → `O(1)`
+
+---
+
+## **Learnings**
+✅ **Efficient Frequency Counting**  
+Using a dictionary helps quickly determine **which numbers are valid candidates**.  
+
+✅ **Tracking Minimum Rotations**  
+Instead of brute-forcing swaps, direct comparisons allow us to optimize rotation selection.  
+
+✅ **Early Exit Strategy**  
+If no number meets the `n` frequency requirement, we avoid unnecessary computations.  
+
+This approach provides an **efficient** and **structured** way to solve the problem while maintaining readability. Let me know if you'd like any refinements! 🚀
