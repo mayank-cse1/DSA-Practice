@@ -1,0 +1,86 @@
+# **Finding Three Consecutive Odd Numbers: A Simple Algorithmic Approach**
+
+## **Introduction**
+Detecting patterns in numerical sequences is a fundamental concept in algorithm design. One such problem requires checking whether an array contains **three consecutive odd numbers**. This challenge is simple in nature but emphasizes efficient iteration and logical condition checks.
+
+---
+
+## **Intuition**
+The goal is to scan the array and determine if any **three consecutive numbers** are all **odd**.  
+### **Key Observations**:
+1. **Odd Numbers Check** → A number is odd if `num % 2 != 0`.
+2. **Sliding Window Approach** → Instead of checking all subsets, a **fixed-size window** (three elements) moves across the array sequentially.
+3. **Early Exit Optimization** → If a valid triplet is found, there's no need to continue searching.
+
+---
+
+## **Approach**
+### **Step 1: Handle Edge Cases**
+- If the array has **less than three elements**, return `False`, since a triplet cannot exist.
+
+### **Step 2: Iterate Using a Sliding Window**
+- Maintain three indices: `i`, `j`, and `k`, representing consecutive elements.
+- Traverse the array sequentially.
+- Check if all three numbers are odd.
+- If a valid triplet is found, return `True` immediately.
+
+### **Step 3: Return `False` if No Valid Triplet is Found**
+- If the loop completes without finding three consecutive odd numbers, return `False`.
+
+---
+
+## **Algorithm**
+1. **Initialize indices**: `i = 0`, `j = 1`, `k = 2`.
+2. **Check if array length is less than 3** → Return `False`.
+3. **Iterate while `k < len(arr)`**:
+   - Check if `arr[i]`, `arr[j]`, and `arr[k]` are all odd.
+   - If true, return `True` immediately.
+   - Otherwise, shift all indices forward (`i++, j++, k++`).
+4. **Return `False` if no triplet is found**.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def threeConsecutiveOdds(self, arr: List[int]) -> bool:
+        i, j, k = 0, 1, 2
+        if len(arr) < 3:
+            return False
+        
+        while k < len(arr):
+            if arr[i] % 2 != 0 and arr[j] % 2 != 0 and arr[k] % 2 != 0:
+                return True
+            i += 1
+            j += 1
+            k += 1
+        
+        return False
+```
+
+---
+
+## **Time Complexity**
+- **Sliding Window Iteration** → `O(n)`, where `n` is the size of the array.
+- **Early Exit Optimization** → If a triplet is found early, the loop **terminates early**.
+
+**Total Time Complexity** → **O(n)** (Linear)
+
+---
+
+## **Space Complexity**
+- **Only integer variables are used (`i, j, k`)** → **O(1)**
+- **No additional storage is required** beyond the input array.
+
+**Total Space Complexity** → **O(1)** (Constant)
+
+---
+
+## **Learnings**
+✅ **Sliding Window Approach** → Efficiently checks consecutive elements without unnecessary nested loops.  
+✅ **Early Exit Strategy** → Reduces computational overhead by stopping at the first valid occurrence.  
+✅ **Minimal Space Usage** → No extra memory allocations, making it space-efficient.
+
+This approach ensures a **clean**, **efficient**, and **optimized** way to solve the problem while keeping the logic straightforward. Would you like any further refinements? 😊
