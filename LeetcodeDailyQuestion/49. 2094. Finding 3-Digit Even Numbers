@@ -1,0 +1,76 @@
+It looks like you've accidentally duplicated your code. I'll provide a **clear explanation** along with an optimized approach.
+
+---
+
+# **Finding Even Three-Digit Numbers from Digits**
+
+## **Intuition**
+The problem requires forming **three-digit even numbers** using a given list of digits. To achieve this:
+1. The **hundreds digit** (`i`) **must be non-zero**, ensuring a valid three-digit number.
+2. The **ones digit** (`k`) **must be even** to satisfy the even-number requirement.
+3. The **tens digit** (`j`) can be any available digit from the given list.
+4. Each digit can be used **only once per number**, meaning we must avoid duplicates.
+
+---
+
+## **Approach**
+1. **Iterate Over All Possible Combinations**:
+   - Use **nested loops** to pick three distinct indices (`i, j, k`).
+   - Ensure `i ≠ j ≠ k` to prevent reusing digits.
+
+2. **Filtering Conditions**:
+   - `digits[i]` **should not be `0`**, ensuring a three-digit number.
+   - `digits[k]` **must be even** (`digits[k] % 2 == 0`).
+
+3. **Form the Number & Store Unique Values**:
+   - Convert selected digits into an integer (`temp_num`).
+   - Use a **set** to remove duplicates.
+   - **Sort** the final list before returning.
+
+---
+
+## **Optimized Code**
+```python
+from typing import List
+
+class Solution:
+    def findEvenNumbers(self, digits: List[int]) -> List[int]:
+        ans = set()  # Using a set to remove duplicates directly
+
+        for i in range(len(digits)):
+            if digits[i] == 0:  # Skip invalid hundred's place
+                continue
+            for j in range(len(digits)):
+                if j == i:
+                    continue
+                for k in range(len(digits)):
+                    if k == i or k == j or digits[k] % 2 != 0:  # Ensure the last digit is even
+                        continue
+                    
+                    temp_num = digits[i] * 100 + digits[j] * 10 + digits[k]
+                    ans.add(temp_num)
+        
+        return sorted(ans)  # Sorting the final unique results
+```
+
+---
+
+## **Time Complexity**
+- **Three nested loops** → **O(n³)** where `n` is the number of digits.
+- **Using a set removes duplicates efficiently**.
+- **Sorting the final result** → **O(m log m)** (`m` is the unique three-digit numbers).
+
+**Total Time Complexity** → **O(n³ + m log m)**, which is reasonable given the constraints.
+
+## **Space Complexity**
+- **Set for unique numbers** → **O(m)** (`m` is the count of valid numbers).
+- **Total Space Complexity** → **O(m)**.
+
+---
+
+## **Learnings**
+✅ **Using `set()` to eliminate duplicates efficiently**.  
+✅ **Checking conditions (`hundreds ≠ 0`, ones must be even) early prevents unnecessary processing**.  
+✅ **Sorting ensures correct ordering of results**.
+
+This approach keeps things clean while improving efficiency. Hope this helps! 🚀 Let me know if you'd like further refinements. 😊
