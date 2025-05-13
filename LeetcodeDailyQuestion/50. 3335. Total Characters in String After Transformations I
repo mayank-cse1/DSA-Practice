@@ -1,0 +1,98 @@
+# **Length After Transformations: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem involves tracking the transformation of a string over `t` rounds according to specific rules. Each transformation shifts character frequencies and redistributes them into new positions. The challenge lies in efficiently updating the frequency array while ensuring modular arithmetic constraints are applied.
+
+### **Key Observations**
+1. **Character Frequency Tracking**  
+   - The transformation doesn’t alter individual characters but shifts their frequencies dynamically.  
+   - A frequency array (`char`) is used to store the count of each letter (`a-z`).  
+
+2. **Transformation Rules**  
+   - `char[i]` moves to `char[i+1]` except for `char[0]`, which depends on `char[25]`.  
+   - `char[1]` incorporates `char[0]` and `char[25]`, ensuring continuity in movement.
+
+3. **Modulo Handling**  
+   - Since numbers can grow large, every update follows the modulus constraint (`10^9 + 7`).
+
+---
+
+## **Approach**
+### **Step 1: Initialize Frequency Array**
+- Create a `char` array of size `26` (for alphabet letters).
+- Populate the array by counting occurrences of each letter in `s`.
+
+### **Step 2: Apply Transformations (`t` rounds)**
+- Create a temporary array (`nxt`) to store new frequencies per round.
+- Update:
+  - `nxt[0] = char[25]` → Circular shift handling.
+  - `nxt[1] = (char[25] + char[0]) % mod` → Influence of previous cycle.
+  - `nxt[i] = char[i-1]` for all other indices → Shifting pattern.
+
+### **Step 3: Compute Final Count**
+- Sum the transformed frequency array and apply modulo.
+
+---
+
+## **Algorithm**
+1. **Initialize `char` array** and populate with letter frequencies from `s`.
+2. **Iterate `t` rounds**, updating the frequency shifts per transformation.
+3. **Sum transformed frequencies** and return the result modulo `10^9 + 7`.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def lengthAfterTransformations(self, s: str, t: int) -> int:
+        char = [0] * 26
+        mod = 10**9 + 7
+        
+        # Count character occurrences
+        for ele in s:
+            char[ord(ele) - ord("a")] += 1
+        
+        # Apply transformation for t rounds
+        for _ in range(t):
+            nxt = [0] * 26
+            nxt[0] = char[25]
+            nxt[1] = (char[25] + char[0]) % mod
+            for i in range(2, len(char)):
+                nxt[i] = char[i-1]
+            char = nxt
+        
+        # Compute final length
+        return sum(char) % mod
+```
+
+---
+
+## **Time Complexity**
+- **Counting Initial Frequencies** → `O(n)`, where `n` is the length of `s`.
+- **Transformation Rounds** → `O(26 * t) = O(t)`, since we process 26 letters per round.
+- **Summing the Result** → `O(26) = O(1)`.
+
+**Total Complexity** → `O(n + t)`
+
+---
+
+## **Space Complexity**
+- **Character Frequency Array (`char`)** → `O(26) = O(1)`.
+- **Temporary Array (`nxt`)** → `O(26) = O(1)`.
+
+**Total Space Complexity** → `O(1)`
+
+---
+
+## **Learnings**
+✅ **Using Frequency Arrays for Character Transformations**  
+Instead of modifying strings directly, tracking letter occurrences allows efficient transformations.  
+
+✅ **Modulo Arithmetic for Large Values**  
+Prevents overflow and ensures correctness in large computations.  
+
+✅ **Iterative Transformation Approach**  
+Avoids recursion pitfalls and maintains clarity in updating states.
+
