@@ -1,0 +1,90 @@
+# **Identifying Triangle Types: Intuition, Approach, and Implementation**
+
+## **Intuition**
+Triangles are classified into **three types** based on their side lengths:
+1. **Equilateral** → All three sides are equal.
+2. **Isosceles** → Exactly two sides are equal.
+3. **Scalene** → All three sides have different lengths.
+
+Before determining the type, we must check whether the given three sides **form a valid triangle** using the **Triangle Inequality Theorem**, which states:
+```
+A triangle exists if the sum of any two sides is greater than the third side.
+```
+
+---
+
+## **Approach**
+### **Step 1: Validate Input**
+- If the input list `nums` **does not contain exactly three elements**, return `"none"`.
+
+### **Step 2: Triangle Inequality Check**
+- Ensure the sum of **any two sides** is **greater than** the third side.
+
+### **Step 3: Determine Triangle Type**
+- If all three sides are **equal**, return `"equilateral"`.
+- If exactly **two sides are equal**, return `"isosceles"`.
+- Otherwise, return `"scalene"`.
+
+---
+
+## **Algorithm**
+1. **Verify Input Length** → If `nums` does not have **exactly three elements**, return `"none"`.
+2. **Check Triangle Validity** → Ensure the three sides satisfy the **Triangle Inequality Theorem**.
+3. **Classify the Triangle**:
+   - If all sides are equal → `"equilateral"`.
+   - If exactly two sides are equal → `"isosceles"`.
+   - Otherwise → `"scalene"`.
+4. **Return `"none"` if the sides do not form a valid triangle**.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def triangleType(self, nums: List[int]) -> str:
+        if len(nums) != 3:
+            return "none"
+
+        # Triangle inequality check
+        if nums[0] + nums[1] > nums[2] and nums[1] + nums[2] > nums[0] and nums[2] + nums[0] > nums[1]:
+            # Check triangle type
+            if len(set(nums)) == 1:
+                return "equilateral"
+            elif len(set(nums)) == 2:
+                return "isosceles"
+            else:
+                return "scalene"
+        else:
+            return "none"
+```
+
+---
+
+## **Time Complexity**
+- **Input Length Check** → **O(1)**
+- **Triangle Inequality Verification** → **O(1)**
+- **Set-based Classification** → **O(1)** (since it checks a set of three values)
+
+**Total Time Complexity** → **O(1)** (Constant Time)
+
+---
+
+## **Space Complexity**
+- **Stores only a few integer variables** → **O(1)**.
+- **No additional data structures are used**.
+
+**Total Space Complexity** → **O(1)** (Constant Space)
+
+---
+
+## **Learnings**
+✅ **Triangle Classification Requires Validation**  
+The **Triangle Inequality Theorem** ensures input side lengths form a valid triangle before classification.
+
+✅ **Using Sets for Efficient Classification**  
+Using Python’s `set()` simplifies the process by directly checking unique side counts.
+
+✅ **Optimized O(1) Approach**  
+Since only three values are processed, the solution runs in **constant time and space**.
