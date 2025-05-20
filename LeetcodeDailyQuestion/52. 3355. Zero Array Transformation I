@@ -1,0 +1,94 @@
+# **Checking if an Array Can Become Zero: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem requires determining whether a given array `nums` can be transformed into an array of all zeros using a series of decrement operations defined by `queries`. Each query `[l, r]` reduces all elements between indices `l` and `r` by **1**. 
+
+Instead of applying each operation individually (which would be inefficient), we leverage the **difference array technique** to optimize the decrement process.
+
+---
+
+## **Approach**
+1. **Initialize a Difference Array** (`diff`):
+   - Instead of modifying `nums` directly, maintain a separate array (`diff`) to record changes.
+   - `diff[l] -= 1` signals the start of a decrement effect.
+   - `diff[r+1] += 1` negates the decrement effect after `r`.
+
+2. **Compute the Final Decrement Array** (`decrement`):
+   - Construct the cumulative effect of all decrements by iterating over `diff`.
+   - The running sum (`curr`) determines how much each element in `nums` is reduced.
+
+3. **Check if `nums` Becomes Zero**:
+   - If `nums[i] + decrement[i] > 0` for any index `i`, return `False`.
+   - Otherwise, return `True`, meaning all values can be transformed to zero.
+
+---
+
+## **Algorithm**
+1. **Initialize the difference array** (`diff`).
+2. **Process queries to populate `diff`**.
+3. **Compute cumulative decrements in `decrement`**.
+4. **Validate transformation**:
+   - If any value remains positive, return `False`.
+   - Otherwise, return `True`.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def isZeroArray(self, nums: List[int], queries: List[List[int]]) -> bool:
+        diff = [0] * len(nums)
+
+        # Apply range updates using the difference array technique
+        for l, r in queries:
+            diff[l] -= 1
+            if r + 1 < len(nums):
+                diff[r + 1] += 1
+
+        # Compute the cumulative effect on nums
+        decrement = []
+        curr = 0
+        for ele in diff:
+            curr += ele
+            decrement.append(curr)
+
+        # Check if all elements in nums can become zero
+        for i in range(len(nums)):
+            if nums[i] + decrement[i] > 0:
+                return False
+        
+        return True
+```
+
+---
+
+## **Time Complexity**
+- **Processing Queries (`diff` array updates)** → **O(q)** (`q` is the number of queries).
+- **Computing Cumulative Decrements** → **O(n)** (traversing the difference array).
+- **Final Validation Step** → **O(n)** (checking if `nums` becomes zero).
+
+**Total Complexity** → **O(q + n)** (Efficient)
+
+---
+
+## **Space Complexity**
+- **Difference Array (`diff`)** → **O(n)**
+- **Cumulative Decrement (`decrement`)** → **O(n)**
+
+**Total Space Complexity** → **O(n)**
+
+---
+
+## **Learnings**
+✅ **Using the Difference Array for Efficient Range Updates**  
+Instead of modifying elements directly, leveraging a difference array speeds up transformations.  
+
+✅ **Optimized Approach vs Naïve Iteration**  
+Iterating over `nums` directly for each query would be **O(q * n)**—this optimized method reduces it to **O(q + n)**.
+
+✅ **Cumulative Sum to Track Changes**  
+A running sum efficiently calculates how much each element needs to be reduced without extra loops.
+
+This implementation ensures **optimized performance** and clarity in handling range modifications. Let me know if you'd like further refinements! 🚀
