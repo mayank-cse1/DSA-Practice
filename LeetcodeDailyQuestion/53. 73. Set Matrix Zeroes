@@ -1,0 +1,129 @@
+# **Setting Matrix Zeroes: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem requires modifying a matrix **in-place** such that:
+- If an element is `0`, all elements in its **row** and **column** become `0`.
+  
+Instead of iterating through the matrix multiple times, we first **identify the affected rows and columns**, then set values to `0`.
+
+---
+
+## **Approach**
+### **Step 1: Identify Rows and Columns to Modify**
+- **Use two hash maps (`row`, `col`)** to record which rows and columns must be set to zero.
+- Traverse the matrix and update the maps whenever a `0` is found.
+
+### **Step 2: Update the Matrix**
+- Use the `row` map to set entire rows to `0`.
+- Use the `col` map to set entire columns to `0`.
+
+---
+
+## **Algorithm**
+1. Initialize two dictionaries:
+   - `row = {}` → Tracks rows that contain a `0`.
+   - `col = {}` → Tracks columns that contain a `0`.
+
+2. **First Pass**:
+   - Traverse the matrix and update `row[i]` and `col[j]` if `matrix[i][j] == 0`.
+
+3. **Second Pass**:
+   - If a row exists in `row`, set its entire row to `0`.
+   - If a column exists in `col`, set its entire column to `0`.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        row = {}
+        col = {}
+
+        # Identify affected rows and columns
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 0:
+                    row[i] = 1
+                    col[j] = 1    
+
+        # Set rows to zero
+        for r in row.keys():
+            for c in range(len(matrix[0])):
+                matrix[r][c] = 0
+
+        # Set columns to zero
+        for c in col.keys():
+            for r in range(len(matrix)):
+                matrix[r][c] = 0
+```
+
+---
+
+## **Time Complexity**
+- **First pass** (identifying zeros) → `O(m * n)`
+- **Second pass** (setting rows and columns) → `O(m * n)`
+
+**Total Time Complexity** → **O(m * n)** (Optimal for this approach)
+
+---
+
+## **Space Complexity**
+- **Hash maps (`row` and `col`)** → `O(m + n)`
+- **In-place modification** → No additional memory allocation beyond input storage.
+
+**Total Space Complexity** → **O(m + n)**
+
+---
+
+## **Optimized Approach (Using Matrix as Storage)**
+Instead of using hash maps, we can **use the first row and first column** to mark which rows and columns should be zero, reducing space complexity to **O(1)**.
+
+```python
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        m, n = len(matrix), len(matrix[0])
+        first_row_zero = any(matrix[0][j] == 0 for j in range(n))
+        first_col_zero = any(matrix[i][0] == 0 for i in range(m))
+
+        # Use first row and column to store zero marks
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+
+        # Set matrix zeros based on the marks
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+
+        # Handle first row and column separately
+        if first_row_zero:
+            for j in range(n):
+                matrix[0][j] = 0
+        if first_col_zero:
+            for i in range(m):
+                matrix[i][0] = 0
+```
+
+### **Optimized Complexity**
+✅ **Time Complexity** → `O(m * n)`  
+✅ **Space Complexity** → `O(1)`
+
+This solution is **more space-efficient**, making it ideal for larger matrices.
+
+---
+
+## **Learnings**
+✅ **Efficient Data Storage** → Hash maps simplify tracking, but matrix marking eliminates extra memory usage.  
+✅ **Optimized In-Place Updates** → Avoids unnecessary space allocation while maintaining clarity.  
+✅ **Multi-Pass Traversal** → Splitting identification and modification ensures correctness.
+
+Hope this helps! Let me know if you'd like further optimizations. 🚀
