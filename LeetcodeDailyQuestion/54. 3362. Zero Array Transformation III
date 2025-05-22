@@ -1,0 +1,127 @@
+# **Max Removal Using Heap Priority Queue: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem involves removing elements from an array (`nums`) based on given `queries`, where each query defines a **starting index** and an **ending index** for candidate selections. The goal is to **maximize removals** while ensuring the given constraints are met.
+
+### **Key Observations**
+1. **Heap-Based Priority Selection**:
+   - Since we want to maximize removals efficiently, a **max heap** (`heapq`) helps prioritize higher values first.
+   
+2. **Tracking Candidates & Chosen Elements**:
+   - **Candidates** store potential elements for selection.
+   - **Chosen** keeps track of selected removals, ensuring correct counting.
+
+3. **Sorting Queries for Efficient Processing**:
+   - Sorting queries by their **starting index** (`x`) ensures ordered traversal.
+
+---
+
+## **Approach**
+### **Step 1: Sort Queries by Starting Index**
+- Sorting helps efficiently pick values at the correct indices while iterating.
+
+### **Step 2: Iterating Through `nums`**
+- Loop through each index `i` and:
+  - Extract applicable queries using `heapq`.
+  - Track required removals (`reqd = nums[i] - len(chosen)`).
+  - If `reqd` is greater than available candidates, return `-1`.
+  - Select the top candidates using a **max heap**.
+
+### **Step 3: Verify Remaining Valid Elements**
+- If any value in `nums` remains non-zero after removals, return `-1`.
+
+### **Step 4: Return Total Unused Queries + Remaining Candidates**
+- The final result combines unused queries and remaining candidates.
+
+---
+
+## **Algorithm**
+1. **Sort Queries by `x`**.
+2. **Process Each Index `i`**:
+   - Extract relevant queries.
+   - Track required removals.
+   - Use **heapq** for prioritization.
+3. **Validate the Final Condition**:
+   - If remaining values in `nums` are **greater than zero**, return `-1`.
+4. **Return Total Remaining Queries & Candidates**.
+
+---
+
+## **Code Implementation**
+```python
+import heapq
+from typing import List
+
+class Solution:
+    def maxRemoval(self, nums: List[int], queries: List[List[int]]) -> int:
+        queries.sort(key=lambda x: x[0])
+        candidates = []
+        chosen = []
+
+        for i in range(len(nums)):
+            # Selecting candidates with starting index i
+            while queries:
+                x, y = queries.pop(0)
+                if x == i:
+                    heapq.heappush(candidates, -y)
+                else:
+                    queries.insert(0, [x, y])
+                    break
+            
+            reqd = nums[i] - len(chosen)
+
+            # Edge Case: Not enough candidates
+            if len(candidates) < reqd:
+                return -1
+            
+            # Choose top candidates
+            while reqd > 0 and candidates:
+                ele = -heapq.heappop(candidates)
+                if ele < i:
+                    continue
+                heapq.heappush(chosen, ele)
+                reqd -= 1
+
+            nums[i] -= len(chosen)
+
+            if nums[i] > 0:
+                return -1
+            
+            # Remove elements that are no longer relevant
+            while chosen:
+                ele = heapq.heappop(chosen)
+                if ele != i:
+                    heapq.heappush(chosen, ele)
+                    break
+
+        return len(queries) + len(candidates)
+```
+
+---
+
+## **Time Complexity**
+- **Sorting Queries** → `O(q log q)`, where `q` is the number of queries.
+- **Iterating Over `nums`** → `O(n)`, where `n` is the length of `nums`.
+- **Heap Operations (`heapq`)** → `O(log q)` per insertion/removal.
+
+**Total Complexity** → `O(q log q + n log q)`
+
+---
+
+## **Space Complexity**
+- **Candidates (`heapq`) Storage** → `O(q)`
+- **Chosen Storage** → `O(n)`
+
+**Total Space Complexity** → `O(q + n)`
+
+---
+
+## **Learnings**
+✅ **Using a Priority Queue (`heapq`) for Selection**  
+Efficiently picking elements while maintaining order minimizes unnecessary operations.
+
+✅ **Sorting for Efficient Query Processing**  
+Sorting ensures structured traversal, avoiding redundant searches.
+
+✅ **Dynamic Heap Utilization**  
+Heap operations (`push` & `pop`) allow flexible element selection.
