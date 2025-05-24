@@ -1,0 +1,75 @@
+# **Finding Words Containing a Specific Character: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The goal of this problem is to **find all indices** in a given list of words where a specific character (`x`) appears. Instead of storing the words themselves, we store their **indices**, allowing efficient lookups.
+
+### **Key Observations**
+1. **String Membership Check (`x in word`)**:
+   - Python provides a built-in way to check whether a substring exists in a string (`x in word`).
+   - This eliminates the need for manual iteration over characters.
+
+2. **Tracking Indices Instead of Words**:
+   - Since the problem asks for **indices**, not the actual words, we store the **index** using `enumerate()`.
+
+---
+
+## **Approach**
+1. **Iterate Over the List**:
+   - Use `enumerate(words)` to obtain both the index (`i`) and the word (`word`).
+   
+2. **Check for Presence of `x` in Each Word**:
+   - If `x` appears in `word`, store its index in `ans`.
+
+3. **Return the List of Indices**:
+   - The final list contains all positions where the condition was met.
+
+---
+
+## **Algorithm**
+1. **Initialize an empty list `ans`** to store indices.
+2. **Loop through each word in `words` using `enumerate()`**:
+   - If `x in word`, append index `i` to `ans`.
+3. **Return `ans` as the final output**.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def findWordsContaining(self, words: List[str], x: str) -> List[int]:
+        ans = []
+        for i, word in enumerate(words):
+            if x in word:
+                ans.append(i)
+        return ans
+```
+
+---
+
+## **Time Complexity**
+- **Iterating through words** → `O(n)`, where `n` is the number of words.
+- **Checking `x in word`** → `O(m)`, where `m` is the average word length.
+
+**Total Time Complexity** → **O(n * m)**
+
+---
+
+## **Space Complexity**
+- **Only storing indices in a list (`ans`)** → **O(n)** (Worst case: `x` is in every word).
+- **No additional structures used beyond output storage**.
+
+**Total Space Complexity** → **O(n)**
+
+---
+
+## **Learnings**
+✅ **Using `enumerate()` for Index Tracking**  
+It simplifies index retrieval while looping over elements.  
+
+✅ **Efficient String Membership Checking (`x in word`)**  
+Python’s built-in operation avoids manual character scanning.  
+
+✅ **Minimal Space Usage**  
+Only storing indices keeps memory usage efficient.  
