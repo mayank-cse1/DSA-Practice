@@ -1,0 +1,111 @@
+# **Finding the Longest Palindromic String Using Word Pairs**
+
+## **Intuition**
+The problem requires constructing the **longest possible palindrome** using pairs of words from the given list. A palindrome reads the same forward and backward, meaning we need to strategically select words and their reverses.
+
+### **Key Observations**
+1. **Perfectly Palindromic Pairs** (`"aa", "bb"`)  
+   - If a word is already a palindrome (e.g., `"aa"`), its frequency determines how much it contributes to the total palindrome length.  
+   - **If even count**, all occurrences contribute.  
+   - **If odd count**, we place one in the middle and the rest in pairs.  
+
+2. **Matching Reverse Pairs** (`"ab", "ba"`)  
+   - If `"ab"` exists, check for `"ba"` and pair them together to extend the palindrome.
+
+3. **Tracking Frequencies Efficiently**  
+   - Using a dictionary (`word_map`) ensures fast lookups and keeps track of available words.
+
+---
+
+## **Approach**
+### **Step 1: Store Word Frequencies**
+- Count occurrences of each word using a dictionary.
+
+### **Step 2: Process Each Word**
+- If the word is **already a palindrome**:
+  - Use all pairs (`word_map[word] * 2`).
+  - If an **odd frequency** exists, keep one for the center.
+- If the word has a **reverse counterpart**, pair them (`"ab"` with `"ba"`) to contribute `4` characters per valid pair.
+
+### **Step 3: Return the Final Length**
+- Accumulate the valid palindrome length and return it.
+
+---
+
+## **Algorithm**
+1. **Initialize dictionary (`word_map`)** to track frequencies.
+2. **Iterate through words**, updating the frequency map.
+3. **Identify palindromic words**:
+   - Process them based on their frequency count.
+4. **Check for reverse word pairs**:
+   - If `"ab"` and `"ba"` exist, pair them together to maximize palindrome length.
+5. **Return the final palindrome length**.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def longestPalindrome(self, words: List[str]) -> int:
+        def isPalindrome(word):
+            return word[0] == word[1]
+
+        ans = 0
+        word_map = {}
+
+        # Count occurrences of each word
+        for word in words:
+            word_map[word] = word_map.get(word, 0) + 1
+
+        flag = True  # Tracks if an odd palindrome can be placed in the center
+
+        for word in set(words):
+            if isPalindrome(word):
+                if word_map[word] % 2 == 0:
+                    ans += word_map[word] * 2
+                else:
+                    if flag:
+                        ans += 2
+                        flag = False
+                    ans += (word_map[word] - 1) * 2                
+            else:
+                rev_word = word[::-1]
+                if rev_word in word_map:
+                    temp = min(word_map[word], word_map[rev_word])
+                    word_map[word] -= temp
+                    word_map[rev_word] -= temp
+                    ans += temp * 4
+
+        return ans
+```
+
+---
+
+## **Time Complexity**
+- **Building Frequency Map** → `O(n)`
+- **Processing Unique Words** → `O(n)`
+- **Checking Reverse Pairs** → `O(n)`
+
+**Total Time Complexity** → `O(n)`
+
+---
+
+## **Space Complexity**
+- **Dictionary Storage (`word_map`)** → `O(n)`
+- **Tracking variables** → `O(1)`
+
+**Total Space Complexity** → `O(n)`
+
+---
+
+## **Learnings**
+✅ **Using Dictionaries for Fast Lookup**  
+Tracking word occurrences ensures efficient processing.
+
+✅ **Palindrome Pairing Strategy**  
+Directly pairing words with their reverses simplifies length calculations.
+
+✅ **Handling Odd Frequency Cases**  
+By placing one odd palindrome in the center, we optimize palindrome construction.
