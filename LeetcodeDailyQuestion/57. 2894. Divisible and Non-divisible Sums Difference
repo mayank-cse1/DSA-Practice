@@ -1,0 +1,93 @@
+# **Difference of Sums: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The goal is to compute the difference between:
+1. **Sum of all numbers from `1` to `n`**.
+2. **Sum of numbers divisible by `m`** within the same range.
+
+By calculating these values separately, we can determine the **difference** efficiently using mathematical formulas.
+
+---
+
+## **Approach**
+### **Step 1: Compute Total Sum**
+- Using the formula for the sum of the first `n` natural numbers:
+  ```
+  total_sum_n = n * (n + 1) // 2
+  ```
+
+### **Step 2: Compute Sum of Numbers Divisible by `m`**
+- The largest number divisible by `m` in the range `1` to `n` is:
+  ```
+  last_num_div = n - (n % m)
+  ```
+- The number of terms in this sequence (`m, 2m, 3m, ...`) is:
+  ```
+  div_n = last_num_div // m
+  ```
+- Using the sum formula for the first `k` numbers and multiplying by `m`:
+  ```
+  sum_div_m = m * (div_n * (div_n + 1) // 2)
+  ```
+
+### **Step 3: Compute Non-Divisible Sum**
+- Subtract the sum of numbers divisible by `m` from the total sum:
+  ```
+  sum_not_div_m = total_sum_n - sum_div_m
+  ```
+
+### **Step 4: Return the Difference**
+- Compute:
+  ```
+  difference = sum_not_div_m - sum_div_m
+  ```
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def differenceOfSums(self, n: int, m: int) -> int:
+        # Total Sum
+        total_sum_n = n * (n + 1) // 2
+
+        # Sum of numbers divisible by m
+        last_num_div = n - n % m
+        div_n = last_num_div // m
+        sum_div_m = m * (div_n * (div_n + 1) // 2)
+
+        # Sum of numbers NOT divisible by m
+        sum_not_div_m = total_sum_n - sum_div_m
+
+        return sum_not_div_m - sum_div_m
+```
+
+---
+
+## **Time Complexity**
+- **Computing Total Sum** → **O(1)**
+- **Computing Divisible Sum** → **O(1)**
+- **Final Difference Calculation** → **O(1)**
+
+**Total Time Complexity** → **O(1)** (Constant time, efficient)
+
+---
+
+## **Space Complexity**
+- **Uses only integer variables** → **O(1)** (No extra space required)
+
+---
+
+## **Learnings**
+✅ **Using Mathematical Formulas for Efficient Summation**  
+Avoiding loops ensures optimal performance.  
+
+✅ **Handling Numbers Divisible by `m` Using Simple Arithmetic**  
+Tracking sequences simplifies calculations while maintaining accuracy.  
+
+✅ **Constant Time Complexity (`O(1)`)**  
+All operations execute in a fixed number of steps, making the solution highly efficient.
+
+This approach ensures correctness while keeping the implementation neat and optimized. Let me know if you need further clarifications! 🚀
