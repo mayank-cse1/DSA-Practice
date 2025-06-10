@@ -1,0 +1,98 @@
+# **Maximum Difference in Character Frequency: Intuition, Approach, and Implementation**
+
+## **Intuition**
+The problem involves finding the **maximum difference** between character frequencies in a string. We classify characters into **even-frequency** and **odd-frequency** groups, then compute the difference between their maximum and minimum values.
+
+### **Key Observations**
+1. **Use a Frequency Map** → First, count occurrences of each character.
+2. **Classify Characters into Even/Odd Groups** → Separately track max/min values for both.
+3. **Compute Differences** → The result is the **maximum absolute difference** between the min of one group and the max of the other.
+
+---
+
+## **Approach**
+1. **Build Character Frequency Map**:
+   - Loop through `s` to count occurrences of each character.
+
+2. **Track Even and Odd Frequencies**:
+   - Maintain:
+     - `even_max` & `even_min` for even frequencies.
+     - `odd_max` & `odd_min` for odd frequencies.
+
+3. **Compute Maximum Difference**:
+   - The final result is:
+     ```
+     max(odd_max - even_min, odd_min - even_max)
+     ```
+   - Ensures the biggest possible spread between the groups.
+
+---
+
+## **Algorithm**
+1. **Initialize `freq_map`** to store occurrences of characters in `s`.
+2. **Iterate over `s`**:
+   - Update frequency counts.
+3. **Find Even and Odd Frequency Extremes**:
+   - Track `even_max`, `even_min`, `odd_max`, `odd_min`.
+4. **Compute Maximum Difference**:
+   - Return the best possible difference between odd/even frequency values.
+
+---
+
+## **Code Implementation**
+```python
+from typing import List
+
+class Solution:
+    def maxDifference(self, s: str) -> int:
+        freq_map = {}
+
+        # Count character occurrences
+        for ele in s:
+            freq_map[ele] = freq_map.get(ele, 0) + 1
+
+        even_max, even_min = float('-inf'), float('inf')
+        odd_max, odd_min = float('-inf'), float('inf')
+
+        # Track min/max frequencies for even and odd counts
+        for freq in freq_map.values():
+            if freq % 2 == 0:
+                even_max = max(even_max, freq)
+                even_min = min(even_min, freq)
+            else:
+                odd_max = max(odd_max, freq)
+                odd_min = min(odd_min, freq)
+
+        return max(odd_max - even_min, odd_min - even_max)
+```
+
+---
+
+## **Time Complexity**
+- **Building Frequency Map** → `O(n)`
+- **Processing Frequency Counts** → `O(1)` (at most 26 unique letters)
+- **Final Calculation** → `O(1)`
+
+**Total Complexity** → **O(n)**
+
+---
+
+## **Space Complexity**
+- **Dictionary (`freq_map`) Storage** → `O(1)` (fixed at `O(26)`)
+- **Constant Storage for Min/Max Tracking** → `O(1)`
+
+**Total Space Complexity** → **O(1)**
+
+---
+
+## **Learnings**
+✅ **Optimized Frequency Counting Using Hash Maps**  
+Using `dict.get()` simplifies updates without explicit checks.  
+
+✅ **Handling Edge Cases with `inf`**  
+Using `float('inf')` ensures clean min/max calculations without arbitrary values.  
+
+✅ **Efficient Computation in Linear Time**  
+Maintaining separate min/max values avoids unnecessary loops, keeping the algorithm **O(n)**.
+
+This approach ensures efficiency and correctness! 🚀 Let me know if you’d like further refinements. 😊
