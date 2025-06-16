@@ -1,0 +1,71 @@
+# **Maximum Difference Between Increasing Elements**
+
+This problem is a classic case where a brute force approach gives way to a more elegant and efficient solution once the core pattern is recognized.
+
+---
+
+## **Problem Statement Recap**
+Given a list of integers `nums`, we want to find the **maximum difference** between two elements `nums[j] - nums[i]` such that `j > i` and `nums[j] > nums[i]`. If no such pair exists, return `-1`.
+
+---
+
+## **Brute Force Approach**
+
+### ✅ **Code**
+```python
+class Solution:
+    def maximumDifference(self, nums: List[int]) -> int:
+        diff = -1
+        for i in range(len(nums) - 1):
+            for j in range(i + 1, len(nums)):
+                if nums[j] > nums[i]:
+                    diff = max(diff, nums[j] - nums[i])
+        return diff
+```
+
+### 💡 **Explanation**
+- Compare every pair `(i, j)` where `j > i`.
+- If `nums[j] > nums[i]`, compute the difference and update the maximum.
+
+### ⏱️ Time Complexity → `O(n²)`
+Inefficient for large inputs because it checks all pairs.
+
+### 📦 Space Complexity → `O(1)`
+Only uses a few variables.
+
+---
+
+## **Optimal Approach**
+
+### ✅ **Code**
+```python
+class Solution:
+    def maximumDifference(self, nums: List[int]) -> int:
+        preceding_min_ele = nums[0]
+        ans = -1
+        for ele in nums[1:]:
+            if ele > preceding_min_ele:
+                ans = max(ans, ele - preceding_min_ele)
+            else:
+                preceding_min_ele = ele
+        return ans
+```
+
+### 💡 **Explanation**
+- Traverse from left to right.
+- Keep track of the **minimum value seen so far**.
+- If the current number is larger, compute the difference.
+- Update the answer and continue scanning.
+
+### ⏱️ Time Complexity → `O(n)`
+Scans the array once.
+
+### 📦 Space Complexity → `O(1)`
+Constant space, with no extra data structures.
+
+---
+
+## **Key Takeaway**
+This pattern of maintaining a **running minimum** and calculating differences on the fly is extremely handy—not just here, but in problems like **Best Time to Buy and Sell Stock** and related variations. Learning to identify where brute force can be trimmed down to one-pass logic is a skill that scales across challenges.
+
+Want to convert this into a blog-friendly format or try a follow-up variant? Let me know! 😊
