@@ -1,0 +1,72 @@
+## **Problem Summary**
+You’re given:
+- An integer array `nums`.
+- An integer `k`.
+
+### **Task**
+Partition `nums` into **subsequences** such that:
+- Every number belongs to exactly one subsequence.
+- For each subsequence, the **difference between its maximum and minimum** elements is **at most `k`**.
+
+### **Goal**
+Return the **minimum number of such subsequences**.
+
+---
+
+## **Intuition**
+To minimize the number of subsequences:
+- We should **maximize** how many elements we can squeeze into each valid group.
+- Since the constraint is based on the **range** (`max - min <= k`), sorting helps group numbers that are close together.
+
+---
+
+## **Approach**
+1. **Sort the array** to line up elements in ascending order.
+2. Use a **greedy strategy**:
+   - Start with the first ungrouped element as the base (`nums[i]`).
+   - Keep adding elements to the current group as long as `nums[j] ≤ nums[i] + k`.
+   - When you find a number that would exceed the range, start a new group.
+3. Keep track of how many such groups (subsequences) you form.
+
+---
+
+## **Code Explanation**
+```python
+class Solution:
+    def partitionArray(self, nums: List[int], k: int) -> int:
+        nums.sort()
+        i = 0
+        count = 0
+        while i < len(nums):
+            j = i + 1
+            while j < len(nums) and nums[j] <= nums[i] + k:
+                j += 1
+            count += 1
+            i = j
+        return count
+```
+
+- `nums.sort()` ensures we’re always grouping nearest possible values.
+- The outer loop selects the start of a new group.
+- The inner loop expands the group while it’s valid.
+- `count` is incremented for each new group.
+
+---
+
+## **Time & Space Complexity**
+- **Time Complexity**:  
+  - Sorting: `O(n log n)`  
+  - Scanning: `O(n)`  
+  - **Total**: `O(n log n)`
+
+- **Space Complexity**:  
+  - `O(1)` (in-place grouping after sort)
+
+---
+
+## **Learning Highlights**
+✅ Greedy methods work well for **minimizing group counts** with local constraints  
+✅ Sorting often reveals **clustering opportunities**  
+✅ Efficient traversal with two pointers avoids unnecessary loops
+
+Let me know if you'd like a visual walkthrough or a follow-up variation of this problem! 🚀  
