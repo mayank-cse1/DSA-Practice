@@ -1,0 +1,88 @@
+# 🧩 Minimum Deletions to Make a String k-Special
+
+## 📝 Problem Statement
+You're given:
+- A string `word` consisting of lowercase English letters.
+- An integer `k`.
+
+The string is called **k-special** if the absolute difference between the frequencies of *any* two characters is less than or equal to `k`.
+
+### Goal:
+Return the **minimum number of character deletions** required to make the string `k-special`.
+
+#### 📌 Examples:
+**Input**: `word = "aabcaba"`, `k = 0`  
+**Frequencies**: `a = 4, b = 2, c = 1`  
+**Output**: `3` (Delete 2 a’s and 1 b OR 1 a, 1 b, 1 c)
+
+**Input**: `word = "dabdcbdcdcd"`, `k = 2`  
+**Frequencies**: `a = 1, b = 2, c = 3, d = 5`  
+**Output**: `0` (All frequencies already within `k`)
+
+---
+
+## 💡 Intuition
+To make a string k-special, we need to **flatten the frequency distribution** so that all frequencies lie within a difference of `k`.
+
+- We can either:
+  - Completely **remove less frequent characters**, or
+  - **Reduce higher frequencies** until they're within range.
+
+By **sorting frequencies**, we focus on the smallest and largest counts and shrink the gap between them using minimal deletions.
+
+---
+
+## 🔍 Approach
+1. **Count frequencies** of each character using a dictionary.
+2. **Sort the frequency list** to make comparisons easier.
+3. Use a **recursive strategy** with two pointers `i` (low) and `j` (high):
+   - If `frequencies[j] - frequencies[i] <= k`, done!
+   - Else, consider two options:
+     - Delete all of `frequencies[i]` and solve the rest.
+     - Reduce `frequencies[j]` to `frequencies[i] + k` and solve the rest.
+   - Return the minimum deletions between both options.
+
+---
+
+## 🧠 Code
+```python
+from typing import List
+
+class Solution:
+    def minimumDeletions(self, word: str, k: int) -> int:
+        freq = {}
+        for ele in word:
+            freq[ele] = freq.get(ele, 0) + 1
+
+        frequencies = sorted(freq.values())
+
+        def helper(i: int, j: int) -> int:
+            if i >= j or frequencies[j] - frequencies[i] <= k:
+                return 0
+            # Option 1: delete all of frequencies[i]
+            pick1 = frequencies[i] + helper(i + 1, j)
+            # Option 2: reduce frequencies[j]
+            pick2 = frequencies[j] - frequencies[i] - k + helper(i, j - 1)
+            return min(pick1, pick2)
+
+        return helper(0, len(frequencies) - 1)
+```
+
+---
+
+## ⏱ Time & Space Complexity
+- **Time Complexity**:  
+  - Sorting frequencies: `O(n log n)`  
+  - Recursive traversal: worst-case `O(n²)`  
+  - (Could be optimized further using memoization)
+
+- **Space Complexity**:  
+  - Frequency dictionary: `O(26)`  
+  - Recursion stack: up to `O(n)`
+
+---
+
+## 🧠 Learnings
+✅ **Frequency compression problems** often benefit from sorting and two-pointer strategies.  
+✅ **Recursive decisions with bounded choices** are elegant for problems with symmetrical structure.  
+✅ Always consider **memoization** or a bottom-up approach for performance improvement in recursive solutions.
