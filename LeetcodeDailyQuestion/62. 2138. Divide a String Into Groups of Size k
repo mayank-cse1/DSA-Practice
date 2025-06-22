@@ -1,0 +1,83 @@
+# 🔠 Divide a String Into Fixed-Length Groups with Padding
+
+## 📝 Problem Statement
+Given:
+- A string `s`,
+- An integer `k`, and
+- A character `fill`.
+
+Your task is to divide the string into substrings of **length `k`**, padding the final group (if needed) with the `fill` character. The groups must:
+- All be of length exactly `k`.
+- Appear in **left-to-right** order, preserving original order of characters in `s`.
+
+---
+
+## 💡 Intuition
+We aim to:
+- **Split** the input string `s` into fixed-size chunks of `k` characters.
+- **Right-pad** the final chunk if there aren’t enough characters using the given `fill`.
+
+A simple recursive solution works here, but care must be taken to maintain correct order and handle trailing characters precisely.
+
+---
+
+## 🔍 Approach
+1. Use a recursive function `helper(i)` that returns a list of grouped substrings starting from index `i`.
+2. If the remaining substring has fewer than `k` characters:
+   - Append the required number of `fill` characters to make the group exactly `k` long.
+3. If there are enough characters for a full group:
+   - Recursively process the rest of the string.
+   - Combine the current group with results from the recursive call.
+4. Reverse the final list since the recursion builds the groups in reverse order.
+
+---
+
+## 🧪 Example
+```python
+s = "abcdefghi"
+k = 3
+fill = "x"
+
+# Groups: ['abc', 'def', 'ghi'] -> No padding needed.
+```
+
+```python
+s = "abcde"
+k = 3
+fill = "z"
+
+# Groups: ['abc', 'dez'] -> 'de' is padded with 'z' to form 'dez'.
+```
+
+---
+
+## 🧠 Code
+```python
+from typing import List
+
+class Solution:
+    def divideString(self, s: str, k: int, fill: str) -> List[str]:
+        def helper(i):
+            if i >= len(s):
+                return []
+            if i + k > len(s):
+                temp = k - (len(s) - i)
+                string = s[i:] + temp * fill
+                return [string]
+            return helper(i + k) + [s[i:i + k]]
+        
+        return helper(0)[::-1]
+```
+
+---
+
+## ⏱ Time & Space Complexity
+- **Time Complexity**: `O(n/k)` → each group is processed once (total groups are approximately `n/k`).
+- **Space Complexity**: `O(n/k)` → result list stores all chunks; recursion stack may also go up to `n/k`.
+
+---
+
+## 📘 Learnings
+✅ **Recursive slicing** can elegantly solve chunking problems, but reversal is often needed when recursion builds results bottom-up.  
+✅ **Edge case handling** (like trailing characters) is essential for fixed-size formatting.  
+✅ Recursive solutions are expressive, but an iterative approach may be more intuitive and performant for large strings.
