@@ -1,0 +1,53 @@
+### 💡 Problem Summary
+Given a binary string `s` and an integer `k`, you need to find the **length of the longest subsequence** (not necessarily contiguous) such that its binary representation is less than or equal to `k`.
+
+---
+
+### ✅ Key Observations
+- **Rightmost bits contribute the least to the overall number**, so including them is often safe.
+- **Zeroes are "free"** in terms of numeric value, so we can always include them.
+- For ones, we need to check if including the corresponding power of 2 would still keep the value ≤ `k`.
+
+---
+
+### ✅ Optimized & Clean Version
+```python
+class Solution:
+    def longestSubsequence(self, s: str, k: int) -> int:
+        value = 0
+        power = 1
+        count = 0
+
+        # Traverse from right to left
+        for bit in reversed(s):
+            if bit == '0':
+                count += 1  # 0s are always safe
+            else:
+                if power <= k and value + power <= k:
+                    value += power
+                    count += 1
+                else:
+                    # Can’t afford this '1'
+                    pass
+            power *= 2
+            if power > k:
+                break  # No point going further: the place value is too large
+        
+        return count
+```
+
+---
+
+### ⏱ Time Complexity
+- **O(n)** in worst case (traverse the entire string once).
+- Early exit possible when `2^i > k`.
+
+### 📦 Space Complexity
+- **O(1)** — constant extra space used.
+
+---
+
+### ✨ Learnings
+- When working with binary strings and constraints like `≤ k`, **work from least significant bit**.
+- Use bitwise logic and **early stopping conditions** to keep your solution sharp.
+- Zeroes are your allies in these problems—they don’t inflate numeric value, but contribute to length.
