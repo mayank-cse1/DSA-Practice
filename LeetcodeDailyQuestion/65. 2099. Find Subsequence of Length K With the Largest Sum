@@ -1,0 +1,67 @@
+## ✅ Problem Statement
+Given:
+- A list of integers `nums` (can include negatives).
+- An integer `k`.
+
+**Task**:  
+Return a subsequence of size `k` (maintaining original relative order) such that its **sum is maximized**.
+
+---
+
+## 💡 Intuition
+To maximize the sum of a `k`-element subsequence:
+1. Select the **k largest numbers**.
+2. Preserve their **relative order** from the original list.
+
+---
+
+## 🛠️ Approach
+1. **Copy and sort** `nums` to extract the `k` largest values.
+2. **Build a frequency map** of the elements that won't be in the final subsequence (`non_ans_map`).
+3. **Iterate through `nums`**, skipping elements marked for exclusion (using the frequency map), and preserve the rest.
+4. **Return the first `k` remaining elements**, which will be the required subsequence.
+
+---
+
+## 🧠 Code (Slightly Refactored for Clarity)
+```python
+from typing import List
+
+class Solution:
+    def maxSubsequence(self, nums: List[int], k: int) -> List[int]:
+        temp = sorted(nums)
+        exclude = temp[:len(nums) - k]
+
+        skip_map = {}
+        for num in exclude:
+            skip_map[num] = skip_map.get(num, 0) + 1
+
+        ans = []
+        for num in nums:
+            if skip_map.get(num, 0):
+                skip_map[num] -= 1
+            else:
+                ans.append(num)
+            if len(ans) == k:
+                break  # optimization: stop once we have k elements
+
+        return ans
+```
+
+---
+
+## ⏱ Time Complexity
+- Sorting: `O(n log n)`
+- Iteration & Map Usage: `O(n)`
+
+**Total**: `O(n log n)`
+
+## 📦 Space Complexity
+- Frequency map + result list: `O(n)`
+
+---
+
+## 🎯 Learnings
+- Preserving **relative order** disqualifies simple slicing after sort.
+- Using a **skip map** lets us avoid dropping all duplicates of the same value.
+- Strategic short-circuiting after collecting `k` items improves performance.
