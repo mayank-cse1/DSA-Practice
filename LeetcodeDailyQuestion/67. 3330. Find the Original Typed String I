@@ -1,0 +1,73 @@
+## 🧩 Problem Statement
+
+You are given a string `word`. Find the number of **non-empty substrings** where each substring consists of **identical characters**, and **each pair of adjacent characters in the substring are the same**.
+
+Return the **total number of such substrings** (including all single-character substrings).
+
+---
+
+## 💡 Intuition
+
+A segment of consecutive identical characters contributes to multiple valid substrings:
+- For example, `"aaa"` contributes: `"a"`, `"aa"`, `"aaa"` → 3 substrings.
+
+But in your logic, instead of generating all substrings, you're computing them more efficiently by adding only the count of **additional substrings** introduced by repeated characters in a run.
+
+---
+
+## 🛠️ Approach
+
+1. **Initialize counters**:
+   - `i` for traversal,
+   - `ans` for counting valid substrings (start with 1 to count the first character).
+
+2. **Traverse the string**:
+   - For each group of identical characters, find where the streak ends (`j`).
+   - The number of valid substrings added from this streak is:  
+     `length - 1` (we already counted one as part of the default count, or with previous streaks).
+
+3. **Add to total** and continue to the next segment.
+
+---
+
+## ✅ Code
+```python
+class Solution:
+    def possibleStringCount(self, word: str) -> int:
+        i = 0
+        ans = 1  # count starts at 1 to include the first character
+        while i < len(word):
+            j = i
+            while j < len(word) and word[j] == word[i]:
+                j += 1
+            ans += (j - i - 1)
+            i = j
+        return ans
+```
+
+---
+
+## 🔍 Example
+**Input**: `"aaabbc"`  
+Groups: `"aaa"`, `"bb"`, `"c"`  
+- `"aaa"` contributes 3 substrings  
+- `"bb"` contributes 2  
+- `"c"` contributes 1  
+Total = `3 + 2 + 1 = 6`
+
+**Output**: `6`
+
+---
+
+## ⏱ Time Complexity
+- **O(n)** — Single pass through the string
+
+## 📦 Space Complexity
+- **O(1)** — No additional space needed
+
+---
+
+## ✨ Learnings
+✅ Consecutive character patterns can be counted without generating substrings  
+✅ Run-length grouping is a helpful strategy for substring problems  
+✅ Starting with an offset base value (like `ans = 1`) can simplify accounting
