@@ -1,0 +1,62 @@
+# 🍀 Find the Largest Lucky Integer
+
+## 🧩 Problem Statement
+Given an array `arr`, find the largest **lucky integer** — an integer `x` such that:
+- `x` appears **exactly `x` times** in the array.
+
+If no such integer exists, return `-1`.
+
+---
+
+## 💡 Intuition
+This is a classic frequency-counting task:
+- Count how many times each number appears.
+- Check if that number is equal to its frequency.
+- Track the largest such number.
+
+---
+
+## ✅ Approach
+1. **Count Frequencies**:
+   - Use a hash map (`dict`) to record how many times each number appears.
+
+2. **Filter Lucky Numbers**:
+   - Iterate over the frequency map.
+   - If a number is equal to its frequency, it’s “lucky”.
+
+3. **Track the Maximum**:
+   - Update `ans` if the lucky number is larger than previous ones.
+
+---
+
+## 🧠 Code Explanation
+```python
+class Solution:
+    def findLucky(self, arr: List[int]) -> int:
+        freq = {}
+        for ele in arr:
+            freq[ele] = freq.get(ele, 0) + 1  # count frequency
+        
+        ans = -1
+        for ele, val in freq.items():
+            if ele == val:
+                ans = max(ans, ele)  # update largest lucky number
+        
+        return ans
+```
+
+- Uses `dict.get()` for cleaner frequency updates.
+- Starts `ans` at `-1`, which is returned if no lucky integer is found.
+
+---
+
+## ⏱ Time & Space Complexity
+- **Time**: `O(n)` — one pass to count, one pass to scan the map.
+- **Space**: `O(n)` — for the frequency dictionary.
+
+---
+
+## 🧠 Learnings
+✅ When frequency matters, dictionaries are your best friends.  
+✅ Never underestimate early filters (like `ele == val`) to prune unwanted cases.  
+✅ A little math humor: sometimes to be “lucky”, you’ve gotta match your own hype (frequency).
