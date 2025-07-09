@@ -1,0 +1,83 @@
+# 🕓 Maximum Free Time Between Events
+
+## 🧩 Problem Statement
+Given:
+- An `eventTime` (total duration),
+- An integer `k`,
+- Lists `startTime` and `endTime` representing the times of scheduled events.
+
+### Goal:
+Find the **maximum total free time** obtainable by choosing **at most `k+1` non-overlapping free time slots**, where a free time slot is the time between consecutive events or before/after the timeline.
+
+---
+
+## 💡 Intuition
+- Every time there's no overlap between two events, there's **free time** between the end of one and the start of the next.
+- We record all such **non-overlapping gaps** as possible rest slots.
+- The problem then becomes a classic **sliding window** scenario:
+  - From the list of gaps, find a contiguous subarray of at most `k+1` elements that **maximizes the sum**.
+
+---
+
+## 🔍 Approach
+
+### Step 1: Generate Free Time Slots
+- Traverse the `startTime` and `endTime` lists.
+- If an event starts after the previous one ends, calculate the time gap.
+
+### Step 2: Include the final trailing gap
+- After all events, add the time from the last event’s end to `eventTime`.
+
+### Step 3: Find the maximum sum of `k+1` free slots
+- Use a **sliding window** of size up to `k+1`.
+- Track the sum of the current window and update `result` accordingly.
+
+---
+
+## ✅ Code Refined for Clarity
+```python
+from typing import List
+
+class Solution:
+    def maxFreeTime(self, eventTime: int, k: int, startTime: List[int], endTime: List[int]) -> int:
+        prev_end = 0
+        free_slots = []
+
+        # Collect non-overlapping gaps
+        for i in range(len(startTime)):
+            if startTime[i] >= prev_end:
+                free_slots.append(startTime[i] - prev_end)
+                prev_end = endTime[i]
+
+        # Add remaining time after the last event
+        free_slots.append(eventTime - prev_end)
+
+        # Sliding window of size up to k+1
+        result = 0
+        window_sum = 0
+        for i in range(len(free_slots)):
+            window_sum += free_slots[i]
+            if i > k:
+                window_sum -= free_slots[i - k - 1]
+            result = max(result, window_sum)
+
+        return result
+```
+
+---
+
+## ⏱ Time Complexity
+- **O(n)** to compute free slots.
+- **O(n)** for sliding window computation.
+
+✅ Total: `O(n)`
+
+## 📦 Space Complexity
+- **O(n)** for storing gaps in `free_slots`
+
+---
+
+## ✨ Learnings
+- This blends **greedy gap detection** with a classic **sliding window** technique.
+- Real-world scheduling problems can be reframed as **subarray optimization**.
+- Always account for edge cases like time left after the final scheduled event.
