@@ -1,0 +1,106 @@
+# ⏱️ Max Free Time With Smart Block Removal
+
+## 🧩 Problem Statement
+
+You're given:
+
+- `startTime[]` and `endTime[]` — arrays representing the start and end of scheduled events.
+- An integer `eventTime` — the total available time span.
+
+Each event **blocks** a segment of time. Between events, you get **free gaps**.
+
+### 🧠 Goal:
+
+Find the **maximum amount of free time** that can be achieved by:
+- Possibly removing **at most one blocker** if it can be fully transferred into the adjacent gaps.
+- If not removable, leave it and find the best combined free window between gaps.
+
+---
+
+## 💡 Intuition
+
+This is a clever twist on **interval merging** and **gap maximization**:
+
+1. Gaps are **time between event end and next event start**.
+2. Blocks are the **busy time** occupied by events.
+3. For each blocker (event), check whether its duration can be redistributed into adjacent gaps:
+   - If yes, consider the combined window **`gap[i-1] + block[i] + gap[i]`**.
+   - Else, fallback to **`gap[i-1] + gap[i]`**.
+
+The solution leverages:
+- Gap tracking.
+- Block duration handling.
+- A priority order based on **the three largest gaps** to judge whether a block can be transferred.
+
+---
+
+## ⚙️ Breakdown of the Code
+
+### **Step 1: Capture Gaps and Blocks**
+```python
+startTime.append(eventTime)     # Handle final gap till end
+endTime.append(-99)             # Sentinel to ignore
+```
+
+- Each gap is `startTime[i] - prev_end`
+- Each block is `endTime[i] - startTime[i]` (if not sentinel)
+
+Also tracks top 3 largest gaps to later validate transfer conditions.
+
+---
+
+### **Step 2: Check If Blocker Is Transferable**
+```python
+def is_transferable(ind):
+    ...
+```
+
+- Logic checks whether adjacent gaps are large enough to absorb `block[ind]`
+- Uses largest gap values to judge.
+
+---
+
+### **Step 3: Evaluate All Blockers**
+```python
+for ind in range(len(block)):
+    if is_transferable(ind):
+        ans = max(ans, gap[i-1] + block[ind] + gap[i])
+    else:
+        ans = max(ans, gap[i-1] + gap[i])
+```
+
+- Tries each scenario and keeps track of the best merged time window.
+
+---
+
+## 🧪 Example Walkthrough
+
+### Input:
+```python
+eventTime = 10
+startTime = [0, 3, 7, 9]
+endTime   = [1, 4, 8, 10]
+```
+
+### Derived:
+- Gaps: [0, 2, 3, 1, 0]
+- Blocks: [1, 1, 1, 1]
+
+- Try merging around each blocker if possible.
+
+---
+
+## ⏱️ Time & Space Complexity
+
+- **Time**: `O(n)` for computing gaps and blocks  
+- **Space**: `O(n)` for gap/block arrays
+
+---
+
+## 🧠 Learnings
+
+✅ It's possible to **simulate event scheduling smartly** using gaps and blocks  
+✅ Careful bookkeeping (top 3 gap sizes) enables flexible planning  
+✅ Modular logic (`is_transferable`) makes edge-case validation clean and readable
+
+Would you like me to simplify the logic even more or wrap this into a reusable scheduling function for other scenarios? I’d be glad to!
