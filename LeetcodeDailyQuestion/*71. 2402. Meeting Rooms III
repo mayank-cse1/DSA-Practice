@@ -1,0 +1,85 @@
+# 🏢 Most Booked Meeting Room Using Priority Queues
+
+## 🧩 Problem Statement
+You're managing `n` meeting rooms and a list of meeting time intervals (`meetings`). Each meeting must be assigned a room. If no rooms are available at the meeting’s start time, the meeting waits for the earliest available room. Once assigned, a room is busy for the full meeting duration.
+
+### Goal:
+Determine which room was booked the most number of times. If there’s a tie, return the **room with the smallest index**.
+
+---
+
+## 💡 Intuition
+This is a classic resource scheduling challenge. You use **two heaps**:
+- One (`unused_rooms`) stores **available room indices**.
+- Another (`used_rooms`) stores `[end_time, room_index]` of **occupied rooms**, sorted by earliest release time.
+
+By sorting meetings by their start times and leveraging heaps efficiently, we simulate room usage with minimal overhead.
+
+---
+
+## 🧠 Approach
+1. **Sort meetings** by start time.
+2. Track `unused_rooms` as a **min-heap**.
+3. Track `used_rooms` as a **min-heap of `[end_time, room_index]`**.
+4. For each meeting:
+   - Free any rooms whose meetings have ended.
+   - If available rooms exist, pick the **lowest-index** one and assign the meeting.
+   - If no room is available, wait for the room with the earliest end time. Delay the meeting accordingly.
+5. Keep track of how many times each room was used.
+6. At the end, return the room index with the **maximum booking count**.
+
+---
+
+## ✅ Code Explained
+```python
+from heapq import heapify, heappop, heappush
+from typing import List
+
+class Solution:
+    def mostBooked(self, n: int, meetings: List[List[int]]) -> int:
+        unused_rooms = list(range(n))  # Initially, all rooms are free
+        used_rooms = []  # Min-heap of [end_time, room_index]
+        heapify(unused_rooms)
+
+        meeting_count = [0] * n  # Count of meetings per room
+
+        for start, end in sorted(meetings):
+            # Free up rooms that have completed by 'start'
+            while used_rooms and used_rooms[0][0] <= start:
+                _, room = heappop(used_rooms)
+                heappush(unused_rooms, room)
+
+            if unused_rooms:
+                room = heappop(unused_rooms)
+                heappush(used_rooms, [end, room])
+            else:
+                room_end, room = heappop(used_rooms)
+                new_end = room_end + (end - start)
+                heappush(used_rooms, [new_end, room])
+
+            meeting_count[room] += 1
+
+        return meeting_count.index(max(meeting_count))
+```
+
+---
+
+## ⏱ Time Complexity
+- **Sorting meetings**: `O(m log m)`
+- **Each meeting**:  
+  - Heap operations (push/pop): `O(log n)`  
+  - Total: `O(m log n)` for `m` meetings
+
+✅ **Overall**: `O(m log m + m log n)`
+
+---
+
+## 📦 Space Complexity
+- Heaps + counters: `O(n)` for room tracking
+
+---
+
+## 📘 Learnings
+✅ Simulating real-world scheduling often boils down to clever use of heaps  
+✅ Using min-heaps for availability and delay modeling gives tight control over dynamic timing  
+✅ Always handle tied results deterministically — here by returning the smallest-index room
