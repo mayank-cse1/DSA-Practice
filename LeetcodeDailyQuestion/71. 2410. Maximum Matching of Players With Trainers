@@ -1,0 +1,101 @@
+# 🧩 Matching Players and Trainers Efficiently
+
+## 📝 Problem Statement
+You are given:
+- A list `players`, representing the **abilities** of each player.
+- A list `trainers`, representing the **maximum training capacity** of each trainer.
+
+Each player can be matched with at most **one** trainer if:
+```
+player ability ≤ trainer capacity
+```
+
+Each trainer can match with **only one player**, and vice versa.
+
+### 🎯 Goal:
+Return the **maximum number of possible matchings**.
+
+---
+
+## 💡 Intuition
+To maximize matchings:
+- You should **sort both lists** so you can efficiently find compatible pairs.
+- Think of it like a **two-pointer matching game**:
+  - Start from the weakest player and the weakest trainer.
+  - Move forward optimally based on compatibility.
+
+---
+
+## 🛠️ Approach
+1. **Sort `players` and `trainers`** in ascending order.
+2. Initialize two pointers `i` and `j` for players and trainers respectively.
+3. If the current player (`players[i]`) can be matched with the current trainer (`trainers[j]`), increment both pointers and the match count.
+4. Otherwise, move the trainer pointer `j` forward (looking for a better fit).
+5. Repeat until one of the lists is exhausted.
+
+---
+
+## ✅ Code
+```python
+class Solution:
+    def matchPlayersAndTrainers(self, players: List[int], trainers: List[int]) -> int:
+        players.sort()
+        trainers.sort()
+
+        i = j = ans = 0
+
+        while i < len(players) and j < len(trainers):
+            if players[i] <= trainers[j]:
+                ans += 1
+                i += 1
+                j += 1
+            else:
+                j += 1  # try next trainer
+        
+        return ans
+```
+
+---
+
+## 🧪 Examples
+### Example 1
+```python
+players = [4, 7, 9]
+trainers = [8, 2, 5, 8]
+# After sorting:
+# players = [4, 7, 9]
+# trainers = [2, 5, 8, 8]
+# Matching:
+# 4 ↔ 5 → Match
+# 7 ↔ 8 → Match
+# 9 ↔ 8 → No match
+# ✅ Output: 2
+```
+
+### Example 2
+```python
+players = [1, 1, 1]
+trainers = [10]
+# Only one trainer available
+# ✅ Output: 1
+```
+
+---
+
+## ⏱ Time Complexity
+- Sorting: `O(n log n + m log m)` where `n` and `m` are lengths of `players` and `trainers`
+- Matching: `O(n + m)`
+
+✅ Total: `O(n log n + m log m)`
+
+---
+
+## 📦 Space Complexity
+- `O(1)` extra space (in-place two-pointer traversal)
+
+---
+
+## 🧠 Learnings
+✅ Sorting brings order and efficiency to greedy matching problems  
+✅ Two-pointer strategies shine when working with sorted lists  
+✅ Always check problem constraints — one-to-one matching simplifies logic
