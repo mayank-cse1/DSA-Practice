@@ -1,0 +1,54 @@
+# 🔢 Convert Binary Linked List to Decimal Integer
+
+## 📝 Problem Statement
+You're given a **singly linked list** representing a binary number. Each node contains `0` or `1`. The most significant bit is at the **head of the list**, and the least significant at the tail.
+
+**Goal:**  
+Convert this binary representation into a decimal integer.
+
+---
+
+## 💡 Intuition
+This problem is similar to converting a binary string into an integer:
+- Start from the **most significant bit** (at the head).
+- For every bit, shift its value according to its position.
+- Accumulate the total using bit manipulation or arithmetic.
+
+---
+
+## 🛠️ Approach in Your Code
+1. **Calculate Length** of the linked list to determine bit positions.
+2. **Traverse Again** to compute value:
+   - For each bit, multiply it by `2^position` (position derived from length).
+   - Sum up contributions from all bits.
+
+---
+
+## ✅ Suggested Improvements
+- Instead of calculating the length first and then traversing again, we can do it in **one pass** using left-shifting.
+
+### ⚙️ Optimized Version
+```python
+class Solution:
+    def getDecimalValue(self, head: Optional[ListNode]) -> int:
+        num = 0
+        while head:
+            num = num * 2 + head.val  # Same as (num << 1) | head.val
+            head = head.next
+        return num
+```
+
+---
+
+## 📊 Complexity
+| Metric           | Value     |
+|------------------|-----------|
+| Time Complexity   | `O(n)`    |
+| Space Complexity  | `O(1)`    |
+
+---
+
+## ✨ Learnings
+✅ Linked list traversal can be paired with positional logic for numeric conversion  
+✅ Bitwise techniques help process binary data cleanly and efficiently  
+✅ Always consider in-place streaming logic to avoid double-pass strategies
