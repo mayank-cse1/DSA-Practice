@@ -1,0 +1,105 @@
+# ✅ Valid Word Checker Based on Rules
+
+## 🧩 Problem Statement
+
+Given a string `word`, determine if it’s **valid** by following these criteria:
+
+1. **Minimum Length**: The word must be at least 3 characters long.
+2. **Character Composition**:
+   - Contains **at least one vowel**: `'a','e','i','o','u'` (case-insensitive).
+   - Contains **at least one consonant** (any alphabet letter that’s not a vowel).
+   - May contain digits (`0-9`), but **no special characters**.
+   
+Return `True` if valid, `False` otherwise.
+
+---
+
+## 💡 Intuition
+
+The rules boil down to a three-part check:
+- Is the word long enough?
+- Are there both vowel(s) and consonant(s)?
+- Is every character a **letter or digit** (no symbols)?
+
+You’re scanning each character and using `ord()` to inspect its ASCII range for validation.
+
+---
+
+## 🔍 Approach
+
+1. **Length Check**: If `len(word) < 3`, return `False`.
+
+2. **Character-by-Character Inspection**:
+   - If character is a **letter**:
+     - Check if it’s a **vowel**, else it’s a consonant.
+   - If character is a **digit**, continue.
+   - Else (symbol/punctuation), return `False`.
+
+3. At the end, return `True` if **both `has_vowel` and `has_consonant`** are `True`.
+
+---
+
+## ✅ Code (Refined & Readable Version)
+```python
+class Solution:
+    def isValid(self, word: str) -> bool:
+        vowels = set("aeiouAEIOU")
+        has_vowel = False
+        has_consonant = False
+
+        if len(word) < 3:
+            return False
+
+        for c in word:
+            if c.isalpha():
+                if c in vowels:
+                    has_vowel = True
+                else:
+                    has_consonant = True
+            elif c.isdigit():
+                continue
+            else:
+                return False
+
+        return has_vowel and has_consonant
+```
+
+Regression 
+
+```python
+import re
+class Solution:
+    def isValid(self, word: str) -> bool:
+        if len(word) < 3:
+            return False
+        if not re.fullmatch(r'[a-zA-Z0-9]+', word):
+            return False
+        if not re.search(r'[aeiouAEIOU]', word):
+            return False
+        if not re.search(r'(?i)[b-df-hj-np-tv-z]', word):
+            return False
+        return True 
+```
+---
+
+## 🧪 Example
+```python
+Solution().isValid("ae1") ➞ False  # No consonant
+Solution().isValid("a1b") ➞ True   # Vowel + consonant + digit
+Solution().isValid("ab@") ➞ False  # Invalid symbol '@'
+```
+
+---
+
+## ⏱ Time & Space Complexity
+| Type              | Value      |
+|------------------|------------|
+| Time Complexity   | `O(n)`     |
+| Space Complexity  | `O(1)`     |
+
+---
+
+## ✨ Learnings
+- Using `str.isalpha()` and `str.isdigit()` simplifies ASCII checks.
+- Sets (`vowels`) provide clean membership checking.
+- Always validate input length early to save unnecessary computation.
