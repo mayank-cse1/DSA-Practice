@@ -1,0 +1,81 @@
+# Max Length Based on Even/Odd Patterns
+
+## 🧩 Problem Statement  
+You’re given a list of integers `nums`. Your goal is to determine the **maximum length** of a subsequence that satisfies one of the following conditions:
+1. All elements are even.
+2. All elements are odd.
+3. Alternating pattern of odd-even.
+4. Alternating pattern of even-odd.
+
+Return the length of the longest such valid subsequence.
+
+---
+
+## 💡 Intuition  
+You’re evaluating multiple interpretations of “patterned subsequence”:
+- **Purely even or purely odd**: Count occurrences independently.
+- **Alternating parity**:
+  - Start with **odd → even → odd...**
+  - Start with **even → odd → even...**
+
+Use a simple modulus check (`% 2`) to verify parity and update count accordingly.
+
+---
+
+## 🔍 Approach Breakdown
+
+### ✅ Step 1: Pure Even Count  
+Loop through `nums`, count all even numbers.
+
+### ✅ Step 2: Pure Odd Count  
+Loop again and count all odd numbers.
+
+### ✅ Step 3: Alternating (Odd → Even)  
+Use a flag `start = 1` (odd expected first). Update `count` when the current number matches expected parity, and flip.
+
+### ✅ Step 4: Alternating (Even → Odd)  
+Same as above, but start with `start = 0` (even expected first).
+
+### ✅ Final Step: Return the max of all 4 counts.
+
+---
+
+## 🧠 Clean Version of the Code
+```python
+class Solution:
+    def maximumLength(self, nums: List[int]) -> int:
+        if len(nums) < 3:
+            return len(nums)
+
+        def count_parity(target_parity):
+            return sum(1 for num in nums if num % 2 == target_parity)
+
+        def count_alternating(start_parity):
+            count = 0
+            expected = start_parity
+            for num in nums:
+                if num % 2 == expected:
+                    count += 1
+                    expected ^= 1  # Flip parity
+            return count
+
+        all_even = count_parity(0)
+        all_odd = count_parity(1)
+        alt_odd_even = count_alternating(1)
+        alt_even_odd = count_alternating(0)
+
+        return max(all_even, all_odd, alt_odd_even, alt_even_odd)
+```
+
+---
+
+## ⏱ Time Complexity
+- **O(n)** — One pass per counting variant
+- **O(1)** — Space (only counters used)
+
+---
+
+## 🔎 Learnings
+✅ Simple parity checks unlock powerful pattern recognition.  
+✅ Alternation patterns can be modeled with parity flipping (`^= 1`).  
+✅ Breaking the problem into bite-sized checks improves readability and scalability.
