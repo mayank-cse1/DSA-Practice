@@ -1,0 +1,64 @@
+# Maximum Sum of Unique Positive Integers
+
+## 🧩 Problem Statement
+
+Given a list `nums` of integers (which may include negative numbers or duplicates), return the **maximum sum** obtainable by:
+- **Adding only distinct positive numbers** from the list.
+
+If **no positive numbers** exist, return the **maximum value** in the list (which will be negative or zero).
+
+---
+
+## 💡 Intuition
+
+This task boils down to **filtering** and **deduplication**:
+- Only consider **positive integers**.
+- Prevent adding any positive number more than once.
+- If there are no positives, fallback to the largest number in the array.
+
+---
+
+## 🛠️ Approach
+
+1. **Use a dictionary** (`visited`) to keep track of numbers already included.
+2. Loop through `nums`:
+   - If `ele > 0` and hasn’t been visited:
+     - Add it to `ans`
+     - Mark it in `visited`
+3. After the loop:
+   - If no numbers were added (empty dictionary), return the maximum value in the list (could be negative).
+   - Otherwise, return the accumulated sum.
+
+---
+
+## ✅ Refactored Version (Optional Cleanup)
+```python
+class Solution:
+    def maxSum(self, nums: List[int]) -> int:
+        seen = set()
+        total = 0
+        for num in nums:
+            if num > 0 and num not in seen:
+                seen.add(num)
+                total += num
+        return total if seen else max(nums)
+```
+
+Using a set simplifies presence checks and reads more cleanly.
+
+---
+
+## ⏱ Time & Space Complexity
+
+| Metric | Complexity |
+|--------|------------|
+| Time   | `O(n)`     |
+| Space  | `O(n)`     |
+
+---
+
+## 🎯 Learnings
+
+✅ Deduplication with sets or dicts is great for filtering unique values  
+✅ Handling edge cases (like all negatives) with a fallback ensures robustness  
+✅ Simple conditional logic can unlock high clarity in algorithms
