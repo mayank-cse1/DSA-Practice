@@ -1,0 +1,71 @@
+# 🏔️ Count Hills and Valleys in an Array
+
+## 🧩 Problem Statement
+You're given a list of integers `nums` representing terrain elevation. A **hill** is defined as a point where the elevation is **strictly greater** than its neighbors. A **valley** is a point where the elevation is **strictly less** than its neighbors.
+
+### Conditions:
+- Consecutive duplicates should be treated as a single elevation plateau.
+- The sequence must have at least three meaningful elevations to form a hill or valley.
+- Count all **local hills and valleys** in the list.
+
+---
+
+## 💡 Intuition
+To spot hills and valleys:
+1. **Skip consecutive duplicates** since they cannot be peaks or dips.
+2. For each candidate middle point, compare with its left and right neighbors:
+   - `nums[i-1] > nums[i] < nums[i+1]` → valley
+   - `nums[i-1] < nums[i] > nums[i+1]` → hill
+
+Your code uses `nums[i-2]`, `nums[i-1]`, and `nums[i]`, and skips forward whenever duplicates are detected at `nums[i-1] == nums[i]`.
+
+---
+
+## ⚠️ Bug Alert
+There’s a subtle issue: incrementing `i` inside the `while` loop without updating the outer loop could **skip valid entries** and even run past the end of the list.
+
+---
+
+## ✅ Cleaned-Up Version (With Plateau Compression)
+```python
+class Solution:
+    def countHillValley(self, nums: List[int]) -> int:
+        # Compress consecutive duplicates
+        compressed = [nums[0]]
+        for num in nums[1:]:
+            if num != compressed[-1]:
+                compressed.append(num)
+
+        count = 0
+        for i in range(1, len(compressed) - 1):
+            if compressed[i - 1] < compressed[i] > compressed[i + 1]:
+                count += 1  # Hill
+            elif compressed[i - 1] > compressed[i] < compressed[i + 1]:
+                count += 1  # Valley
+
+        return count
+```
+
+---
+
+## 🧪 Example
+```python
+nums = [2, 4, 1, 1, 6, 5]
+# Compressed: [2, 4, 1, 6, 5]
+# Hills: 4 (between 2 and 1), 6 (between 1 and 5)
+# Valleys: 1 (between 4 and 6)
+# ➞ Total: 3
+```
+
+---
+
+## ⏱ Time & Space Complexity
+- **Time**: `O(n)` for traversal and compression
+- **Space**: `O(n)` for compressed list
+
+---
+
+## 📘 Learnings
+✅ Compressing duplicates simplifies peak/trough detection  
+✅ Local comparisons can model terrain-like problems  
+✅ Always consider loop-skip edge cases when modifying iterators inside a loop
