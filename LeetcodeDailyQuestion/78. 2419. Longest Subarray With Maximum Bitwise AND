@@ -1,0 +1,75 @@
+# 🔢 Longest Consecutive Maximum Value Subarray
+
+## 🧩 Problem Statement
+
+Given an integer array `nums`, return the **length of the longest contiguous subarray** consisting **only of the maximum element** in the array.
+
+---
+
+## 💡 Intuition
+
+The goal is to isolate streaks of the **maximum number** and identify the longest consecutive run. Since we don’t need to consider non-max elements, we:
+- First find the `max_val`.
+- Then scan the array to locate **runs** of `max_val` and track their lengths.
+
+---
+
+## 🧠 Approach
+
+1. **Identify the max element** of the array.
+2. Use **two pointers** (`i` and `temp`) to iterate through the array:
+   - When a `max_val` is found, mark the start index (`temp`).
+   - Continue while elements are equal to `max_val`.
+   - After the run ends, update the answer with the run length (`i - temp`).
+3. Skip over non-maximum values during traversal.
+
+---
+
+## ✅ Code
+
+```python
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        max_val = max(nums)
+        i = 0
+        longest = 0
+
+        while i < len(nums):
+            if nums[i] == max_val:
+                start = i
+                while i < len(nums) and nums[i] == max_val:
+                    i += 1
+                longest = max(longest, i - start)
+            else:
+                i += 1
+
+        return longest
+```
+
+---
+
+## 🔍 Example
+
+```python
+nums = [1, 2, 3, 3, 2, 3, 3, 3]
+max = 3
+Longest contiguous run of 3’s = length 3 (last segment)
+➞ Output: 3
+```
+
+---
+
+## ⏱ Time & Space Complexity
+
+| Metric            | Value     |
+|-------------------|-----------|
+| Time Complexity   | `O(n)`    |
+| Space Complexity  | `O(1)`    |
+
+---
+
+## 📘 Learnings
+
+✅ Identifying segments (runs) is often best done with a single traversal and pointer tricks  
+✅ Avoid unnecessary storage by calculating directly during iteration  
+✅ Always test edge cases like all elements equal or multiple equal-length runs
