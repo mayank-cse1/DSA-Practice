@@ -1,0 +1,78 @@
+# 🔢 Count Unique Bitwise ORs of All Subarrays
+
+## 🧩 Problem Statement
+
+Given an array `A`, compute the number of **distinct values** that can be obtained by taking the **bitwise OR** of every possible subarray.
+
+### Example:
+```python
+A = [1, 2, 4]
+Subarrays:
+[1] → 1  
+[2] → 2  
+[4] → 4  
+[1,2] → 1|2 = 3  
+[2,4] → 2|4 = 6  
+[1,2,4] → 1|2|4 = 7  
+→ Output: 6 unique values
+```
+
+---
+
+## 💡 Intuition
+
+Bitwise OR is **monotonic**: once a bit is set, it stays set.  
+So instead of recomputing ORs for every subarray from scratch, we can:
+- Track the ORs of subarrays ending at each index.
+- Use a **rolling set** `cur` to store all ORs ending at the current position.
+- Merge these into a global set `ans` to collect all unique results.
+
+---
+
+## 🛠️ Approach
+
+1. Initialize:
+   - `ans`: set of all unique OR results.
+   - `cur`: set of ORs ending at previous index (start with `{0}`).
+
+2. For each element `x` in `A`:
+   - Compute new ORs by doing `x | y` for each `y` in `cur`.
+   - Add `x` itself to start new subarrays.
+   - Update `cur` and merge into `ans`.
+
+3. Return the size of `ans`.
+
+---
+
+## ✅ Code (With Optional Debug Prints)
+```python
+class Solution(object):
+    def subarrayBitwiseORs(self, A):
+        ans = set()
+        cur = {0}
+        for x in A:
+            cur = {x | y for y in cur}
+            cur |= {x}
+            ans |= cur
+        return len(ans)
+```
+
+---
+
+## ⏱ Time Complexity
+
+- Worst-case: `O(n * log(max(A)))`  
+  - Each OR operation can set up to 30 bits (for 32-bit integers).
+  - The number of distinct ORs per step is bounded.
+
+## 📦 Space Complexity
+
+- `O(n * log(max(A)))` for storing unique ORs.
+
+---
+
+## 🧠 Learnings
+
+✅ Bitwise operations often allow **monotonic optimizations**  
+✅ Sets are powerful for tracking uniqueness without duplicates  
+✅ Rolling state (`cur`) avoids recomputation and speeds up subarray analysis
