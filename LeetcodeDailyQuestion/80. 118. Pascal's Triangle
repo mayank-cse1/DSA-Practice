@@ -1,0 +1,77 @@
+# 🔺 Pascal's Triangle Generator Using Combinatorics
+
+## 🧩 Problem Statement
+
+Given an integer `numRows`, generate the first `numRows` of **Pascal's Triangle**.
+
+Pascal’s Triangle is a triangular array where:
+- Each row `r` contains `r + 1` elements.
+- Each element is computed using the binomial coefficient:  
+  $$ \text{row}[i] = \binom{r}{i} = \frac{r!}{i!(r-i)!} $$
+
+---
+
+## 💡 Intuition
+
+Instead of building each row iteratively from the previous one, you’re using **combinatorics**:
+- For row `r`, generate all values using `nCr(r, i)` for `i = 0 to r`.
+
+This is mathematically elegant and avoids dependency on previous rows.
+
+---
+
+## 🛠️ Approach
+
+1. Define a factorial function `fact(n)` to compute `n!`.
+2. Define `ncr(n, r)` using the formula:
+   $$ \binom{n}{r} = \frac{n!}{r!(n-r)!} $$
+3. For each row index `r` from `0` to `numRows - 1`, generate the row using `ncr(r, i)` for all `i`.
+4. Append each row to the result.
+
+---
+
+## ✅ Code (Your Version, Cleaned)
+```python
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        def fact(n):
+            result = 1
+            for i in range(2, n + 1):
+                result *= i
+            return result
+
+        def ncr(n, r):
+            return fact(n) // (fact(r) * fact(n - r))
+
+        def build_row(r):
+            return [ncr(r, i) for i in range(r + 1)]
+
+        triangle = []
+        for r in range(numRows):
+            triangle.append(build_row(r))
+
+        return triangle
+```
+
+---
+
+## ⏱ Time Complexity
+
+- **Factorial computation**: `O(n)` per call
+- **nCr per row**: `O(n^2)` total across all rows
+
+✅ Acceptable for small `numRows` (e.g., ≤ 20)
+
+---
+
+## 📦 Space Complexity
+
+- `O(n^2)` for storing the triangle
+
+---
+
+## 🧠 Learnings
+
+✅ Combinatorics offers a direct way to compute Pascal’s Triangle  
+✅ Factorials are reusable — consider memoization for optimization  
+✅ Mathematical definitions can replace iterative logic for clarity
