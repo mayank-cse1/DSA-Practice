@@ -1,0 +1,103 @@
+# 🧺 Minimum Cost to Make Baskets Equal
+
+## 🧩 Problem Statement
+
+You’re given two baskets `basket1` and `basket2`, each containing fruits represented by their **costs**. You can swap fruits between baskets to make them **identical in content** (same fruit types and counts).
+
+### Rules:
+- You can swap any fruit from one basket with any fruit from the other.
+- The **cost of a swap** is the **minimum of the two fruit costs**.
+- Alternatively, you can perform an **indirect swap** using the **cheapest fruit overall**, which costs `2 × min_fruit_cost`.
+
+### Goal:
+Return the **minimum total cost** to make the baskets equal.  
+If it's **not possible**, return `-1`.
+
+---
+
+## 💡 Intuition
+
+1. **Count frequency differences** between baskets.
+2. If any fruit has an **odd difference**, it’s impossible to balance — return `-1`.
+3. For each fruit with a non-zero difference:
+   - Half of the excess must be swapped.
+   - Collect all such fruits into a list `to_swap`.
+4. Sort `to_swap` to prioritize cheaper swaps.
+5. For each pair in the first half of `to_swap`, choose:
+   - Direct swap cost (`fruit_cost`)
+   - Indirect swap cost (`2 × min_fruit_cost`)
+   - Pick the cheaper of the two.
+
+---
+
+## 🛠️ Approach
+
+1. Use `Counter` to compute net frequency difference.
+2. For each fruit:
+   - If `count % 2 != 0`, return `-1`.
+   - Add `abs(count) // 2` instances to `to_swap`.
+3. Sort `to_swap`.
+4. Traverse the **first half** of `to_swap`:
+   - Add `min(direct_swap, indirect_swap)` to total cost.
+
+---
+
+## ✅ Code
+```python
+from collections import Counter
+from typing import List
+
+class Solution:
+    def minCost(self, basket1: List[int], basket2: List[int]) -> int:
+        freq = Counter(basket1)
+        freq.subtract(Counter(basket2))
+
+        to_swap = []
+        for fruit_cost, count in freq.items():
+            if count % 2 != 0:
+                return -1
+            for _ in range(abs(count) // 2):
+                to_swap.append(fruit_cost)
+
+        to_swap.sort()
+        min_overall_fruit = min(basket1 + basket2)
+        cost = 0
+
+        for i in range(len(to_swap) // 2):
+            direct_swap = to_swap[i]
+            indirect_swap = min_overall_fruit * 2
+            cost += min(direct_swap, indirect_swap)
+
+        return cost
+```
+
+---
+
+## 🧪 Example
+
+```python
+basket1 = [1, 2, 2]
+basket2 = [2, 3, 1]
+# After balancing: both baskets should have [1, 2, 2]
+# Swap 3 with 2 → cost = min(2, 3) = 2
+# Output: 2
+```
+
+---
+
+## ⏱ Time Complexity
+
+- `O(n log n)` — sorting `to_swap`
+- `O(n)` — frequency counting and traversal
+
+## 📦 Space Complexity
+
+- `O(n)` — for frequency map and swap list
+
+---
+
+## 🧠 Learnings
+
+✅ Frequency difference is a powerful tool for balancing problems  
+✅ Sorting + greedy selection helps minimize cost  
+✅ Always check for impossibility early (odd counts)
