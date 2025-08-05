@@ -1,0 +1,87 @@
+# 🧺 Count of Unplaced Fruits
+
+## 🧩 Problem Statement
+
+You’re given:
+- A list `fruits`, where each element represents the **size or quantity** of a fruit.
+- A list `baskets`, where each element represents the **capacity** of a basket.
+
+### Rules:
+- Each fruit must be placed in a basket with **capacity ≥ fruit size**.
+- Each basket can hold **at most one fruit**.
+- Once used, a basket becomes unavailable.
+
+### Goal:
+Return the **number of fruits that could not be placed**.
+
+---
+
+## 💡 Intuition
+
+This is a **greedy matching** problem:
+- For each fruit, try to find the **first available basket** that can hold it.
+- If no such basket exists, increment the count of unplaced fruits.
+
+---
+
+## ✅ Your Code (Reviewed)
+```python
+class Solution:
+    def numOfUnplacedFruits(self, fruits: List[int], baskets: List[int]) -> int:
+        count = 0
+        for qty in fruits:
+            placed = False
+            for i, capacity in enumerate(baskets):
+                if capacity >= qty:
+                    placed = True
+                    baskets[i] = 0  # mark basket as used
+                    break
+            if not placed:
+                count += 1
+        return count
+```
+
+### ✅ Works correctly, but here are some enhancements:
+- You can **sort both lists** to optimize placement.
+- Use a **pointer** to track available baskets.
+
+---
+
+## 🧠 Optimized Version (Optional)
+```python
+class Solution:
+    def numOfUnplacedFruits(self, fruits: List[int], baskets: List[int]) -> int:
+        fruits.sort()
+        baskets.sort()
+        i = j = 0
+        unplaced = 0
+
+        while i < len(fruits):
+            while j < len(baskets) and baskets[j] < fruits[i]:
+                j += 1
+            if j < len(baskets):
+                j += 1  # use this basket
+            else:
+                unplaced += 1
+            i += 1
+
+        return unplaced
+```
+
+---
+
+## ⏱ Time Complexity
+
+| Version         | Time       |
+|----------------|------------|
+| Original        | `O(n * m)` — nested loop  
+| Optimized       | `O(n log n + m log m)` — sorting + linear scan
+
+---
+
+## 📘 Learnings
+
+✅ Greedy matching problems benefit from sorting and pointer-based traversal  
+✅ Always mark resources (like baskets) as used to avoid reuse  
+✅ Consider edge cases: no baskets, all fruits too large, etc.
+
