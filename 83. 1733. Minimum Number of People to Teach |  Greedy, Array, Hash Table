@@ -1,0 +1,93 @@
+# 🗣️ Minimum Teachings to Enable Communication
+
+## 🧩 Problem Statement
+
+You're given:
+- `languages`: a list where `languages[i]` contains the languages person `i+1` knows.
+- `friendships`: a list of pairs `[x, y]` representing friendships between person `x` and person `y`.
+
+### Goal:
+Teach the **minimum number of people** a **single language** so that **every friendship** has at least one common language between the two friends.
+
+---
+
+## 💡 Intuition
+
+1. **Identify "sad" people** — those involved in friendships where no common language exists.
+2. For each language, count how many "sad" people already know it.
+3. To minimize teachings:
+   - Choose the language known by the **most sad people**.
+   - Teach this language to the remaining sad people who don’t know it.
+
+---
+
+## ✅ Your Code Logic
+
+- Step 1: Build the `sad` set of people involved in language-less friendships.
+- Step 2: Count how many sad people know each language.
+- Step 3: Pick the language with the highest overlap.
+- Step 4: Return `len(sad) - max_overlap` as the minimum number of teachings.
+
+---
+
+## 🧠 Cleaned-Up Version
+
+```python
+from collections import Counter
+from typing import List
+
+class Solution:
+    def minimumTeachings(self, n: int, languages: List[List[int]], friendships: List[List[int]]) -> int:
+        sad = set()
+
+        # Step 1: Identify sad people
+        for x, y in friendships:
+            if not set(languages[x - 1]) & set(languages[y - 1]):
+                sad.add(x)
+                sad.add(y)
+
+        if not sad:
+            return 0
+
+        # Step 2: Count language frequency among sad people
+        freq = Counter()
+        for person in sad:
+            for lang in languages[person - 1]:
+                freq[lang] += 1
+
+        # Step 3: Find the language known by most sad people
+        max_known = max(freq.values())
+
+        # Step 4: Teach the rest this language
+        return len(sad) - max_known
+```
+
+---
+
+## ⏱ Time Complexity
+
+- `O(f * l)` where `f` is the number of friendships and `l` is the average number of languages per person.
+
+---
+
+## 🧪 Example
+
+```python
+languages = [[1], [2], [1,2]]
+friendships = [[1,2], [2,3]]
+# Person 1 and 2 → no common language
+# Person 2 and 3 → common language 2
+# Sad people: 1, 2
+# Language 1 known by person 1
+# Language 2 known by person 2
+# Choose either → teach 1 person
+# ✅ Output: 1
+```
+
+---
+
+## 🧠 Learnings
+
+✅ Set intersection is a powerful tool for checking shared knowledge  
+✅ Greedy selection based on frequency minimizes effort  
+✅ Always check for early exit conditions (like `if not sad`)
