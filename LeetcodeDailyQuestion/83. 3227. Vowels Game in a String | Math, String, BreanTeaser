@@ -1,0 +1,76 @@
+# 🧠 Does Alice Win? — A Simple Vowel Detection Challenge
+
+## 📌 Problem Statement
+
+Imagine a game where Alice wins if a given string contains **at least one vowel**. The vowels are `'a', 'e', 'i', 'o', 'u'`, and the check should be **case-insensitive**. Your task is to implement a function that returns `True` if Alice wins (i.e., the string contains a vowel), and `False` otherwise.
+
+---
+
+## 💡 Intuition
+
+This is a classic string scanning problem. We need to:
+- Traverse each character in the string.
+- Convert it to lowercase to ensure case-insensitive comparison.
+- Check if it belongs to the set of vowels.
+- If we find at least one vowel, Alice wins!
+
+This is a great example of how simple logic and clean iteration can solve a real-world problem efficiently.
+
+---
+
+## 🧪 Example
+
+```python
+Input: "hello"
+Output: True  # contains 'e' and 'o'
+
+Input: "sky"
+Output: False  # no vowels
+```
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def doesAliceWin(self, s: str) -> bool:
+        count = 0
+        for ele in s:
+            if ele.lower() in ['a', 'e', 'i', 'o', 'u']:
+                count += 1
+        if count == 0:
+            return False
+        else:
+            return True
+```
+
+### ✅ Cleaner Version (Optional)
+
+```python
+class Solution:
+    def doesAliceWin(self, s: str) -> bool:
+        return any(c.lower() in 'aeiou' for c in s)
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Value       |
+|-------------------|-------------|
+| Time Complexity   | `O(n)` — where `n` is the length of the string |
+| Space Complexity  | `O(1)` — constant space used for counting |
+
+---
+
+## 🎯 Final Thoughts
+
+This problem is a great warm-up for string manipulation and character filtering. It teaches:
+- Case normalization
+- Membership testing
+- Early exit strategies (via `any()`)
+
+--- 
+
+Let me know if you'd like to turn this into a tutorial or add visuals for a beginner audience!
