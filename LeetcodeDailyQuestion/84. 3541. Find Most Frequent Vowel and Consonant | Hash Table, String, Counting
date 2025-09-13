@@ -1,0 +1,95 @@
+# 🔠 Max Frequency Sum of Vowels and Consonants
+
+## 📌 Problem Statement
+
+Given a string `s`, write a function that:
+- Counts the frequency of each **vowel** and each **non-vowel** (consonants, digits, symbols).
+- Returns the **sum of the most frequent vowel and the most frequent non-vowel**.
+
+This can be useful in text analysis, scoring systems, or linguistic games where character dominance matters.
+
+---
+
+## 💡 Intuition
+
+To solve this:
+- Traverse the string character by character.
+- Use two dictionaries:
+  - One for vowels (`freq_vow`)
+  - One for non-vowels (`freq`)
+- For each character:
+  - Convert to lowercase for consistency.
+  - Check if it's a vowel (`a, e, i, o, u`) and update the appropriate dictionary.
+- After counting:
+  - Find the **maximum frequency** in each dictionary.
+  - Return their sum.
+
+---
+
+## 🧪 Example
+
+```python
+Input: "hello world"
+Vowels: e, o, o → 'o' appears twice
+Consonants: h, l, l, w, r, l, d → 'l' appears three times
+
+Output: 3 (max consonant) + 2 (max vowel) = 5
+```
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def maxFreqSum(self, s: str) -> int:
+        freq = {None: 0}
+        freq_vow = {None: 0}
+        for ele in s:
+            if ele.lower() in ['a', 'e', 'i', 'o', 'u']:
+                if ele not in freq_vow:
+                    freq_vow[ele] = 0
+                freq_vow[ele] += 1
+            else:
+                if ele not in freq:
+                    freq[ele] = 0
+                freq[ele] += 1
+        return max(freq.values()) + max(freq_vow.values())
+```
+
+---
+
+## ✅ Cleaner Version (Optional)
+
+```python
+from collections import Counter
+
+class Solution:
+    def maxFreqSum(self, s: str) -> int:
+        vowels = set('aeiou')
+        freq_vow = Counter()
+        freq = Counter()
+
+        for c in s.lower():
+            if c in vowels:
+                freq_vow[c] += 1
+            else:
+                freq[c] += 1
+
+        return (max(freq.values()) if freq else 0) + (max(freq_vow.values()) if freq_vow else 0)
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Value       |
+|-------------------|-------------|
+| Time Complexity   | `O(n)` — where `n` is the length of the string |
+| Space Complexity  | `O(k)` — where `k` is the number of unique characters |
+
+---
+
+## 🎯 Final Thoughts
+
+This function is a neat way to measure character dominance in a string. Whether you're building a scoring engine for word games or analyzing text patterns, separating vowels and consonants can reveal interesting insights.
