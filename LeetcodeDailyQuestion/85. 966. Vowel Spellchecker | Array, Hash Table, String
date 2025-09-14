@@ -1,0 +1,104 @@
+# 🔍 Spellchecker with Vowel Normalization and Case Insensitivity
+
+## 📌 Problem Statement
+
+You're given:
+- A list of correct words `wordlist`.
+- A list of `queries` to validate.
+
+For each query, return the **best match** from `wordlist` based on the following priority:
+1. **Exact match** (case-sensitive).
+2. **Case-insensitive match**.
+3. **Vowel-error match**: treat all vowels (`a, e, i, o, u`) as interchangeable.
+4. If no match is found, return an empty string `""`.
+
+---
+
+## 💡 Intuition
+
+This problem is about **progressive relaxation** of matching rules:
+- First, try to match the query exactly.
+- If that fails, try ignoring case.
+- If that still fails, treat vowels as wildcards and match based on consonant structure.
+
+To do this efficiently:
+- Preprocess `wordlist` into three lookup structures:
+  - A set for exact matches.
+  - A dictionary for case-insensitive matches.
+  - A dictionary for vowel-normalized matches.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def spellchecker(self, wordlist: List[str], queries: List[str]) -> List[str]:
+        def normalize_vowels(word: str) -> str:
+            vowels = set("aeiou")
+            return "".join("*" if ch in vowels else ch for ch in word.lower())
+        
+        # Exact match set
+        words = set(wordlist)
+        
+        # Case-insensitive map
+        case_map = {}
+        # Vowel-error map
+        vowel_map = {}
+        
+        for word in wordlist:
+            lower_word = word.lower()
+            case_map.setdefault(lower_word, word)
+            vowel_map.setdefault(normalize_vowels(word), word)
+        
+        ans = []
+        for q in queries:
+            if q in words:
+                ans.append(q)
+            elif q.lower() in case_map:
+                ans.append(case_map[q.lower()])
+            elif normalize_vowels(q) in vowel_map:
+                ans.append(vowel_map[normalize_vowels(q)])
+            else:
+                ans.append("")
+        return ans
+```
+
+---
+
+## 🧪 Example
+
+```python
+wordlist = ["KiTe", "kite", "hare", "Hare"]
+queries = ["kite", "Kite", "KiTe", "Hare", "HARE", "Hear", "hear", "keti", "keet", "keto"]
+
+Output:
+["kite", "KiTe", "KiTe", "Hare", "hare", "", "", "KiTe", "", "KiTe"]
+```
+
+### Explanation:
+- `"kite"` → exact match
+- `"Kite"` → case-insensitive match
+- `"keti"` → vowel-error match with `"KiTe"`
+- `"Hear"` → no match
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time (preprocessing) | `O(n * m)` — where `n` is the number of words and `m` is average word length  
+| Time (querying)      | `O(q * m)` — for `q` queries  
+| Space                | `O(n * m)` — for storing maps and sets
+
+---
+
+## 🎯 Final Thoughts
+
+This spellchecker is a great example of layered matching logic:
+- It balances performance with flexibility.
+- It uses smart preprocessing to make query resolution fast.
+- The vowel normalization trick is especially useful in noisy text environments.
+
+Want to extend this to support fuzzy matching or typo correction? That’s a whole new level of fun—let’s dive in when you’re ready!
