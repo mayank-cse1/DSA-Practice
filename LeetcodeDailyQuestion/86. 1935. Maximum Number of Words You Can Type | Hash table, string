@@ -1,0 +1,88 @@
+# ⌨️ Can Be Typed Words — Filtering with Broken Letters
+
+## 📌 Problem Statement
+
+You're given:
+- A string `text` containing words separated by spaces.
+- A string `brokenLetters` representing letters that are broken on a keyboard.
+
+### Goal:
+Return the number of words in `text` that **can be typed** without using any of the broken letters.
+
+---
+
+## 💡 Intuition
+
+This is a classic filtering problem:
+- Split the sentence into individual words.
+- For each word, check if it contains any broken letter.
+- If it does, skip it.
+- Otherwise, count it as a typable word.
+
+Using a flag or early exit strategy helps avoid unnecessary checks once a broken letter is found.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def canBeTypedWords(self, text: str, brokenLetters: str) -> int:
+        list_text = text.split(" ")
+        ans = 0
+        for word in list_text:
+            flag = 0
+            for char in brokenLetters:
+                if char in word:
+                    flag = 1
+                    break
+            if flag == 1:
+                continue
+            else:
+                ans += 1
+        return ans
+```
+
+---
+
+## ✅ Cleaner Version (Optional)
+
+```python
+class Solution:
+    def canBeTypedWords(self, text: str, brokenLetters: str) -> int:
+        broken = set(brokenLetters)
+        return sum(all(c not in broken for c in word) for word in text.split())
+```
+
+This version uses:
+- A `set` for faster lookup.
+- `all()` and `sum()` for concise logic.
+
+---
+
+## 🧪 Example
+
+```python
+text = "hello world"
+brokenLetters = "ad"
+
+- "hello" → no broken letters → ✅
+- "world" → contains "d" → ❌
+
+Output: 1
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n * m)` — where `n` is number of words and `m` is average word length  
+| Space Complexity  | `O(1)` — constant space for counters and flags (or `O(k)` for broken letter set)
+
+---
+
+## 🎯 Final Thoughts
+
+This function is a great example of early exit optimization and character filtering. Whether you're building a typing tutor or simulating keyboard errors, this logic is both practical and efficient.
