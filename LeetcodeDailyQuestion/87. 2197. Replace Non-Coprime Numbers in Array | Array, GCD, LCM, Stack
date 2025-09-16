@@ -1,0 +1,75 @@
+# 🔁 Replace Non-Coprimes in an Array
+
+## 📌 Problem Statement
+
+You're given a list of integers `nums`. Your task is to **iteratively replace adjacent non-coprime numbers** with their **Least Common Multiple (LCM)** until no more replacements are possible.
+
+### Definitions:
+- Two numbers are **non-coprime** if their greatest common divisor (GCD) is greater than 1.
+- The **LCM** of two numbers `a` and `b` is:  
+  $$ \text{LCM}(a, b) = \frac{a \cdot b}{\text{GCD}(a, b)} $$
+
+---
+
+## 💡 Intuition
+
+This is a **stack-based reduction** problem:
+- Traverse the array from left to right.
+- Maintain a stack (`ans`) of processed numbers.
+- For each new number:
+  - While the top of the stack is **non-coprime** with it, pop and replace both with their LCM.
+- Push the final reduced number back to the stack.
+
+This ensures that adjacent non-coprimes are merged **greedily and recursively**.
+
+---
+
+## 🧠 Code
+
+```python
+from math import gcd
+from typing import List
+
+class Solution:
+    def replaceNonCoprimes(self, nums: List[int]) -> List[int]:
+        ans = [nums[0]]
+        for ele in nums[1:]:
+            while ans:
+                temp = gcd(ele, ans[-1])
+                if temp == 1:
+                    break
+                ele = (ele * ans.pop()) // temp
+            ans.append(ele)
+        return ans
+```
+
+---
+
+## 🧪 Example
+
+```python
+Input: [6, 4, 3, 2]
+Step 1: 6 and 4 → GCD = 2 → Replace with LCM(6,4) = 12 → [12]
+Step 2: 12 and 3 → GCD = 3 → Replace with LCM(12,3) = 12 → [12]
+Step 3: 12 and 2 → GCD = 2 → Replace with LCM(12,2) = 12 → [12]
+
+Output: [12]
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n^2)` worst-case — each element may trigger multiple merges  
+| Space Complexity  | `O(n)` — for the stack
+
+---
+
+## 🎯 Final Thoughts
+
+This problem is a great example of:
+- Stack-based greedy reduction
+- Using GCD and LCM to simplify number sequences
+- Recursive merging logic
