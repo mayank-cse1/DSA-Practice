@@ -1,0 +1,80 @@
+# 🔢 Max Frequency Elements — Counting the Most Common Values
+
+## 📌 Problem Statement
+
+Given a list of integers `nums`, return the **total number of elements** that appear with the **maximum frequency**.
+
+### Example:
+```python
+Input: [1, 2, 2, 3, 3]
+Frequencies: {1:1, 2:2, 3:2}
+Maximum frequency = 2
+Elements with max frequency: 2 and 3 → total count = 2 + 2 = 4
+Output: 4
+```
+
+---
+
+## 💡 Intuition
+
+This problem is about:
+- Counting how often each number appears.
+- Identifying the **maximum frequency**.
+- Summing the frequencies of all elements that match this maximum.
+
+Instead of just counting how many elements have the max frequency, we sum their individual frequencies to get the total number of such elements in the list.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def maxFrequencyElements(self, nums: List[int]) -> int:
+        freq = {}
+        for ele in nums:
+            if ele not in freq:
+                freq[ele] = 0
+            freq[ele] += 1
+
+        maximum = 0
+        ans_array = []
+
+        for key, val in freq.items():
+            if val > maximum:
+                maximum = val
+                ans_array = []
+            if val == maximum:
+                ans_array.append(val)
+
+        return sum(ans_array)
+```
+
+---
+
+## ✅ Cleaner Version (Optional)
+
+```python
+from collections import Counter
+
+class Solution:
+    def maxFrequencyElements(self, nums: List[int]) -> int:
+        freq = Counter(nums)
+        max_freq = max(freq.values())
+        return sum(val for val in freq.values() if val == max_freq)
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — one pass to count, one pass to sum  
+| Space Complexity  | `O(k)` — where `k` is the number of unique elements
+
+---
+
+## 🎯 Final Thoughts
+
+This function is a great example of frequency analysis. Whether you're building a leaderboard, analyzing survey data, or filtering dominant values, this pattern shows up often.
