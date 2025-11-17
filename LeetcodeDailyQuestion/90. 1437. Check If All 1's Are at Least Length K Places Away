@@ -1,0 +1,79 @@
+# Check if Ones Are K Length Apart
+
+## Problem Statement
+
+You’re given:
+- A binary array `nums` (containing only `0`s and `1`s).
+- An integer `k`.
+
+### Goal:
+Return `True` if all `1`s in the array are at least `k` indices apart. Otherwise, return `False`.
+
+---
+
+## Intuition
+
+This is a **distance-checking problem**:
+- Traverse the array while tracking the index of the last seen `1`.
+- For each new `1`, check the gap between it and the previous `1`.
+- If the gap is less than or equal to `k`, return `False`.
+- If no violations are found, return `True`.
+
+Special case:
+- If `k = 0`, any arrangement is valid since no spacing is required.
+
+---
+
+## Code
+
+```python
+class Solution:
+    def kLengthApart(self, nums: List[int], k: int) -> bool:
+        if k == 0:
+            return True
+        prev = None
+        for i, num in enumerate(nums):
+            if num == 1:
+                if prev is not None and i - prev <= k:
+                    return False
+                prev = i
+        return True
+```
+
+---
+
+## Example
+
+```python
+nums = [1,0,0,0,1,0,0,1]
+k = 2
+Output: True
+# Explanation: All 1s are at least 2 indices apart.
+```
+
+```python
+nums = [1,0,1,0,1]
+k = 2
+Output: False
+# Explanation: The first two 1s are only 2 apart, violating the condition.
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — single pass through the array |
+| Space Complexity  | `O(1)` — only a variable to track last index |
+
+---
+
+## Final Thoughts
+
+This solution is efficient and elegant:
+- It leverages a **single pass** with a simple pointer (`prev`).
+- Handles edge cases like `k = 0` gracefully.
+- Runs in linear time with constant space.
+
+This pattern of tracking the last seen index is widely applicable in problems involving spacing, scheduling, or constraints between repeated events.
