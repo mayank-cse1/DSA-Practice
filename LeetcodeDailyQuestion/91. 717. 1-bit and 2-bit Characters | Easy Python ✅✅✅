@@ -1,0 +1,78 @@
+# One-Bit vs Two-Bit Characters
+
+## Problem Statement
+
+You’re given a binary array `bits` representing a string encoded with two rules:
+- **One-bit character**: represented by `0`
+- **Two-bit character**: represented by `10` or `11`
+
+The array always ends with a `0`.  
+Your task: Determine if the last character must be a **one-bit character**.
+
+---
+
+## Intuition
+
+- If the array length is `1`, the only character is `0` → return `True`.
+- If the second-to-last bit is `0`, the last `0` must stand alone → return `True`.
+- Otherwise, the last `0` might be part of a two-bit character.  
+  To decide, count consecutive `1`s before the final `0`:
+  - If the count is **even**, the last `0` is a one-bit character.
+  - If the count is **odd**, the last `0` is part of a two-bit character.
+
+This works because two-bit characters always start with `1`.
+
+---
+
+## Code
+
+```python
+class Solution:
+    def isOneBitCharacter(self, bits: List[int]) -> bool:
+        if len(bits) == 1:
+            return True
+        if bits[-2] == 0:
+            return True
+
+        i = -2
+        count_one = 0
+        while -i != len(bits) + 1:
+            if bits[i] == 1:
+                count_one += 1
+                i -= 1
+            else:
+                break
+
+        return count_one % 2 == 0
+```
+
+---
+
+## 🧪 Example
+
+```python
+bits = [1, 0, 0]
+Output: True
+# Explanation: The last '0' is a one-bit character.
+```
+
+```python
+bits = [1, 1, 1, 0]
+Output: False
+# Explanation: The last '0' is part of a two-bit character '10'.
+```
+
+---
+
+## Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — worst case, scan all bits |
+| Space Complexity  | `O(1)` — only counters and pointers |
+
+---
+
+## Final Thoughts
+
+This solution cleverly uses **parity of consecutive ones** before the last `0` to determine whether it stands alone or not. It’s efficient, concise, and handles edge cases like single-element arrays gracefully.  
