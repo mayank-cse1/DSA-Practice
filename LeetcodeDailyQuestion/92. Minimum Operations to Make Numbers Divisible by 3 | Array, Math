@@ -1,0 +1,71 @@
+# Minimum Operations to Make Numbers Divisible by 3
+
+## Problem Statement
+
+You’re given an array of integers `nums`. For each number, you can perform operations to make it divisible by 3.  
+
+### Rule:
+- In one operation, you can either **add 1** or **subtract 1** from a number.
+- The cost of operations for each number is the minimum steps required to make it divisible by 3.
+
+### Goal:
+Return the **total minimum number of operations** needed for the entire array.
+
+---
+
+## 💡 Intuition
+
+Every integer modulo 3 (`ele % 3`) gives three possible cases:
+- If `ele % 3 == 0`: already divisible → **0 operations**.
+- If `ele % 3 == 1`: either subtract 1 or add 2 → **1 operation**.
+- If `ele % 3 == 2`: either subtract 2 or add 1 → **1 operation**.
+
+So the formula `min(ele % 3, 3 - (ele % 3))` neatly captures the minimum operations:
+- For remainder 1 → `min(1, 2) = 1`
+- For remainder 2 → `min(2, 1) = 1`
+- For remainder 0 → `min(0, 3) = 0`
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def minimumOperations(self, nums: List[int]) -> int:
+        ans = 0
+        for ele in nums:
+            ans += min(ele % 3, 3 - (ele % 3))
+        return ans
+```
+
+---
+
+## 🧪 Example
+
+```python
+nums = [1, 2, 3, 4]
+- 1 → needs 1 operation (subtract 1)
+- 2 → needs 1 operation (add 1)
+- 3 → already divisible → 0
+- 4 → needs 1 operation (subtract 1)
+
+Total = 1 + 1 + 0 + 1 = 3
+Output: 3
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — single pass through the array |
+| Space Complexity  | `O(1)` — only a counter variable |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is elegant because it leverages modular arithmetic to minimize operations. Instead of branching into multiple cases, the `min()` formula captures all possibilities in one line.  
+
+Would you like me to also show you a **mathematical proof** of why `min(ele % 3, 3 - (ele % 3))` always works?
