@@ -1,0 +1,66 @@
+# 🔢 Prefixes Divisible by 5
+
+## 📌 Problem Statement
+
+You’re given a binary array `nums` representing bits of a binary number. For each prefix of the array, determine whether the integer value of that prefix is divisible by 5.
+
+### Goal:
+Return a list of booleans where each entry corresponds to whether the prefix ending at that index is divisible by 5.
+
+---
+
+## 💡 Intuition
+
+- A prefix of bits can be interpreted as a binary number.
+- Instead of converting the entire prefix to an integer each time (which would be inefficient), we can maintain a **running remainder modulo 5**.
+- At each step:
+  - Update the remainder using the new bit.
+  - Check if the remainder is `0` (divisible by 5).
+- This works because modular arithmetic allows us to update incrementally without recomputing the whole number.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def prefixesDivBy5(self, nums: List[int]) -> List[bool]:
+        res = []
+        rem = 0
+        for ele in nums:
+            rem = (rem % 5) * 2 + ele
+            res.append(rem % 5 == 0)
+        return res
+```
+
+---
+
+## 🧪 Example
+
+```python
+nums = [0,1,1,1,1,1]
+
+Step 1: prefix "0" → 0 → divisible → True
+Step 2: prefix "01" → 1 → not divisible → False
+Step 3: prefix "011" → 3 → not divisible → False
+Step 4: prefix "0111" → 7 → not divisible → False
+Step 5: prefix "01111" → 15 → divisible → True
+Step 6: prefix "011111" → 31 → not divisible → False
+
+Output: [True, False, False, False, True, False]
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — single pass through the array |
+| Space Complexity  | `O(n)` — result list of size `n` |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is efficient because it leverages **modular arithmetic** to avoid expensive conversions of binary strings to integers at each step. It’s a neat example of how math tricks can simplify iterative problems.  
