@@ -1,0 +1,72 @@
+# Smallest Repunit Divisible by K
+
+## Problem Statement
+
+We want to find the length of the **smallest repunit** (a number consisting only of digit `1`s, like `1`, `11`, `111`, …) that is divisible by a given integer `k`.
+
+### Rules:
+- If such a repunit exists, return its length.
+- If no such repunit exists, return `-1`.
+
+---
+
+## 💡 Intuition
+
+- A repunit can be built iteratively:  
+  `n = previous_remainder * 10 + 1`
+- Instead of constructing huge numbers, we only need to track the **remainder modulo k**.
+- If we ever see the same remainder twice, we’re in a cycle → no repunit divisible by `k` exists.
+- Otherwise, continue until remainder becomes `0`.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def smallestRepunitDivByK(self, k: int) -> int:
+        n = 1
+        length = 1
+        visited = {}
+        while n % k != 0:
+            temp = n % k
+            if temp in visited:
+                return -1
+            visited[temp] = 1
+            n = temp * 10 + 1
+            length += 1
+        return length
+```
+
+---
+
+## 🧪 Example
+
+```python
+Input: k = 3
+Repunit sequence: 1 → 11 → 111
+111 % 3 == 0
+Output: 3
+```
+
+```python
+Input: k = 2
+Repunit sequence: 1 → 11 → 111 → …
+No repunit divisible by 2 (since all repunits are odd).
+Output: -1
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(k)` — worst case, we may check up to `k` remainders |
+| Space Complexity  | `O(k)` — to store visited remainders |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is elegant because it avoids constructing massive repunit numbers directly. By leveraging **modular arithmetic** and cycle detection, it efficiently determines whether a repunit divisible by `k` exists and finds its length.  
