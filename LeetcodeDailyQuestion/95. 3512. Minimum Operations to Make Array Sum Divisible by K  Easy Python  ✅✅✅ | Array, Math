@@ -1,0 +1,72 @@
+# 🔢 Minimum Operations with Modulo Constraint
+
+## 📌 Problem Statement
+
+You’re given:
+- An array of integers `nums`.
+- An integer `k`.
+
+### Goal:
+Find the minimum number of operations required so that the sum of the array becomes divisible by `k`.  
+
+👉 In one operation, you can increment or decrement any element by 1.
+
+---
+
+## 💡 Intuition
+
+- The sum of the array is `S = sum(nums)`.
+- If `S % k == 0`, the sum is already divisible by `k` → **0 operations**.
+- Otherwise, the remainder `r = S % k` tells us how far we are from the nearest multiple of `k`.
+- To fix this, we can either:
+  - Subtract `r` (reduce the sum to the nearest lower multiple of `k`), or
+  - Add `(k - r)` (increase the sum to the nearest higher multiple of `k`).
+- The minimum operations needed is therefore:  
+  \[
+  \min(r, k-r)
+  \]
+
+---
+
+## 🧠 Corrected Code
+
+Your current code only returns `sum(nums) % k`, which gives the remainder but not the minimum operations. Here’s the corrected version:
+
+```python
+class Solution:
+    def minOperations(self, nums: List[int], k: int) -> int:
+        remainder = sum(nums) % k
+        return min(remainder, k - remainder)
+```
+
+---
+
+## 🧪 Example
+
+```python
+nums = [2, 3, 4]
+k = 5
+sum(nums) = 9
+remainder = 9 % 5 = 4
+Options:
+- Subtract 4 → 5 (divisible by 5)
+- Add 1 → 10 (divisible by 5)
+Minimum operations = min(4, 1) = 1
+
+Output: 1
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — single pass to compute sum |
+| Space Complexity  | `O(1)` — only a few variables |
+
+---
+
+## 🎯 Final Thoughts
+
+This problem is a neat application of **modular arithmetic**. The key insight is that the remainder tells you exactly how far you are from divisibility, and the minimum of `r` and `k-r` gives the optimal number of operations.  
