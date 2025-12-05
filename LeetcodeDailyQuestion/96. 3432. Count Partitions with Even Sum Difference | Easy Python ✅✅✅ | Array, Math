@@ -1,0 +1,84 @@
+
+
+#  Counting Valid Partitions in an Array
+
+##  Problem Statement
+
+You’re given an array of integers `nums`.  
+We want to count the number of **valid partitions** such that:
+
+- At each partition point, the array is split into a **left subarray** and a **right subarray**.
+- Both subarrays must have **non-zero sums**.
+- The sums of the left and right subarrays must have the **same parity** (both even or both odd).
+
+---
+
+## 💡 Intuition
+
+- Compute the **total sum** of the array.
+- Traverse the array from left to right, maintaining:
+  - `left_sum`: sum of elements seen so far.
+  - `right_sum`: sum of remaining elements.
+- At each step:
+  - Update `left_sum` and `right_sum`.
+  - Check if `right_sum != 0` (to avoid empty partition).
+  - Check if `left_sum % 2 == right_sum % 2` (same parity).
+- If both conditions hold, increment the count.
+
+This ensures we only count partitions where both sides are non-empty and parity matches.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def countPartitions(self, nums: List[int]) -> int:
+        total_sum = sum(nums)
+        left_sum = 0
+        right_sum = total_sum
+        count = 0
+
+        for ele in nums:
+            left_sum += ele
+            right_sum -= ele
+            if right_sum != 0 and left_sum % 2 == right_sum % 2:
+                count += 1
+
+        return count
+```
+
+---
+
+## 🧪 Example
+
+```python
+nums = [2, 3, 4, 1]
+
+Step 1: left=2, right=8 → both even → valid
+Step 2: left=5, right=3 → both odd → valid
+Step 3: left=9, right=-1 → right is non-zero, both odd → valid
+Step 4: left=10, right=0 → invalid (right sum = 0)
+
+Output: 3
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — single pass through the array |
+| Space Complexity  | `O(1)` — only counters and sums |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is efficient and elegant:
+- It leverages prefix sums (`left_sum`) and suffix sums (`right_sum`) in one pass.
+- The parity check ensures we only count partitions with matching even/odd sums.
+- Runs in linear time with constant space.
+
+This pattern of **prefix-suffix tracking** is widely useful in problems involving balance, parity, or constraints between two halves of an array.  
