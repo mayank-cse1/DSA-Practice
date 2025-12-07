@@ -1,0 +1,71 @@
+
+---
+
+# 🔢 Count Odd Numbers in a Range
+
+## 📌 Problem Statement
+
+You’re given two integers `low` and `high` representing the inclusive range `[low, high]`.  
+The task is to return the **number of odd integers** within this range.
+
+---
+
+## 💡 Intuition
+
+- The total number of integers in the range is `gap = high - low + 1`.
+- If `low` is even:
+  - Exactly half of the numbers in the range are odd → `gap // 2`.
+- If `low` is odd:
+  - The range starts with an odd number, so there’s one extra odd compared to the even-start case → `(gap + 1) // 2`.
+
+This simple parity check avoids looping through the entire range.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def countOdds(self, low: int, high: int) -> int:
+        gap = high - low + 1
+        if low % 2 == 0:
+            return gap // 2
+        else:
+            return (gap + 1) // 2
+```
+
+---
+
+## 🧪 Example
+
+```python
+Input: low = 3, high = 7
+Range = [3, 4, 5, 6, 7]
+Odd numbers = [3, 5, 7] → 3
+Output: 3
+```
+
+```python
+Input: low = 4, high = 10
+Range = [4, 5, 6, 7, 8, 9, 10]
+Odd numbers = [5, 7, 9] → 3
+Output: 3
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(1)` — constant time calculation |
+| Space Complexity  | `O(1)` — no extra storage |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is efficient and elegant:
+- It leverages **parity checks** instead of brute force.
+- Runs in constant time regardless of the range size.
+- A great example of how mathematical reasoning simplifies problems.
