@@ -1,0 +1,84 @@
+# Maximum Matrix Sum
+
+## Problem Statement
+
+You’re given a matrix of integers. You can flip the sign of any element (multiply by `-1`) any number of times. The goal is to maximize the **sum of all elements** in the matrix after performing these operations.
+
+---
+
+## 💡 Intuition
+
+- Since we can flip signs freely, the best strategy is to make all numbers **positive**.
+- But there’s a catch: if the total number of negative elements is **odd**, one element must remain negative (because flipping signs in pairs preserves parity).
+- To minimize the loss:
+  - Flip all negatives to positive.
+  - If the count of negatives is odd, subtract **twice the smallest absolute value** from the total sum (since one element must stay negative).
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def maxMatrixSum(self, matrix: List[List[int]]) -> int:
+        count_negative = 0
+        min_negative = 999999
+        sum_matrix = 0
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                ele = matrix[i][j]
+                if ele <= 0:
+                    count_negative += 1
+                min_negative = min(min_negative, abs(ele))
+                sum_matrix += abs(ele)
+
+        if count_negative % 2 == 0:
+            return sum_matrix
+        else:
+            return sum_matrix - min_negative * 2
+```
+
+---
+
+## 🧪 Example
+
+```python
+matrix = [[1, -2], [-3, 4]]
+
+Step 1: Absolute values → [1, 2, 3, 4], sum = 10
+Step 2: Count negatives = 2 (even)
+Result = 10
+```
+
+```python
+matrix = [[-1, -2], [-3, -4]]
+
+Step 1: Absolute values → [1, 2, 3, 4], sum = 10
+Step 2: Count negatives = 4 (even)
+Result = 10
+```
+
+```python
+matrix = [[-1, -2], [-3, 5]]
+
+Step 1: Absolute values → [1, 2, 3, 5], sum = 11
+Step 2: Count negatives = 3 (odd)
+Subtract twice the smallest absolute value (1 × 2 = 2)
+Result = 9
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(m × n)` — traverse all elements |
+| Space Complexity  | `O(1)` — only counters and sums |
+
+---
+
+## Final Thoughts
+
+This solution elegantly uses **parity of negatives** and **minimum absolute value tracking** to maximize the matrix sum. It’s a neat example of how mathematical reasoning simplifies what looks like a complex optimization problem.  
