@@ -1,0 +1,202 @@
+# 🟦 Largest Square Area in Overlapping Rectangles
+
+## 📌 Problem Statement
+
+You’re given two lists:
+- `bottomLeft`: coordinates of the bottom-left corners of rectangles.
+- `topRight`: coordinates of the top-right corners of rectangles.
+
+Each rectangle is axis-aligned. The task is to find the **largest possible square area** that can fit inside the intersection of any two rectangles.
+
+---
+
+## 💡 Intuition
+
+- To form a square inside the intersection of two rectangles, we first need to check if they **overlap**.
+- Overlap conditions:
+  - The bottom-left of one rectangle must lie below and to the left of the top-right of the other.
+  - This must hold in both directions.
+- Once overlap is confirmed:
+  - Compute the intersection rectangle:
+    - `y_top = min(top edges)`
+    - `y_bottom = max(bottom edges)`
+    - `x_left = max(left edges)`
+    - `x_right = min(right edges)`
+  - The intersection rectangle dimensions are:
+    - Width = `x_right - x_left`
+    - Height = `y_top - y_bottom`
+  - The largest square that fits inside is limited by the smaller of width and height.
+  - Square area = `(min(width, height))^2`.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def largestSquareArea(self, bottomLeft: List[List[int]], topRight: List[List[int]]) -> int:
+        maxArea = 0
+        for i in range(len(bottomLeft) - 1):
+            for j in range(i + 1, len(bottomLeft)):
+                # Check overlap
+                if (bottomLeft[j][1] < topRight[i][1] and 
+                    bottomLeft[j][0] < topRight[i][0] and 
+                    bottomLeft[i][0] < topRight[j][0] and 
+                    bottomLeft[i][1] < topRight[j][1]):
+
+                    # Intersection boundaries
+                    y_top = min(topRight[i][1], topRight[j][1])
+                    y_bottom = max(bottomLeft[i][1], bottomLeft[j][1])
+                    x_left = max(bottomLeft[i][0], bottomLeft[j][0])
+                    x_right = min(topRight[i][0], topRight[j][0])
+
+                    # Largest square area in intersection
+                    sq_area = (min(abs(x_right - x_left), abs(y_top - y_bottom))) ** 2
+                    maxArea = max(maxArea, sq_area)
+
+        return maxArea
+```
+
+---
+
+## 🧪 Example
+
+```python
+bottomLeft = [[1,1],[2,2]]
+topRight   = [[4,4],[5,5]]
+
+Intersection:
+- x_left = max(1,2) = 2
+- x_right = min(4,5) = 4 → width = 2
+- y_bottom = max(1,2) = 2
+- y_top = min(4,5) = 4 → height = 2
+
+Largest square side = min(2,2) = 2
+Area = 2^2 = 4
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n^2)` — compare every pair of rectangles |
+| Space Complexity  | `O(1)` — only counters and temporary variables |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is efficient for moderate input sizes and elegantly handles overlap detection and intersection computation.  
+
+👉 One refinement: currently, the overlap condition is written explicitly. You could simplify by checking if the intersection rectangle has **positive width and height** (`x_right > x_left` and `y_top > y_bottom`). This makes the code more intuitive and avoids redundant overlap checks.  
+
+Would you like me to show you that simplified version?Here’s a blog-style breakdown of your `largestSquareArea` solution:
+
+---
+
+# 🟦 Largest Square Area in Overlapping Rectangles
+
+## 📌 Problem Statement
+
+You’re given two lists:
+- `bottomLeft`: coordinates of the bottom-left corners of rectangles.
+- `topRight`: coordinates of the top-right corners of rectangles.
+
+Each rectangle is axis-aligned. The task is to find the **largest possible square area** that can fit inside the intersection of any two rectangles.
+
+---
+
+## 💡 Intuition
+
+- To form a square inside the intersection of two rectangles, we first need to check if they **overlap**.
+- Overlap conditions:
+  - The bottom-left of one rectangle must lie below and to the left of the top-right of the other.
+  - This must hold in both directions.
+- Once overlap is confirmed:
+  - Compute the intersection rectangle:
+    - `y_top = min(top edges)`
+    - `y_bottom = max(bottom edges)`
+    - `x_left = max(left edges)`
+    - `x_right = min(right edges)`
+  - The intersection rectangle dimensions are:
+    - Width = `x_right - x_left`
+    - Height = `y_top - y_bottom`
+  - The largest square that fits inside is limited by the smaller of width and height.
+  - Square area = `(min(width, height))^2`.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def largestSquareArea(self, bottomLeft: List[List[int]], topRight: List[List[int]]) -> int:
+        maxArea = 0
+        for i in range(len(bottomLeft) - 1):
+            for j in range(i + 1, len(bottomLeft)):
+                # Check overlap
+                if (bottomLeft[j][1] < topRight[i][1] and 
+                    bottomLeft[j][0] < topRight[i][0] and 
+                    bottomLeft[i][0] < topRight[j][0] and 
+                    bottomLeft[i][1] < topRight[j][1]):
+
+                    # Intersection boundaries
+                    y_top = min(topRight[i][1], topRight[j][1])
+                    y_bottom = max(bottomLeft[i][1], bottomLeft[j][1])
+                    x_left = max(bottomLeft[i][0], bottomLeft[j][0])
+                    x_right = min(topRight[i][0], topRight[j][0])
+
+                    # Largest square area in intersection
+                    sq_area = (min(abs(x_right - x_left), abs(y_top - y_bottom))) ** 2
+                    maxArea = max(maxArea, sq_area)
+
+        return maxArea
+```
+
+---
+
+## 🧪 Example
+
+```python
+bottomLeft = [[1,1],[2,2]]
+topRight   = [[4,4],[5,5]]
+
+Intersection:
+- x_left = max(1,2) = 2
+- x_right = min(4,5) = 4 → width = 2
+- y_bottom = max(1,2) = 2
+- y_top = min(4,5) = 4 → height = 2
+
+Largest square side = min(2,2) = 2
+Area = 2^2 = 4
+```
+
+---
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n^2)` — compare every pair of rectangles |
+| Space Complexity  | `O(1)` — only counters and temporary variables |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is efficient for moderate input sizes and elegantly handles overlap detection and intersection computation.  
+
+👉 One refinement: currently, the overlap condition is written explicitly. You could simplify by checking if the intersection rectangle has **positive width and height** (`x_right > x_left` and `y_top > y_bottom`). This makes the code more intuitive and avoids redundant overlap checks.  
+
+
+## Video Explanation
+
+https://www.youtube.com/watch?v=wHv_7yA3wTw
+
+
+Code
+Testcase
+Testcase
+Test Result
+3047. Find the Largest Area of Square Inside Two Rectangles
