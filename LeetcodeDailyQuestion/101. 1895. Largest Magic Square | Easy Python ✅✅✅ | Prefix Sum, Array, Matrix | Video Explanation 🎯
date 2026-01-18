@@ -1,0 +1,142 @@
+# 🟦 Largest Magic Square in a Grid
+
+## 📌 Problem Statement
+
+Given a 2D grid of integers, find the size of the largest **magic square**.  
+A magic square is defined as a square subgrid where:
+- All rows have the same sum.
+- All columns have the same sum.
+- Both diagonals have the same sum.
+
+---
+
+## 💡 Intuition
+
+- To check sums efficiently, you precompute **prefix sums** for rows and columns.
+- For each possible square size (starting from the largest), check:
+  - Row sums
+  - Column sums
+  - Diagonal sums
+- If all conditions match, return the size.
+
+---
+
+## 🧠 Code Walkthrough
+
+```python
+class Solution:
+    def largestMagicSquare(self, grid: List[List[int]]) -> int:
+        # Step 1: Prefix row sums
+        prefixRowSumGrid = []
+        for i in range(len(grid)):
+            sumRow = []
+            temp = 0
+            for j in range(len(grid[0])):
+                temp += grid[i][j]
+                sumRow.append(temp)
+            prefixRowSumGrid.append(sumRow)
+
+        # Step 2: Prefix column sums
+        prefixColSumGrid = []
+        prefixColSumGrid.append(grid[0][:])
+        for i in range(1, len(grid)):
+            sumCol = []
+            for j in range(len(grid[0])):
+                sumCol.append(prefixColSumGrid[-1][j] + grid[i][j])
+            prefixColSumGrid.append(sumCol)
+
+        # Step 3: Try all square sizes (largest first)
+        maxMagicSquarePossible = min(len(grid), len(grid[0]))
+        for size in range(maxMagicSquarePossible, 0, -1):
+            if size == 1:
+                return size
+            for row in range(len(grid) - size + 1):
+                for col in range(len(grid[0]) - size + 1):
+                    # Initial check: first row vs first column sum
+                    rowSum = prefixRowSumGrid[row][col + size - 1] if col == 0 else prefixRowSumGrid[row][col + size - 1] - prefixRowSumGrid[row][col - 1]
+                    colSum = prefixColSumGrid[row + size - 1][col] if row == 0 else prefixColSumGrid[row + size - 1][col] - prefixColSumGrid[row - 1][col]
+                    if rowSum != colSum:
+                        continue
+
+                    # Check all rows
+                    flag = True
+                    for prefixRow in range(row, row + size):
+                        eachRowSum = prefixRowSumGrid[prefixRow][col + size - 1] if col == 0 else prefixRowSumGrid[prefixRow][col + size - 1] - prefixRowSumGrid[prefixRow][col - 1]
+                        if eachRowSum != rowSum:
+                            flag = False
+                            break
+                    if not flag:
+                        continue
+
+                    # Check all columns
+                    for prefixCol in range(col, col + size):
+                        eachColSum = prefixColSumGrid[row + size - 1][prefixCol] if row == 0 else prefixColSumGrid[row + size - 1][prefixCol] - prefixColSumGrid[row - 1][prefixCol]
+                        if eachColSum != rowSum:
+                            flag = False
+                            break
+                    if not flag:
+                        continue
+
+                    # Check diagonals
+                    diag1 = 0
+                    diag2 = 0
+                    for i in range(size):
+                        diag1 += grid[row + i][col + i]
+                        diag2 += grid[row + i][col + size - 1 - i]
+
+                    if diag1 != rowSum or diag2 != rowSum:
+                        continue
+
+                    # Found a valid magic square
+                    if flag:
+                        return size
+        return 1
+```
+
+---
+
+## 🧪 Example
+
+```python
+grid = [
+    [7,1,4,5,6],
+    [2,5,1,6,4],
+    [1,5,4,3,2],
+    [1,2,7,3,4]
+]
+
+Output: 3
+# The largest magic square has size 3
+```
+
+---
+
+## ⚡ Improvements
+
+1. **Remove Debug Prints**  
+   Your current code has `print(prefixRowSumGrid)` and `print(prefixColSumGrid)`. These are useful for debugging but should be removed in production.
+
+2. **Final Return**  
+   If no larger square is found, the function should return `1` (since any single cell is trivially a magic square). You already handle this correctly.
+
+3. **Optimization**  
+   Instead of checking row and column sums separately, you could unify the logic by computing sums directly with prefix arrays, reducing repeated code.
+
+---
+
+## ⏱ Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n^2 * k)` — checking all sub-squares of size up to `k` |
+| Space Complexity  | `O(n*m)` — prefix sum grids |
+
+---
+
+## Final Thoughts
+
+Your solution is solid: it uses prefix sums to avoid recomputing row/column sums repeatedly, and checks diagonals directly. The structure is clear and efficient for typical grid sizes.
+
+## Video Explanation
+
+https://youtu.be/BSNQBpXV00g
