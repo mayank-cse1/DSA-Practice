@@ -1,0 +1,72 @@
+---
+
+# 🔢 Minimize Maximum Pair Sum
+
+## 📌 Problem Statement
+
+You’re given an array `nums`. You need to:
+- Pair up the elements such that each element is used exactly once.
+- Minimize the **maximum pair sum** among all pairs.
+
+### Example:
+```python
+nums = [3,5,2,3]
+Pairs: (2,5), (3,3)
+Pair sums: [7, 6]
+Maximum = 7
+Output: 7
+```
+
+---
+
+## 💡 Intuition
+
+- To minimize the maximum pair sum, we should **pair the smallest element with the largest element**.
+- This balances extremes and prevents large sums from forming.
+- Sorting the array makes it easy to pair elements from both ends.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def minPairSum(self, nums: List[int]) -> int:
+        nums = sorted(nums)
+        max_sum = 0
+        for left in range(len(nums) // 2):
+            right = len(nums) - 1 - left
+            max_sum = max(max_sum, nums[left] + nums[right])
+        return max_sum
+```
+
+---
+
+## 🧪 Example Walkthrough
+
+```python
+nums = [3,5,4,2]
+
+Sorted: [2,3,4,5]
+Pairs:
+- (2,5) → sum = 7
+- (3,4) → sum = 7
+
+Maximum pair sum = 7
+Output: 7
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n log n)` — sorting dominates |
+| Space Complexity  | `O(1)` — aside from sorting overhead |
+
+---
+
+## 🎯 Final Thoughts
+
+This solution is elegant because it leverages sorting and a two-pointer approach to balance pairs optimally. It’s a classic example of **greedy pairing**: match extremes to minimize the worst-case outcome.  
