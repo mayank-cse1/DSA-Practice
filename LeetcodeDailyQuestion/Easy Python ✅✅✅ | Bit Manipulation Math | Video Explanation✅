@@ -1,0 +1,76 @@
+## 📌 Problem Statement
+Given two integers `left` and `right`, count how many numbers in the inclusive range `[left, right]` have a **prime number of set bits** in their binary representation.
+
+---
+
+## 🎯 Goal
+Return the count of integers between `left` and `right` whose binary representation contains a prime number of `1`s.
+
+---
+
+## 💡 Intuition
+- Convert each number to binary using `bin(i)`.
+- Count the number of `1`s (set bits).
+- Check if this count is prime.
+- Maintain a running total of such numbers.
+
+Since the maximum number of bits for integers up to `10^6` is about 20, we only need to check primes up to 20. That’s why the set `{2,3,5,7,11,13,17,19}` is sufficient.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def countPrimeSetBits(self, left: int, right: int) -> int:
+        prime = {2, 3, 5, 7, 11, 13, 17, 19}
+        ans = 0
+        for i in range(left, right + 1):
+            # Convert number to binary string
+            binary_i = bin(i)
+            # Count set bits
+            count_set = binary_i.count('1')
+            # Check if count is prime
+            if count_set in prime:
+                ans += 1
+        return ans
+```
+
+---
+
+## 🧪 Example
+
+```python
+Input: left = 6, right = 10
+Numbers: 6 (110), 7 (111), 8 (1000), 9 (1001), 10 (1010)
+
+Set bits:
+- 6 → 2 (prime)
+- 7 → 3 (prime)
+- 8 → 1 (not prime)
+- 9 → 2 (prime)
+- 10 → 2 (prime)
+
+Count = 4
+Output: 4
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n log n)` — iterating through range and counting bits (binary conversion is `O(log n)` per number) |
+| Space Complexity  | `O(1)` — only a fixed set of primes and counters |
+
+---
+
+## 🎯 Final Thoughts
+This solution is efficient because:
+- It leverages Python’s built-in `bin()` and `count()` for simplicity.
+- Restricts prime checks to a small fixed set (since bit counts are limited).
+- Runs in linear time relative to the size of the range.
+
+## Video Explanation
+https://youtu.be/jbSOvD1g7BE
