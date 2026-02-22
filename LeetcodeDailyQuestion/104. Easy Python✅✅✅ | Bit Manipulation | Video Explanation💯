@@ -1,0 +1,76 @@
+## 📌 Problem Statement
+Given a positive integer `n`, return the length of the longest distance between two consecutive `1`s in the binary representation of `n`.  
+If there are fewer than two `1`s, return `0`.
+
+---
+
+## 🎯 Goal
+Find the maximum gap (distance in bit positions) between consecutive set bits (`1`s) in the binary form of `n`.
+
+---
+
+## 💡 Intuition
+- Traverse the binary representation of `n` bit by bit.
+- Keep track of the **current bit position** (`curr`) and the **previous position of a `1`** (`prev`).
+- Each time a `1` is encountered:
+  - If `prev` is not `-1`, compute the gap (`curr - prev`).
+  - Update the maximum gap found so far.
+  - Update `prev` to the current position.
+- Continue until all bits are processed.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def binaryGap(self, n: int) -> int:
+        curr = 0
+        prev = -1
+        ans = 0
+        while n > 0:
+            if (n & 1) > 0:  # found a '1'
+                ans = ans if prev == -1 else max(ans, curr - prev)
+                prev = curr
+            curr += 1
+            n >>= 1  # shift right
+        return ans
+```
+
+---
+
+## 🧪 Example
+
+```python
+n = 22
+Binary: 10110
+Positions of '1': [0, 2, 3]
+Gaps: (2-0) = 2, (3-2) = 1
+Maximum gap = 2
+Output: 2
+```
+
+```python
+n = 8
+Binary: 1000
+Only one '1' → No gap
+Output: 0
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(log n)` — proportional to the number of bits in `n` |
+| Space Complexity  | `O(1)` — only a few variables |
+
+---
+
+## 🎯 Final Thoughts
+This solution is efficient because it processes the binary representation of `n` directly using bitwise operations. It avoids converting to a string and instead leverages shifting (`n >>= 1`) for speed. The logic is clean and ensures early updates to the maximum gap as soon as new `1`s are found.  
+
+## Video Explanation
+
+https://youtu.be/HY9UrtSVuPU
