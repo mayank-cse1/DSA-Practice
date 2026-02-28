@@ -1,0 +1,71 @@
+## 📌 Problem Statement
+Given a positive integer `n`, return the decimal value of the binary string formed by concatenating the binary representations of all integers from `1` to `n` in order.  
+Since the result can be very large, return it modulo \(10^9 + 7\).
+
+---
+
+## 🎯 Goal
+Efficiently build the concatenated binary string without actually constructing huge strings, and compute its decimal value modulo \(10^9 + 7\).
+
+---
+
+## 💡 Intuition
+- Concatenating binary numbers is equivalent to **shifting the current result left by the number of bits in the next integer**, then adding the integer itself.
+- Example: concatenating `1 (1)` and `2 (10)` → binary string `110` → decimal `6`.
+- To know how many bits to shift, track the **bit length** of each integer.
+- The bit length increases by 1 whenever the integer is a power of 2.
+- Use modular arithmetic to keep the result within bounds.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def concatenatedBinary(self, n: int) -> int:
+        MOD = 10**9 + 7
+        res = 0
+        digit = 0
+        for i in range(1, n + 1):
+            # If i is a power of 2, increase bit length
+            if (i & (i - 1)) == 0:
+                digit += 1
+            # Shift res left by digit bits and add i
+            res = ((res << digit) % MOD + i) % MOD
+        return res
+```
+
+---
+
+## 🧪 Example
+
+```python
+n = 3
+Binary concatenation: "1" + "10" + "11" = "11011"
+Decimal value = 27
+Output: 27
+```
+
+```python
+n = 12
+Concatenation: "1 10 11 100 ... 1100"
+Decimal value (mod 1e9+7) = 505379714
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(n)` — iterate through all numbers up to `n` |
+| Space Complexity  | `O(1)` — only counters and result variable |
+
+---
+
+## 🎯 Final Thoughts
+This solution is efficient because it avoids building massive binary strings. Instead, it uses **bit shifts** and **modular arithmetic** to simulate concatenation. Tracking bit length via the power-of-2 check is a clever optimization that ensures correctness without costly operations.  
+
+## Video Explanation
+
+https://youtu.be/-LTVHKzqxYg
