@@ -1,0 +1,93 @@
+---
+
+## 📌 Problem Statement
+Design a data structure `Fancy` that supports the following operations:
+1. **append(val)** → Append an integer to the sequence.
+2. **addAll(inc)** → Add `inc` to all elements in the sequence.
+3. **multAll(m)** → Multiply all elements in the sequence by `m`.
+4. **getIndex(idx)** → Return the element at index `idx` modulo \(10^9 + 7\), or `-1` if the index is invalid.
+
+---
+
+## 🎯 Goal
+Efficiently implement these operations without recomputing values for the entire sequence each time, especially for large inputs.
+
+---
+
+## 💡 Intuition
+- Directly applying `addAll` and `multAll` to every element would be too slow.
+- Instead, store each appended value in a **normalized form**:
+  - Adjust the value so that future multiplications and additions can be applied lazily.
+  - Use modular arithmetic to handle large numbers.
+- Maintain two global variables:
+  - `addition`: cumulative addition applied to all elements.
+  - `multiplication`: cumulative multiplication applied to all elements.
+- When appending:
+  - Normalize the value by reversing the current transformations using modular inverse.
+- When retrieving:
+  - Apply the stored transformations back to the normalized value.
+
+---
+
+## 🧠 Code
+
+```python
+class Fancy:
+
+    def __init__(self):
+        self.output = []
+        self.MOD = 10**9 + 7
+        self.addition = 0
+        self.multiplication = 1
+
+    def append(self, val: int) -> None:
+        # Normalize the value before storing
+        x = (val - self.addition) % self.MOD
+        inverse_mod = pow(self.multiplication, self.MOD - 2, self.MOD)
+        self.output.append((x * inverse_mod) % self.MOD)
+
+    def addAll(self, inc: int) -> None:
+        self.addition = (self.addition + inc) % self.MOD
+
+    def multAll(self, m: int) -> None:
+        self.addition = (self.addition * m) % self.MOD
+        self.multiplication = (self.multiplication * m) % self.MOD
+
+    def getIndex(self, idx: int) -> int:
+        if idx >= len(self.output):
+            return -1
+        return (self.output[idx] * self.multiplication + self.addition) % self.MOD
+```
+
+---
+
+## 🧪 Example
+
+```python
+fancy = Fancy()
+fancy.append(2)         # sequence = [2]
+fancy.addAll(3)         # sequence = [5]
+fancy.append(7)         # sequence = [5, 7]
+fancy.multAll(2)        # sequence = [10, 14]
+print(fancy.getIndex(0))  # Output: 10
+print(fancy.getIndex(1))  # Output: 14
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Operation          | Complexity |
+|--------------------|------------|
+| append             | `O(1)` — normalization with modular inverse |
+| addAll             | `O(1)` |
+| multAll            | `O(1)` |
+| getIndex           | `O(1)` |
+| Space Complexity   | `O(n)` — storing normalized values |
+
+---
+
+## 🎯 Final Thoughts
+This design is clever because it avoids costly updates across the entire sequence by using **lazy propagation with modular arithmetic**. The use of modular inverse ensures correctness when normalizing appended values. It’s a great example of how mathematical insight can transform a seemingly complex problem into an efficient solution.  
+
+Would you like me to also show you a **step-by-step dry run** of how normalization works internally when you call `append` after multiple `addAll` and `multAll` operations?
