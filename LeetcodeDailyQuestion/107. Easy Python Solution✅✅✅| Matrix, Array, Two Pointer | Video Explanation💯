@@ -1,0 +1,86 @@
+## 📌 Problem Statement
+You’re given a 2D grid and asked to **reverse a square submatrix vertically**.  
+The submatrix is defined by its top-left corner `(x, y)` and size `k`.  
+The task is to swap rows within this submatrix so that the top half is flipped with the bottom half.
+
+---
+
+## 🎯 Goal
+Return the updated grid after reversing the specified submatrix.
+
+---
+
+## 💡 Intuition
+- To reverse a submatrix vertically:
+  - For each row in the **top half** of the submatrix, swap it with the corresponding row in the **bottom half**.
+- The loop runs until the midpoint (`k // 2`).
+- Each element `(i, j)` is swapped with `(x + k - (i - x) - 1, j)`.
+
+This ensures the submatrix is flipped vertically while preserving column order.
+
+---
+
+## 🧠 Code
+
+```python
+class Solution:
+    def reverseSubmatrix(self, grid: List[List[int]], x: int, y: int, k: int) -> List[List[int]]:
+        i = x
+        while i < x + k // 2:
+            j = y
+            while j < y + k:
+                # Swap (i, j) with its vertically opposite element
+                temp = grid[i][j]
+                grid[i][j] = grid[x + k - (i - x) - 1][j]
+                grid[x + k - (i - x) - 1][j] = temp
+                j += 1
+            i += 1
+        return grid
+```
+
+---
+
+## 🧪 Example
+
+```python
+grid = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9,10,11,12],
+    [13,14,15,16]
+]
+
+x, y, k = 0, 0, 4
+
+Submatrix = entire 4x4 grid
+After reversal:
+[
+    [13,14,15,16],
+    [9,10,11,12],
+    [5, 6, 7, 8],
+    [1, 2, 3, 4]
+]
+```
+
+---
+
+## ⏱ Time and Space Complexity
+
+| Metric            | Complexity |
+|-------------------|------------|
+| Time Complexity   | `O(k^2)` — each element in the submatrix is visited once |
+| Space Complexity  | `O(1)` — in-place swaps |
+
+---
+
+## 🎯 Final Thoughts
+This solution is efficient and concise:
+- It uses **in-place swapping** to avoid extra memory.
+- The indexing formula ensures correct vertical reversal.
+- Works for any square submatrix size `k`.
+
+👉 A small refinement: you could use Python’s tuple swap (`grid[i][j], grid[x+k-(i-x)-1][j] = grid[x+k-(i-x)-1][j], grid[i][j]`) to make the swap cleaner.  
+
+
+## Video Explanation
+https://youtu.be/7yeNuSwR04c
